@@ -31,6 +31,18 @@ function ProjectsSection({ projects }) {
                 )}
               </div>
               <p className="mt-3 text-mist dark:text-nightMuted">{project.description}</p>
+              {project.categories?.length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-2 text-sm">
+                  {project.categories.map((category) => (
+                    <li
+                      key={category}
+                      className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-mist dark:border-slate-600 dark:text-nightMuted"
+                    >
+                      {category}
+                    </li>
+                  ))}
+                </ul>
+              )}
               <div className="mt-4 border-t border-slate-200/70 dark:border-slate-700/60" />
               <p className="mt-3 font-medium text-ink dark:text-white">{project.impact}</p>
               <ul className="mt-4 flex flex-wrap gap-2">

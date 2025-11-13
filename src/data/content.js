@@ -24,6 +24,20 @@ export const portfolio = {
       value: 'Lead, RoboBulls Autonomous Robot Team',
     },
   ],
+  quickStats: [
+    {
+      value: '10K+',
+      label: 'New users unlocked via Mapbox expansion',
+    },
+    {
+      value: '35%',
+      label: 'API latency reduced across 50+ endpoints',
+    },
+    {
+      value: '200+',
+      label: 'Students mentored in CS fundamentals',
+    },
+  ],
   about: [
     'I gravitate toward products where performance, usability, and measurable outcomes matter. Recently I optimized 50+ Express APIs for storm monitoring, redesigned StormAlert’s dashboard, and onboarded new geolocation data to unlock 10K+ more users.',
     'Outside internships I teach full-stack fundamentals to early developers and lead robotics teams, so I’m comfortable breaking down complex ideas, writing docs, and keeping collaboration lightweight but effective.',
@@ -43,6 +57,7 @@ export const portfolio = {
       title: 'FridgeIQ',
       period: 'In progress',
       status: 'Active',
+      categories: ['Mobile', 'AI', 'Consumer'],
       description:
         'iOS app for food management that recommends meals via GPT based on what is already in the fridge.',
       impact:
@@ -53,6 +68,7 @@ export const portfolio = {
     {
       title: 'TripWise',
       period: '2024',
+      categories: ['Full-stack', 'Travel', 'AI'],
       description:
         'Full-stack AI trip planner that generates itineraries, budgets, and travel suggestions.',
       impact:
@@ -63,6 +79,7 @@ export const portfolio = {
     {
       title: 'Stampede Marketplace',
       period: '2023',
+      categories: ['Marketplace', 'Web'],
       description:
         'Campus marketplace built with a four-person Agile team to enable peer-to-peer exchanges.',
       impact:

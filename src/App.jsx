@@ -8,11 +8,13 @@ import ExperienceSection from './components/ExperienceSection'
 import LeadershipSection from './components/LeadershipSection'
 import ContactSection from './components/ContactSection'
 import Footer from './components/Footer'
+import QuickStatsSection from './components/QuickStatsSection'
+import BackToTopButton from './components/BackToTopButton'
 import { useTheme } from './hooks/useTheme'
 import { portfolio } from './data/content'
 
 function App() {
-  const { hero, highlights, about, skills, projects, experience, education, leadership, contact } = portfolio
+  const { hero, highlights, quickStats, about, skills, projects, experience, education, leadership, contact } = portfolio
   const { theme, toggleTheme } = useTheme()
 
   return (
@@ -23,6 +25,7 @@ function App() {
 
         <main>
           <Hero hero={hero} highlights={highlights} contact={contact} />
+          <QuickStatsSection stats={quickStats} />
           <AboutSection about={about} />
           <EducationSection education={education} />
           <SkillsSection skills={skills} />
@@ -33,6 +36,7 @@ function App() {
         </main>
 
         <Footer heroName={hero.name} />
+        <BackToTopButton />
       </div>
     </div>
   )
