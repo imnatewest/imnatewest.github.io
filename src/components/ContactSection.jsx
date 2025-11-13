@@ -6,7 +6,7 @@ function ContactSection({ contact }) {
   return (
     <Reveal as="section" id="contact" className="py-16">
       <div className={containerClass}>
-        <div className="grid gap-8 rounded-3xl border border-accent/20 bg-gradient-to-br from-white to-indigo-50 p-10 shadow-panel transition motion-safe:animate-fade-in-up lg:grid-cols-[minmax(0,1fr)_300px] dark:border-white/10 dark:from-nightSurface dark:to-night">
+        <div className="grid gap-8 rounded-3xl border border-accent/20 bg-gradient-to-br from-white to-indigo-50 p-6 shadow-panel transition motion-safe:animate-fade-in-up sm:p-10 lg:grid-cols-[minmax(0,1fr)_300px] dark:border-white/10 dark:from-nightSurface dark:to-night">
           <div>
             <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">Get in touch</p>
             <h2 className="mt-3 text-3xl font-semibold leading-tight text-ink dark:text-white">

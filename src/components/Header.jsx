@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { containerClass } from '../constants/layout'
 
 const navLinks = [
@@ -32,6 +32,7 @@ function ThemeIcon({ mode }) {
 }
 
 function Header({ heroName, contactEmail, theme, onToggleTheme }) {
+  const profileImage = useMemo(() => `${import.meta.env.BASE_URL}profilepic.jpeg`, [])
   const [menuOpen, setMenuOpen] = useState(false)
   const toggleMenu = () => setMenuOpen((prev) => !prev)
   const closeMenu = () => setMenuOpen(false)
@@ -41,12 +42,13 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/80 backdrop-blur transition-colors dark:border-slate-700/60 dark:bg-night/70">
       <div className={`${containerClass} flex items-center justify-between gap-4 py-4`}>
-        <a
-          className="inline-flex items-center justify-center rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold tracking-[0.3em] transition-colors dark:border-slate-600 dark:text-white"
-          href="#hero"
-          aria-label={`${heroName} home`}
-        >
-          NW
+        <a href="#hero" aria-label={`${heroName} home`} className="flex-shrink-0">
+          <img
+            src={profileImage}
+            alt={`${heroName} headshot`}
+            className="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm transition hover:scale-105 sm:h-12 sm:w-12"
+            loading="lazy"
+          />
         </a>
         <nav className="hidden items-center gap-6 text-sm font-medium text-mist md:flex dark:text-nightMuted" aria-label="Primary">
           {navLinks.map((link) => (
