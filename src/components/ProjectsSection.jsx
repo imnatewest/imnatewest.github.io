@@ -22,7 +22,14 @@ function ProjectsSection({ projects }) {
                   View source ↗
                 </a>
               </div>
-              <h3 className="mt-4 text-2xl font-semibold text-ink dark:text-white">{project.title}</h3>
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <h3 className="text-2xl font-semibold text-ink dark:text-white">{project.title}</h3>
+                {project.status && (
+                  <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-200">
+                    {project.status}
+                  </span>
+                )}
+              </div>
               <p className="mt-3 text-mist dark:text-nightMuted">{project.description}</p>
               <div className="mt-4 border-t border-slate-200/70 dark:border-slate-700/60" />
               <p className="mt-3 font-medium text-ink dark:text-white">{project.impact}</p>

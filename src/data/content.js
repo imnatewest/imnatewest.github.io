@@ -42,6 +42,7 @@ export const portfolio = {
     {
       title: 'FridgeIQ',
       period: 'In progress',
+      status: 'Active',
       description:
         'iOS app for food management that recommends meals via GPT based on what is already in the fridge.',
       impact:
