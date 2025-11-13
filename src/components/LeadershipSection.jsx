@@ -1,8 +1,9 @@
 import { containerClass } from '../constants/layout'
+import Reveal from './Reveal'
 
 function LeadershipSection({ leadership }) {
   return (
-    <section id="leadership" className="py-16">
+    <Reveal as="section" id="leadership" className="py-16">
       <div className={containerClass}>
         <div className="max-w-3xl">
           <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">Leadership</p>
@@ -14,7 +15,7 @@ function LeadershipSection({ leadership }) {
           {leadership.map((item) => (
             <article
               key={item.org}
-              className="rounded-3xl border border-slate-200 bg-white p-7 shadow-card transition dark:border-slate-700/60 dark:bg-nightSurface"
+              className="rounded-3xl border border-slate-200 bg-white p-7 shadow-card transition motion-safe:animate-fade-in-up dark:border-slate-700/60 dark:bg-nightSurface"
             >
               <div className="flex flex-wrap items-center gap-4 text-sm text-mist dark:text-nightMuted">
                 <p>{item.period}</p>
@@ -30,7 +31,7 @@ function LeadershipSection({ leadership }) {
           ))}
         </div>
       </div>
-    </section>
+    </Reveal>
   )
 }
 

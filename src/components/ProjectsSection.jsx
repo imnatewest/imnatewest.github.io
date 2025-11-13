@@ -1,8 +1,9 @@
 import { containerClass } from '../constants/layout'
+import Reveal from './Reveal'
 
 function ProjectsSection({ projects }) {
   return (
-    <section id="projects" className="py-16">
+    <Reveal as="section" id="projects" className="py-16">
       <div className={containerClass}>
         <div className="max-w-3xl">
           <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">Selected work</p>
@@ -11,10 +12,11 @@ function ProjectsSection({ projects }) {
           </h2>
         </div>
         <div className="mt-10 space-y-6">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <article
               key={project.title}
-              className="rounded-3xl border border-slate-200 bg-white p-8 shadow-card transition dark:border-slate-700/60 dark:bg-nightSurface"
+              className="rounded-3xl border border-slate-200 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-1 motion-safe:animate-fade-in-up dark:border-slate-700/60 dark:bg-nightSurface"
+              style={{ animationDelay: `${index * 120}ms` }}
             >
               <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-mist dark:text-nightMuted">
                 <p>{project.period}</p>
@@ -59,7 +61,7 @@ function ProjectsSection({ projects }) {
           ))}
         </div>
       </div>
-    </section>
+    </Reveal>
   )
 }
 

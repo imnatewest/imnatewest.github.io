@@ -1,8 +1,9 @@
 import { containerClass } from '../constants/layout'
+import Reveal from './Reveal'
 
 function EducationSection({ education }) {
   return (
-    <section id="education" className="bg-white py-16 dark:bg-nightSurface/60">
+    <Reveal as="section" id="education" className="bg-white py-16 dark:bg-nightSurface/60">
       <div className={`${containerClass} grid gap-8 md:grid-cols-[minmax(0,1fr)_1.2fr]`}>
         <div>
           <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">Education</p>
@@ -24,7 +25,7 @@ function EducationSection({ education }) {
           </ul>
         </div>
       </div>
-    </section>
+    </Reveal>
   )
 }
 
