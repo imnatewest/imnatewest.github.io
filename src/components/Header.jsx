@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { containerClass } from '../constants/layout'
 
 const navLinks = [
@@ -31,6 +32,12 @@ function ThemeIcon({ mode }) {
 }
 
 function Header({ heroName, contactEmail, theme, onToggleTheme }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const toggleMenu = () => setMenuOpen((prev) => !prev)
+  const closeMenu = () => setMenuOpen(false)
+
+  const linkClasses = 'block rounded-full px-4 py-2 text-sm font-medium text-ink transition hover:bg-slate-100 dark:text-white dark:hover:bg-white/10'
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/80 backdrop-blur transition-colors dark:border-slate-700/60 dark:bg-night/70">
       <div className={`${containerClass} flex items-center justify-between gap-4 py-4`}>
@@ -48,23 +55,55 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
             </a>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 sm:flex">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="Toggle color theme"
-            className="flex items-center justify-center rounded-full border border-slate-300 p-2 text-slate-600 transition hover:-translate-y-0.5 hover:text-ink dark:border-slate-600 dark:text-nightMuted dark:hover:text-white"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 text-slate-600 transition hover:-translate-y-0.5 hover:text-ink dark:border-slate-600 dark:text-nightMuted dark:hover:text-white"
             onClick={onToggleTheme}
           >
             <ThemeIcon mode={theme} />
           </button>
           <a
-            className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-ink transition hover:-translate-y-0.5 dark:border-slate-600 dark:text-white"
+            className="hidden rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-ink transition hover:-translate-y-0.5 dark:border-slate-600 dark:text-white sm:inline-flex"
             href={`mailto:${contactEmail}`}
           >
             Say hello
           </a>
+          <button
+            type="button"
+            aria-label="Toggle navigation menu"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 text-slate-600 transition hover:-translate-y-0.5 hover:text-ink dark:border-slate-600 dark:text-nightMuted dark:hover:text-white md:hidden"
+            onClick={toggleMenu}
+          >
+            {menuOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" className="h-5 w-5" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.6} d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
+      {menuOpen && (
+        <div className="md:hidden border-t border-slate-200/60 bg-white/95 px-4 py-4 shadow-lg transition dark:border-slate-700/60 dark:bg-nightSurface">
+          <nav className="space-y-2" aria-label="Mobile primary">
+            {navLinks.map((link) => (
+              <a key={link.href} className={linkClasses} href={link.href} onClick={closeMenu}>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <div className="mt-4 space-y-2">
+            <a className={linkClasses} href={`mailto:${contactEmail}`} onClick={closeMenu}>
+              Say hello
+            </a>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
