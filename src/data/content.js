@@ -124,7 +124,7 @@ export const portfolio = {
   contact: {
     email: 'imnathanwest@gmail.com',
     phone: '727-459-5304',
-    github: 'https://github.com/nathanwest',
-    linkedin: 'https://www.linkedin.com/in/nathanwest',
+    github: 'https://github.com/imnatewest',
+    linkedin: 'https://www.linkedin.com/in/nathan-west-b0260124b/',
   },
 }
