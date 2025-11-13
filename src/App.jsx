@@ -22,7 +22,7 @@ function App() {
         <Header heroName={hero.name} contactEmail={contact.email} theme={theme} onToggleTheme={toggleTheme} />
 
         <main>
-          <Hero hero={hero} highlights={highlights} />
+          <Hero hero={hero} highlights={highlights} contact={contact} />
           <AboutSection about={about} />
           <EducationSection education={education} />
           <SkillsSection skills={skills} />

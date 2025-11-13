@@ -24,6 +24,7 @@ function ProjectsSection({ projects }) {
               </div>
               <h3 className="mt-4 text-2xl font-semibold text-ink dark:text-white">{project.title}</h3>
               <p className="mt-3 text-mist dark:text-nightMuted">{project.description}</p>
+              <div className="mt-4 border-t border-slate-200/70 dark:border-slate-700/60" />
               <p className="mt-3 font-medium text-ink dark:text-white">{project.impact}</p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {project.tech.map((tech) => (

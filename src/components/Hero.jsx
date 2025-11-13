@@ -7,8 +7,9 @@ function withBasePath(path) {
   return `${import.meta.env.BASE_URL}${path}`
 }
 
-function Hero({ hero, highlights }) {
+function Hero({ hero, highlights, contact }) {
   const resumeHref = withBasePath(hero.resumeUrl)
+  const githubHref = contact?.github
 
   return (
     <section id="hero" className="py-16 md:py-20">
@@ -37,6 +38,29 @@ function Hero({ hero, highlights }) {
             >
               Email me
             </a>
+            {githubHref && (
+              <a
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent hover:text-accent dark:border-white/20 dark:text-white dark:hover:border-accent/60 dark:hover:text-white"
+                href={githubHref}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12 2C6.477 2 2 6.486 2 12.02c0 4.432 2.865 8.192 6.839 9.525.5.094.682-.218.682-.484 0-.239-.009-.87-.014-1.707-2.782.607-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.467-1.11-1.467-.908-.622.069-.61.069-.61 1.004.071 1.533 1.034 1.533 1.034.892 1.536 2.341 1.092 2.91.836.091-.649.35-1.093.635-1.344-2.22-.254-4.555-1.114-4.555-4.956 0-1.095.39-1.99 1.029-2.689-.103-.255-.446-1.281.098-2.671 0 0 .84-.27 2.75 1.027a9.38 9.38 0 0 1 2.503-.338 9.34 9.34 0 0 1 2.503.338c1.909-1.296 2.748-1.027 2.748-1.027.546 1.39.203 2.416.1 2.671.641.699 1.028 1.594 1.028 2.689 0 3.852-2.339 4.699-4.566 4.947.36.31.68.921.68 1.856 0 1.338-.012 2.419-.012 2.749 0 .268.18.582.688.482C19.138 20.208 22 16.45 22 12.02 22 6.486 17.523 2 12 2Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                GitHub
+              </a>
+            )}
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-mist dark:text-nightMuted">
             <span>{hero.location}</span>
