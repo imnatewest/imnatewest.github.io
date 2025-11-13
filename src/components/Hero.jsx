@@ -1,7 +1,15 @@
 import { containerClass } from '../constants/layout'
 import { telHref } from '../utils/phone'
 
+function withBasePath(path) {
+  if (!path) return path
+  if (path.startsWith('http') || path.startsWith('mailto:') || path.startsWith('/')) return path
+  return `${import.meta.env.BASE_URL}${path}`
+}
+
 function Hero({ hero, highlights }) {
+  const resumeHref = withBasePath(hero.resumeUrl)
+
   return (
     <section id="hero" className="py-16 md:py-20">
       <div className={`${containerClass} grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,1fr)]`}>
@@ -17,7 +25,9 @@ function Hero({ hero, highlights }) {
           <div className="mt-8 flex flex-wrap gap-3">
             <a
               className="inline-flex items-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition hover:-translate-y-0.5"
-              href={hero.resumeUrl}
+              href={resumeHref}
+              target="_blank"
+              rel="noreferrer"
             >
               View resume
             </a>

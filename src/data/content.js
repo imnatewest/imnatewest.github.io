@@ -8,7 +8,7 @@ export const portfolio = {
     location: 'Tampa, FL · Remote-friendly',
     email: 'imnathanwest@gmail.com',
     phone: '727-459-5304',
-    resumeUrl: '#contact',
+    resumeUrl: 'nathan-west-resume.pdf',
   },
   highlights: [
     {
