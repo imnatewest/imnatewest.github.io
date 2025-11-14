@@ -12,20 +12,24 @@ function Hero({ hero, highlights, contact }) {
   const githubHref = contact?.github
 
   return (
-    <section id="hero" className="py-16 md:py-20">
+    <section id="hero" className="relative overflow-hidden py-16 md:py-20">
+      <div className="pointer-events-none absolute inset-0 -z-10 hidden lg:block">
+        <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-accent/30 blur-3xl" />
+        <div className="absolute left-10 top-20 h-64 w-64 rounded-full bg-slate-200/60 blur-3xl dark:bg-nightSurface/60" />
+      </div>
       <div className={`${containerClass} grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,1fr)]`}>
         <div className="space-y-4 motion-safe:animate-fade-in-left">
           <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">
             {hero.availability}
           </p>
-          <h1 className="mt-3 text-4xl font-semibold leading-tight sm:text-5xl text-ink dark:text-white">
+          <h1 className="mt-3 text-4xl font-semibold leading-tight text-ink dark:text-white sm:text-5xl">
             {hero.name}
             <span className="mt-2 block text-lg font-medium text-mist sm:text-xl dark:text-nightMuted">{hero.title}</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-mist dark:text-nightMuted">{hero.summary}</p>
           <div className="mt-8 flex flex-col gap-3 motion-safe:animate-fade-in-up motion-safe:animate-delay-150 sm:flex-row sm:flex-wrap">
             <a
-              className="inline-flex items-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition hover:-translate-y-0.5"
+              className="inline-flex items-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent focus-visible:ring-offset-white dark:focus-visible:ring-offset-night"
               href={resumeHref}
               target="_blank"
               rel="noreferrer"
@@ -33,14 +37,14 @@ function Hero({ hero, highlights, contact }) {
               View resume
             </a>
             <a
-              className="inline-flex items-center rounded-full bg-accent/10 px-5 py-2.5 text-sm font-semibold text-accent transition hover:-translate-y-0.5 dark:bg-white/10 dark:text-white"
+              className="inline-flex items-center rounded-full bg-accent/10 px-5 py-2.5 text-sm font-semibold text-accent transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent focus-visible:ring-offset-white dark:bg-white/10 dark:text-white dark:focus-visible:ring-offset-night"
               href={`mailto:${hero.email}`}
             >
               Email me
             </a>
             {githubHref && (
               <a
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent hover:text-accent dark:border-white/20 dark:text-white dark:hover:border-accent/60 dark:hover:text-white"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent focus-visible:ring-offset-white dark:border-white/20 dark:text-white dark:hover:border-accent/60 dark:hover:text-white dark:focus-visible:ring-offset-night"
                 href={githubHref}
                 target="_blank"
                 rel="noreferrer"

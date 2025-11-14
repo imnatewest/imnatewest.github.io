@@ -32,7 +32,7 @@ function App() {
           <ProjectsSection projects={projects} />
           <ExperienceSection experience={experience} />
           <LeadershipSection leadership={leadership} />
-          <ContactSection contact={contact} />
+          <ContactSection contact={contact} hero={hero} />
         </main>
 
         <Footer heroName={hero.name} />
