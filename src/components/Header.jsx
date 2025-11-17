@@ -40,16 +40,19 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
   const linkClasses =
     'block rounded-full px-4 py-2 text-sm font-medium text-ink transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-white dark:hover:bg-white/10 dark:focus-visible:ring-offset-night'
 
+  const initials = heroName
+    .split(' ')
+    .map((word) => word[0])
+    .slice(0, 2)
+    .join('')
+
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/80 backdrop-blur transition-colors dark:border-slate-700/60 dark:bg-night/70">
       <div className={`${containerClass} flex items-center justify-between gap-4 py-4`}>
         <a href="#hero" aria-label={`${heroName} home`} className="flex-shrink-0">
-          <img
-            src={profileImage}
-            alt={`${heroName} headshot`}
-            className="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm transition hover:scale-105 sm:h-12 sm:w-12"
-            loading="lazy"
-          />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 dark:border-slate-600 dark:bg-night dark:text-white sm:h-12 sm:w-12">
+            {initials}
+          </div>
         </a>
         <nav className="hidden items-center gap-6 text-sm font-medium text-mist md:flex dark:text-nightMuted" aria-label="Primary">
           {navLinks.map((link) => (
@@ -67,12 +70,6 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
           >
             <ThemeIcon mode={theme} />
           </button>
-          <a
-            className="hidden rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-ink transition hover:-translate-y-0.5 dark:border-slate-600 dark:text-white sm:inline-flex"
-            href={`mailto:${contactEmail}`}
-          >
-            Say hello
-          </a>
           <button
             type="button"
             aria-label="Toggle navigation menu"

@@ -1,15 +1,21 @@
-import { containerClass } from '../constants/layout'
-import { telHref } from '../utils/phone'
+import { containerClass } from "../constants/layout";
+import { telHref } from "../utils/phone";
 
 function withBasePath(path) {
-  if (!path) return path
-  if (path.startsWith('http') || path.startsWith('mailto:') || path.startsWith('/')) return path
-  return `${import.meta.env.BASE_URL}${path}`
+  if (!path) return path;
+  if (
+    path.startsWith("http") ||
+    path.startsWith("mailto:") ||
+    path.startsWith("/")
+  )
+    return path;
+  return `${import.meta.env.BASE_URL}${path}`;
 }
 
-function Hero({ hero, highlights, contact }) {
-  const resumeHref = withBasePath(hero.resumeUrl)
-  const githubHref = contact?.github
+function Hero({ hero, contact }) {
+  const resumeHref = withBasePath(hero.resumeUrl);
+  const githubHref = contact?.github;
+  const portraitSrc = withBasePath(hero.photo || "profilepic.jpeg");
 
   return (
     <section id="hero" className="relative overflow-hidden py-16 md:py-20">
@@ -17,16 +23,33 @@ function Hero({ hero, highlights, contact }) {
         <div className="absolute -top-32 right-0 h-96 w-96 rounded-full bg-accent/30 blur-3xl" />
         <div className="absolute left-10 top-20 h-64 w-64 rounded-full bg-slate-200/60 blur-3xl dark:bg-nightSurface/60" />
       </div>
-      <div className={`${containerClass} grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,1fr)]`}>
+      <div
+        className={`${containerClass} grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(240px,320px)]`}
+      >
         <div className="space-y-4 motion-safe:animate-fade-in-left">
-          <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">
-            {hero.availability}
+          <div className="flex items-start gap-4">
+            <div>
+              <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">
+                {hero.availability}
+              </p>
+              <h1 className="mt-3 text-4xl font-semibold leading-tight text-ink dark:text-white sm:text-5xl">
+                {hero.name}
+                <span className="mt-2 block text-lg font-medium text-mist sm:text-xl dark:text-nightMuted">
+                  {hero.title}
+                </span>
+              </h1>
+            </div>
+            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl border border-slate-200 shadow-md sm:hidden">
+              <img
+                src={portraitSrc}
+                alt={`${hero.name} portrait`}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+          <p className="mt-6 max-w-2xl text-lg text-mist dark:text-nightMuted">
+            {hero.summary}
           </p>
-          <h1 className="mt-3 text-4xl font-semibold leading-tight text-ink dark:text-white sm:text-5xl">
-            {hero.name}
-            <span className="mt-2 block text-lg font-medium text-mist sm:text-xl dark:text-nightMuted">{hero.title}</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-mist dark:text-nightMuted">{hero.summary}</p>
           <div className="mt-8 flex flex-col gap-3 motion-safe:animate-fade-in-up motion-safe:animate-delay-150 sm:flex-row sm:flex-wrap">
             <a
               className="inline-flex items-center rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-accent/30 transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent focus-visible:ring-offset-white dark:focus-visible:ring-offset-night"
@@ -69,34 +92,38 @@ function Hero({ hero, highlights, contact }) {
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-mist dark:text-nightMuted">
             <span>{hero.location}</span>
             <span className="hidden sm:inline-block">•</span>
-            <a className="hover:text-ink dark:hover:text-white" href={`mailto:${hero.email}`}>
+            <a
+              className="hover:text-ink dark:hover:text-white"
+              href={`mailto:${hero.email}`}
+            >
               {hero.email}
             </a>
             {hero.phone && (
               <>
                 <span className="hidden sm:inline-block">•</span>
-                <a className="hover:text-ink dark:hover:text-white" href={telHref(hero.phone)}>
+                <a
+                  className="hover:text-ink dark:hover:text-white"
+                  href={telHref(hero.phone)}
+                >
                   {hero.phone}
                 </a>
               </>
             )}
           </div>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:pb-0 motion-safe:animate-fade-in-right">
-          {highlights.map((item, index) => (
-            <article
-              key={item.label}
-              style={{ animationDelay: `${index * 120}ms` }}
-              className="min-w-[240px] flex-1 rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-highlight transition motion-safe:animate-float-slow dark:border-slate-700/60 dark:bg-nightSurface"
-            >
-              <p className="text-base font-semibold text-ink dark:text-white">{item.value}</p>
-              <p className="mt-1 text-sm uppercase tracking-[0.2em] text-mist dark:text-nightMuted">{item.label}</p>
-            </article>
-          ))}
+        <div className="motion-safe:animate-fade-in-right hidden sm:block">
+          <div className="relative mx-auto flex h-full w-full max-w-sm overflow-hidden rounded-[36px] border border-slate-200 shadow-2xl dark:border-slate-700/60">
+            <img
+              src={portraitSrc}
+              alt={`${hero.name} portrait`}
+              className="h-full w-full object-cover"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+          </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default Hero
+export default Hero;

@@ -24,7 +24,7 @@ function App() {
         <Header heroName={hero.name} contactEmail={contact.email} theme={theme} onToggleTheme={toggleTheme} />
 
         <main>
-          <Hero hero={hero} highlights={highlights} contact={contact} />
+          <Hero hero={hero} contact={contact} />
           <QuickStatsSection stats={quickStats} />
           <AboutSection about={about} />
           <EducationSection education={education} />
