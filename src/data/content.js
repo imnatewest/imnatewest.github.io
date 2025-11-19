@@ -41,7 +41,7 @@ export const portfolio = {
   ],
   about: [
     "I gravitate toward products where performance, usability, and measurable outcomes matter. Recently I optimized 50+ Express APIs for storm monitoring, redesigned StormAlert’s dashboard, and onboarded new geolocation data to unlock 10K+ more users.",
-    "Outside internships I teach full-stack fundamentals to early developers and lead robotics teams, so I’m comfortable breaking down complex ideas, writing docs, and keeping collaboration lightweight but effective.",
+    "Outside internships I teach full-stack fundamentals to early developers, so I’m comfortable breaking down complex ideas, writing docs, and keeping collaboration lightweight but effective.",
   ],
   skills: [
     {
@@ -154,18 +154,7 @@ export const portfolio = {
       "Database Systems",
     ],
   },
-  leadership: [
-    {
-      org: "RoboBulls · University of South Florida",
-      period: "Aug 2023 – Aug 2024",
-      summary:
-        "Led a five-person developer pod building an autonomous navigation robot for competition.",
-      highlights: [
-        "Integrated LIDAR sensors for real-time mapping, improving obstacle detection accuracy by 50%.",
-        "Collaborated with hardware teammates to calibrate embedded systems and stabilize feedback loops.",
-      ],
-    },
-  ],
+  leadership: [],
   contact: {
     email: "imnathanwest@gmail.com",
     phone: "727-459-5304",
