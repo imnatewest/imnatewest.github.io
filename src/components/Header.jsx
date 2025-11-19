@@ -33,6 +33,7 @@ function ThemeIcon({ mode }) {
 
 function Header({ heroName, contactEmail, theme, onToggleTheme }) {
   const profileImage = useMemo(() => `${import.meta.env.BASE_URL}profilepic.jpeg`, [])
+  const extractionGameHref = useMemo(() => `${import.meta.env.BASE_URL}${encodeURIComponent('extraction game')}/index.html`, [])
   const [menuOpen, setMenuOpen] = useState(false)
   const toggleMenu = () => setMenuOpen((prev) => !prev)
   const closeMenu = () => setMenuOpen(false)
@@ -60,6 +61,12 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
               {link.label}
             </a>
           ))}
+          <a
+            href={extractionGameHref}
+            className="inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-900 dark:bg-white dark:text-night dark:hover:bg-slate-200"
+          >
+            Extraction Game
+          </a>
         </nav>
         <div className="flex items-center gap-2">
           <button
@@ -96,6 +103,9 @@ function Header({ heroName, contactEmail, theme, onToggleTheme }) {
                 {link.label}
               </a>
             ))}
+            <a className={`${linkClasses} bg-ink text-white hover:bg-slate-900 dark:bg-white dark:text-night dark:hover:bg-slate-200`} href={extractionGameHref} onClick={closeMenu}>
+              Extraction Game
+            </a>
           </nav>
           <div className="mt-4 space-y-2">
             <a className={linkClasses} href={`mailto:${contactEmail}`} onClick={closeMenu}>
