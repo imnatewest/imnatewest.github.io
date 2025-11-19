@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "predeploy": "npm run build",
+    "build:extraction": "cd extraction-game && npm run build && mkdir -p ../dist && rm -rf ../dist/extraction-game && cp -R dist ../dist/extraction-game",
+    "predeploy": "npm run build && npm run build:extraction",
     "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
