@@ -33,7 +33,7 @@ function ThemeIcon({ mode }) {
 
 function Header({ heroName, contactEmail, theme, onToggleTheme }) {
   const profileImage = useMemo(() => `${import.meta.env.BASE_URL}profilepic.jpeg`, [])
-  const extractionGameHref = useMemo(() => `${import.meta.env.BASE_URL}${encodeURIComponent('extraction game')}/index.html`, [])
+  const extractionGameHref = useMemo(() => `${import.meta.env.BASE_URL}extraction-game/index.html`, [])
   const [menuOpen, setMenuOpen] = useState(false)
   const toggleMenu = () => setMenuOpen((prev) => !prev)
   const closeMenu = () => setMenuOpen(false)
