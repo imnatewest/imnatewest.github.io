@@ -226,10 +226,10 @@ export class ForestMap extends BaseMap {
 
     createObstacleBlock(x, z, w, d, type) {
         const area = w * d;
-        let density = 0.05; // Default
-        if (type === 'mixed_forest') density = 0.15; // Increased density for more flowers
-        if (type === 'pine_grove') density = 0.12;
-        if (type === 'ruins') density = 0.08;
+        let density = 0.045; // Default (was 0.05)
+        if (type === 'mixed_forest') density = 0.135; // Increased density for more flowers (was 0.15)
+        if (type === 'pine_grove') density = 0.108; // (was 0.12)
+        if (type === 'ruins') density = 0.072; // (was 0.08)
 
         const count = Math.floor(area * density);
 

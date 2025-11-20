@@ -1,7 +1,54 @@
 import * as THREE from 'three';
 
 export class Enemy {
+    static resources = {
+        geometries: {},
+        materials: {},
+        loaded: false
+    };
+
+    static loadResources() {
+        if (this.resources.loaded) return;
+
+        const r = this.resources;
+
+        // Geometries
+        r.geometries.box1 = new THREE.BoxGeometry(1, 0.8, 1);
+        r.geometries.sphereSmall = new THREE.SphereGeometry(0.4, 8, 8);
+        r.geometries.cylinderLeg = new THREE.CylinderGeometry(0.05, 0.05, 0.8);
+        r.geometries.boxGolemBody = new THREE.BoxGeometry(1.2, 1.5, 0.8);
+        r.geometries.boxGolemHead = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+        r.geometries.boxGolemArm = new THREE.BoxGeometry(0.4, 1.2, 0.4);
+        r.geometries.boxEye = new THREE.BoxGeometry(0.1, 0.1, 0.05);
+        r.geometries.boxCarChassis = new THREE.BoxGeometry(1.2, 0.5, 2.0);
+        r.geometries.boxCarCabin = new THREE.BoxGeometry(1.0, 0.4, 1.0);
+        r.geometries.cylinderWheel = new THREE.CylinderGeometry(0.3, 0.3, 0.2);
+        r.geometries.boxHeadlight = new THREE.BoxGeometry(0.2, 0.1, 0.1);
+        r.geometries.boxEyeSmall = new THREE.BoxGeometry(0.2, 0.2, 0.1);
+
+        // Materials (Base)
+        r.materials.slime = new THREE.MeshStandardMaterial({ 
+            color: 0x00ff00, 
+            transparent: true, 
+            opacity: 0.8,
+            roughness: 0.2
+        });
+        r.materials.spiderBody = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        r.materials.golemBody = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        r.materials.golemHead = new THREE.MeshStandardMaterial({ color: 0x696969 });
+        r.materials.golemEye = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+        r.materials.carChassis = new THREE.MeshStandardMaterial({ color: 0xCC0000 });
+        r.materials.carCabin = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        r.materials.carWheel = new THREE.MeshStandardMaterial({ color: 0x111111 });
+        r.materials.carLight = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+        r.materials.eyeBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+        this.resources.loaded = true;
+    }
+
     constructor(scene, position, type = 'slime') {
+        Enemy.loadResources(); // Ensure loaded
+        
         this.scene = scene;
         this.type = type;
         this.mesh = new THREE.Group();
@@ -45,15 +92,9 @@ export class Enemy {
     }
 
     createSlimeModel() {
-        // Slime Body
-        const bodyGeo = new THREE.BoxGeometry(1, 0.8, 1);
-        const bodyMat = new THREE.MeshStandardMaterial({ 
-            color: 0x00ff00, 
-            transparent: true, 
-            opacity: 0.8,
-            roughness: 0.2
-        });
-        this.body = new THREE.Mesh(bodyGeo, bodyMat);
+        const r = Enemy.resources;
+        // Slime Body - Clone material for damage flash
+        this.body = new THREE.Mesh(r.geometries.box1, r.materials.slime.clone());
         this.body.castShadow = true;
         this.mesh.add(this.body);
 
@@ -62,18 +103,19 @@ export class Enemy {
     }
 
     createSpiderModel() {
-        // Body
-        const bodyGeo = new THREE.SphereGeometry(0.4, 8, 8);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
-        this.body = new THREE.Mesh(bodyGeo, bodyMat);
+        const r = Enemy.resources;
+        // Body - Clone material for damage flash
+        this.body = new THREE.Mesh(r.geometries.sphereSmall, r.materials.spiderBody.clone());
         this.body.castShadow = true;
         this.mesh.add(this.body);
 
-        // Legs
+        // Legs (Shared material ok, they don't flash usually, or we can flash body only)
+        // If we want legs to flash, we should use the body material.
+        // Let's use the body material for legs too so they flash together.
         for (let i = 0; i < 8; i++) {
             const leg = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.05, 0.05, 0.8),
-                bodyMat
+                r.geometries.cylinderLeg,
+                this.body.material // Share the cloned material
             );
             leg.rotation.z = Math.PI / 2;
             leg.rotation.y = (i / 8) * Math.PI * 2;
@@ -87,101 +129,83 @@ export class Enemy {
     }
 
     createGolemModel() {
-        // Torso
-        const bodyGeo = new THREE.BoxGeometry(1.2, 1.5, 0.8);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 }); // SaddleBrown
-        this.body = new THREE.Mesh(bodyGeo, bodyMat);
+        const r = Enemy.resources;
+        // Torso - Clone material
+        this.body = new THREE.Mesh(r.geometries.boxGolemBody, r.materials.golemBody.clone());
         this.body.position.y = 0.75;
         this.body.castShadow = true;
         this.mesh.add(this.body);
 
         // Head
-        const head = new THREE.Mesh(
-            new THREE.BoxGeometry(0.6, 0.6, 0.6),
-            new THREE.MeshStandardMaterial({ color: 0x696969 }) // DimGray
-        );
+        const head = new THREE.Mesh(r.geometries.boxGolemHead, r.materials.golemHead);
         head.position.y = 1.8;
         head.castShadow = true;
         this.mesh.add(head);
 
-        // Arms
-        const armGeo = new THREE.BoxGeometry(0.4, 1.2, 0.4);
-        const armL = new THREE.Mesh(armGeo, bodyMat);
+        // Arms - Use body material to flash together
+        const armL = new THREE.Mesh(r.geometries.boxGolemArm, this.body.material);
         armL.position.set(0.9, 1.0, 0);
         armL.castShadow = true;
         this.mesh.add(armL);
 
-        const armR = new THREE.Mesh(armGeo, bodyMat);
+        const armR = new THREE.Mesh(r.geometries.boxGolemArm, this.body.material);
         armR.position.set(-0.9, 1.0, 0);
         armR.castShadow = true;
         this.mesh.add(armR);
         
-        // Glowing Eyes (on head)
-        const eyeGeo = new THREE.BoxGeometry(0.1, 0.1, 0.05);
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x00FF00 }); // Green glow
-        const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+        // Glowing Eyes
+        const eyeL = new THREE.Mesh(r.geometries.boxEye, r.materials.golemEye);
         eyeL.position.set(0.15, 1.8, 0.31);
         this.mesh.add(eyeL);
-        const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+        const eyeR = new THREE.Mesh(r.geometries.boxEye, r.materials.golemEye);
         eyeR.position.set(-0.15, 1.8, 0.31);
         this.mesh.add(eyeR);
     }
 
     createCarModel() {
-        // Chassis
-        const chassisGeo = new THREE.BoxGeometry(1.2, 0.5, 2.0);
-        const chassisMat = new THREE.MeshStandardMaterial({ color: 0xCC0000 }); // Red Car
-        this.body = new THREE.Mesh(chassisGeo, chassisMat);
+        const r = Enemy.resources;
+        // Chassis - Clone material
+        this.body = new THREE.Mesh(r.geometries.boxCarChassis, r.materials.carChassis.clone());
         this.body.position.y = 0.5;
         this.body.castShadow = true;
         this.mesh.add(this.body);
 
         // Cabin
-        const cabinGeo = new THREE.BoxGeometry(1.0, 0.4, 1.0);
-        const cabinMat = new THREE.MeshStandardMaterial({ color: 0x333333 }); // Dark windows
-        const cabin = new THREE.Mesh(cabinGeo, cabinMat);
+        const cabin = new THREE.Mesh(r.geometries.boxCarCabin, r.materials.carCabin);
         cabin.position.y = 0.5;
         cabin.position.z = -0.2;
         this.body.add(cabin);
 
         // Wheels
-        const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2);
-        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-        
         const positions = [
             [-0.6, 0, 0.6], [0.6, 0, 0.6], // Front
             [-0.6, 0, -0.6], [0.6, 0, -0.6] // Back
         ];
 
         positions.forEach(pos => {
-            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            const wheel = new THREE.Mesh(r.geometries.cylinderWheel, r.materials.carWheel);
             wheel.rotation.z = Math.PI / 2;
             wheel.position.set(...pos);
             this.mesh.add(wheel);
         });
 
         // Headlights
-        const lightGeo = new THREE.BoxGeometry(0.2, 0.1, 0.1);
-        const lightMat = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
-        
-        const l1 = new THREE.Mesh(lightGeo, lightMat);
+        const l1 = new THREE.Mesh(r.geometries.boxHeadlight, r.materials.carLight);
         l1.position.set(0.4, 0, 1.0);
         this.body.add(l1);
 
-        const l2 = new THREE.Mesh(lightGeo, lightMat);
+        const l2 = new THREE.Mesh(r.geometries.boxHeadlight, r.materials.carLight);
         l2.position.set(-0.4, 0, 1.0);
         this.body.add(l2);
     }
 
     addEyes(zOffset, yOffset) {
-        const eyeGeo = new THREE.BoxGeometry(0.2, 0.2, 0.1);
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        
-        const eyeL = new THREE.Mesh(eyeGeo, eyeMat);
+        const r = Enemy.resources;
+        const eyeL = new THREE.Mesh(r.geometries.boxEyeSmall, r.materials.eyeBlack);
         eyeL.position.set(0.2, yOffset, zOffset);
         this.mesh.add(eyeL);
 
-        const eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+        const eyeR = new THREE.Mesh(r.geometries.boxEyeSmall, r.materials.eyeBlack);
         eyeR.position.set(-0.2, yOffset, zOffset);
         this.mesh.add(eyeR);
     }
@@ -253,14 +277,27 @@ export class Enemy {
     }
 
     dispose() {
+        // Only dispose the cloned materials, NOT the shared geometries
         this.mesh.traverse((child) => {
             if (child.isMesh) {
-                if (child.geometry) child.geometry.dispose();
+                // Do NOT dispose geometry as it is shared
+                // child.geometry.dispose(); 
+                
                 if (child.material) {
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach(m => m.dispose());
-                    } else {
-                        child.material.dispose();
+                    // Only dispose if it's a cloned material (we know body has cloned material)
+                    // Simple check: if it's not in our static resources list?
+                    // Or just rely on GC for materials if they are small?
+                    // Better: Explicitly dispose the body material which we know is cloned.
+                    // The other materials (eyes, etc) are shared, so DO NOT dispose.
+                    
+                    // Check if material is one of the shared ones
+                    const isShared = Object.values(Enemy.resources.materials).includes(child.material);
+                    if (!isShared) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(m => m.dispose());
+                        } else {
+                            child.material.dispose();
+                        }
                     }
                 }
             }

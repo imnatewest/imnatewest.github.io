@@ -16,6 +16,23 @@ export class CityMap extends BaseMap {
         this.assets.buildingGeo = new THREE.BoxGeometry(1, 1, 1); // Scaled later
         this.assets.roadGeo = new THREE.PlaneGeometry(1, 1); // Scaled later
         this.assets.rubbleGeo = new THREE.DodecahedronGeometry(0.5, 0);
+        
+        // Street Light Assets
+        this.assets.poleGeo = new THREE.CylinderGeometry(0.1, 0.1, 4);
+        this.assets.lampGeo = new THREE.BoxGeometry(0.3, 0.4, 0.3);
+        
+        // Traffic Light Assets
+        this.assets.tlPoleGeo = new THREE.CylinderGeometry(0.08, 0.08, 3.5);
+        this.assets.tlBoxGeo = new THREE.BoxGeometry(0.3, 0.8, 0.2);
+        this.assets.tlLightGeo = new THREE.CircleGeometry(0.1, 16);
+
+        // Prop Assets
+        this.assets.benchGeo = new THREE.BoxGeometry(1.5, 0.1, 0.5); // Seat
+        this.assets.trashGeo = new THREE.CylinderGeometry(0.3, 0.25, 0.8, 8);
+        this.assets.hydrantGeo = new THREE.CylinderGeometry(0.15, 0.2, 0.6, 8);
+        this.assets.treeTrunkGeo = new THREE.CylinderGeometry(0.2, 0.3, 1.0, 6);
+        this.assets.treeLeavesGeo = new THREE.ConeGeometry(1.5, 2.5, 8);
+        this.assets.carWreckGeo = new THREE.BoxGeometry(1.2, 0.5, 2.0); // Simple car shape
 
         // Materials
         this.assets.concreteMat = new THREE.MeshStandardMaterial({ color: 0x999999, roughness: 0.9 }); // Lighter Grey
@@ -32,6 +49,57 @@ export class CityMap extends BaseMap {
         });
         this.assets.rubbleMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 1.0 });
         this.assets.yellowLineMat = new THREE.MeshBasicMaterial({ color: 0x666633 }); // Dim olive yellow
+        
+        this.assets.poleMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        this.assets.lampMat = new THREE.MeshStandardMaterial({ 
+            color: 0xFFDDAA, // Dim warm white
+            emissive: 0xFFDDAA,
+            emissiveIntensity: 0.2
+        });
+        
+        this.assets.tlBoxMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+        this.assets.redMat = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
+        this.assets.yellowMat = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+        this.assets.greenMat = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+
+        this.assets.benchMat = new THREE.MeshStandardMaterial({ color: 0x5C4033 }); // Wood
+        this.assets.trashMat = new THREE.MeshStandardMaterial({ color: 0x223322 }); // Dark Green
+        this.assets.hydrantMat = new THREE.MeshStandardMaterial({ color: 0xCC0000 }); // Red
+        this.assets.treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x5C4033 });
+        this.assets.treeLeavesMat = new THREE.MeshStandardMaterial({ color: 0x228B22 });
+        this.assets.carWreckMat = new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.8 });
+
+        // Construction Assets
+        this.assets.girderGeo = new THREE.BoxGeometry(0.2, 1, 0.2); // Scaled later
+        this.assets.girderMat = new THREE.MeshStandardMaterial({ color: 0xFF8C00, metalness: 0.6, roughness: 0.4 }); // Dark Orange
+        this.assets.grateGeo = new THREE.PlaneGeometry(1.5, 1.5);
+        this.assets.grateMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9, side: THREE.DoubleSide });
+        this.assets.barrierGeo = new THREE.BoxGeometry(2, 1, 0.2);
+        this.assets.barrierMat = new THREE.MeshStandardMaterial({ color: 0xFFCC00 }); // Yellow
+
+        // Instanced Meshes (Max Counts Estimated)
+        this.instanced = {};
+        
+        // Street Lights
+        this.instanced.poles = new THREE.InstancedMesh(this.assets.poleGeo, this.assets.poleMat, 1000);
+        this.instanced.lamps = new THREE.InstancedMesh(this.assets.lampGeo, this.assets.lampMat, 1000);
+        
+        // Traffic Lights
+        this.instanced.tlPoles = new THREE.InstancedMesh(this.assets.tlPoleGeo, this.assets.poleMat, 200);
+        this.instanced.tlBoxes = new THREE.InstancedMesh(this.assets.tlBoxGeo, this.assets.tlBoxMat, 200);
+        this.instanced.tlReds = new THREE.InstancedMesh(this.assets.tlLightGeo, this.assets.redMat, 200);
+        this.instanced.tlYellows = new THREE.InstancedMesh(this.assets.tlLightGeo, this.assets.yellowMat, 200);
+        this.instanced.tlGreens = new THREE.InstancedMesh(this.assets.tlLightGeo, this.assets.greenMat, 200);
+        
+        // Rubble
+        this.instanced.rubble = new THREE.InstancedMesh(this.assets.rubbleGeo, this.assets.rubbleMat, 500);
+
+        // Props
+        this.instanced.benches = new THREE.InstancedMesh(this.assets.benchGeo, this.assets.benchMat, 200);
+        this.instanced.trashCans = new THREE.InstancedMesh(this.assets.trashGeo, this.assets.trashMat, 200);
+        this.instanced.hydrants = new THREE.InstancedMesh(this.assets.hydrantGeo, this.assets.hydrantMat, 100);
+        this.instanced.carWrecks = new THREE.InstancedMesh(this.assets.carWreckGeo, this.assets.carWreckMat, 50);
+        this.instanced.sewerGrates = new THREE.InstancedMesh(this.assets.grateGeo, this.assets.grateMat, 100);
     }
 
     generate() {
@@ -47,6 +115,16 @@ export class CityMap extends BaseMap {
         this.scene.add(ground);
         this.ground = ground;
 
+        // Reset Instance Counts
+        for (const key in this.instanced) {
+            this.instanced[key].count = 0;
+            this.scene.add(this.instanced[key]);
+            // Add to props for cleanup if BaseMap disposes props
+            this.props.push(this.instanced[key]); 
+        }
+        
+        this.sewerGratePositions = []; // Store for steam particles
+
         // City Grid Generation
         const blockSize = 20;
         const roadWidth = 5; // Reduced for cramped city feel
@@ -59,7 +137,18 @@ export class CityMap extends BaseMap {
                 const bz = z * (blockSize + roadWidth) - offset;
 
                 // Create a City Block
-                this.createCityBlock(bx, bz, blockSize);
+                // Check for Park Location (Center-ish)
+                if (x === 2 && z === 3) {
+                    // Pass center of the block
+                    this.createPark(bx + blockSize / 2, bz + blockSize / 2, blockSize);
+                } 
+                // Check for Construction Site (Opposite Park)
+                else if (x === 3 && z === 2) {
+                    this.createConstructionSite(bx + blockSize / 2, bz + blockSize / 2, blockSize);
+                }
+                else {
+                    this.createCityBlock(bx, bz, blockSize);
+                }
             }
         }
 
@@ -68,25 +157,380 @@ export class CityMap extends BaseMap {
 
         // Road debris/obstacles
         this.createRoadDebris(gridSize, blockSize, roadWidth, offset);
+        this.createCarWrecks(gridSize, blockSize, roadWidth, offset);
 
         // Atmospheric elements
         this.createStreetLights(gridSize, blockSize, roadWidth, offset);
         this.createTrafficLights(gridSize, blockSize, roadWidth, offset);
+        this.createSidewalkProps(gridSize, blockSize, roadWidth, offset);
+        this.createSewerGrates(gridSize, blockSize, roadWidth, offset);
 
         // Extraction Zone - Convenience Store
         this.createConvenienceStore(15, 15);
+        
+        // Update Instance Matrices
+        for (const key in this.instanced) {
+            this.instanced[key].instanceMatrix.needsUpdate = true;
+        }
+    }
+    
+    update(deltaTime) {
+        // Emit steam from sewer grates
+        if (this.sewerGratePositions) {
+            this.sewerGratePositions.forEach(pos => {
+                if (Math.random() > 0.95) { // Occasional puff
+                    // Use 'dust' for now, maybe add 'steam' later
+                    // Emit slightly above ground
+                    const p = pos.clone();
+                    p.y += 0.2;
+                    p.x += (Math.random() - 0.5) * 0.5;
+                    p.z += (Math.random() - 0.5) * 0.5;
+                    this.particleSystem.emit(p, 'dust', 1); 
+                }
+            });
+        }
+    }
+
+    createConstructionSite(x, z, size) {
+        const group = new THREE.Group();
+        group.position.set(x, 0, z);
+
+        // Dirt Ground
+        const dirtGeo = new THREE.PlaneGeometry(size, size);
+        const dirtMat = new THREE.MeshStandardMaterial({ color: 0x5C4033, roughness: 1.0 });
+        const dirt = new THREE.Mesh(dirtGeo, dirtMat);
+        dirt.rotation.x = -Math.PI / 2;
+        dirt.position.y = 0.06; // Above road/sidewalk
+        dirt.receiveShadow = true;
+        group.add(dirt);
+
+        // Steel Framework (Grid of girders)
+        const girderHeight = 8;
+        const spacing = 6;
+        
+        for (let gx = -size/2 + 2; gx < size/2; gx += spacing) {
+            for (let gz = -size/2 + 2; gz < size/2; gz += spacing) {
+                // Vertical Column
+                const col = new THREE.Mesh(this.assets.girderGeo, this.assets.girderMat);
+                col.scale.set(2, girderHeight, 2);
+                col.position.set(gx, girderHeight/2, gz);
+                col.castShadow = true;
+                group.add(col);
+                
+                // Horizontal Beams (Top)
+                if (gx + spacing < size/2) {
+                    const beamX = new THREE.Mesh(this.assets.girderGeo, this.assets.girderMat);
+                    beamX.scale.set(spacing * 5, 1, 1); // Stretch X
+                    beamX.rotation.z = Math.PI / 2;
+                    beamX.position.set(gx + spacing/2, girderHeight, gz);
+                    group.add(beamX);
+                }
+                if (gz + spacing < size/2) {
+                    const beamZ = new THREE.Mesh(this.assets.girderGeo, this.assets.girderMat);
+                    beamZ.scale.set(spacing * 5, 1, 1); // Stretch (rotated to Z)
+                    beamZ.rotation.x = Math.PI / 2;
+                    beamZ.position.set(gx, girderHeight, gz + spacing/2);
+                    group.add(beamZ);
+                }
+            }
+        }
+
+        // Unfinished Wall (Brick)
+        const wallGeo = new THREE.BoxGeometry(1, 1, 1);
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const wall = new THREE.Mesh(wallGeo, wallMat);
+        wall.scale.set(size * 0.6, 4, 0.5);
+        wall.position.set(0, 2, -size/3);
+        wall.castShadow = true;
+        group.add(wall);
+
+        // Crane Base (Yellow)
+        const craneBase = new THREE.Mesh(new THREE.BoxGeometry(2, 4, 2), this.assets.barrierMat);
+        craneBase.position.set(-size/3, 2, size/3);
+        craneBase.castShadow = true;
+        group.add(craneBase);
+        
+        // Crane Arm
+        const craneArm = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 10), this.assets.barrierMat);
+        craneArm.position.set(-size/3, 4, size/3 + 3);
+        craneArm.rotation.x = -Math.PI / 6;
+        craneArm.castShadow = true;
+        group.add(craneArm);
+
+        // Barriers around perimeter
+        const barrierCount = 8;
+        for (let i = 0; i < barrierCount; i++) {
+            // Front
+            const b1 = new THREE.Mesh(this.assets.barrierGeo, this.assets.barrierMat);
+            b1.position.set((i - barrierCount/2) * 2.5, 0.5, size/2 - 1);
+            group.add(b1);
+            
+            // Back
+            const b2 = new THREE.Mesh(this.assets.barrierGeo, this.assets.barrierMat);
+            b2.position.set((i - barrierCount/2) * 2.5, 0.5, -size/2 + 1);
+            group.add(b2);
+        }
+
+        this.scene.add(group);
+        this.props.push(group);
+        this.addCollisionBox(group, new THREE.Vector3(size, 10, size));
+    }
+
+    createSewerGrates(gridSize, blockSize, roadWidth, offset) {
+        const dummy = new THREE.Object3D();
+        
+        const addGrate = (x, z) => {
+            if (this.instanced.sewerGrates.count >= this.instanced.sewerGrates.instanceMatrix.count) return;
+            
+            dummy.position.set(x, 0.02, z); // Just above road
+            dummy.rotation.x = -Math.PI / 2;
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            
+            const idx = this.instanced.sewerGrates.count++;
+            this.instanced.sewerGrates.setMatrixAt(idx, dummy.matrix);
+            
+            this.sewerGratePositions.push(new THREE.Vector3(x, 0, z));
+        };
+
+        // Place randomly on roads
+        // Vertical roads
+        for (let x = 0; x < gridSize - 1; x++) {
+            const rx = (x * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+            for (let z = -offset; z < offset; z += 20) {
+                if (Math.random() < 0.4) {
+                    // Offset slightly from center of road
+                    const sideOffset = (Math.random() - 0.5) * 2; 
+                    addGrate(rx + sideOffset, z + Math.random() * 5);
+                }
+            }
+        }
+        
+        // Horizontal roads
+        for (let z = 0; z < gridSize - 1; z++) {
+            const rz = (z * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+            for (let x = -offset; x < offset; x += 20) {
+                if (Math.random() < 0.4) {
+                    const sideOffset = (Math.random() - 0.5) * 2;
+                    addGrate(x + Math.random() * 5, rz + sideOffset);
+                }
+            }
+        }
+    }
+
+    createSidewalkProps(gridSize, blockSize, roadWidth, offset) {
+        const dummy = new THREE.Object3D();
+        
+        const addProp = (meshName, x, z, rotY = 0) => {
+            if (this.instanced[meshName].count >= this.instanced[meshName].instanceMatrix.count) return;
+            
+            dummy.position.set(x, 0, z);
+            dummy.rotation.set(0, rotY, 0);
+            dummy.scale.set(1, 1, 1);
+            
+            // Adjust height for specific props
+            if (meshName === 'benches') dummy.position.y = 0.2;
+            if (meshName === 'trashCans') dummy.position.y = 0.4;
+            if (meshName === 'hydrants') dummy.position.y = 0.3;
+
+            dummy.updateMatrix();
+            const idx = this.instanced[meshName].count++;
+            this.instanced[meshName].setMatrixAt(idx, dummy.matrix);
+        };
+
+        // Iterate roads similar to street lights
+        // Vertical roads
+        for (let x = 0; x < gridSize - 1; x++) {
+            const rx = (x * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+            
+            for (let z = -offset; z < offset; z += 15) {
+                // Left Sidewalk
+                if (Math.random() < 0.3) addProp('trashCans', rx - roadWidth/2 - 0.5, z + 2);
+                if (Math.random() < 0.2) addProp('hydrants', rx - roadWidth/2 - 0.5, z + 5);
+                if (Math.random() < 0.2) addProp('benches', rx - roadWidth/2 - 1.0, z + 8, Math.PI/2);
+
+                // Right Sidewalk
+                if (Math.random() < 0.3) addProp('trashCans', rx + roadWidth/2 + 0.5, z - 2);
+                if (Math.random() < 0.2) addProp('hydrants', rx + roadWidth/2 + 0.5, z - 5);
+                if (Math.random() < 0.2) addProp('benches', rx + roadWidth/2 + 1.0, z - 8, -Math.PI/2);
+            }
+        }
+
+        // Horizontal roads
+        for (let z = 0; z < gridSize - 1; z++) {
+            const rz = (z * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+            
+            for (let x = -offset; x < offset; x += 15) {
+                // Top Sidewalk
+                if (Math.random() < 0.3) addProp('trashCans', x + 2, rz - roadWidth/2 - 0.5);
+                if (Math.random() < 0.2) addProp('hydrants', x + 5, rz - roadWidth/2 - 0.5);
+                if (Math.random() < 0.2) addProp('benches', x + 8, rz - roadWidth/2 - 1.0, 0);
+
+                // Bottom Sidewalk
+                if (Math.random() < 0.3) addProp('trashCans', x - 2, rz + roadWidth/2 + 0.5);
+                if (Math.random() < 0.2) addProp('hydrants', x - 5, rz + roadWidth/2 + 0.5);
+                if (Math.random() < 0.2) addProp('benches', x - 8, rz + roadWidth/2 + 1.0, Math.PI);
+            }
+        }
+    }
+
+    createCarWrecks(gridSize, blockSize, roadWidth, offset) {
+        const dummy = new THREE.Object3D();
+        const wreckCount = 15;
+        
+        for (let i = 0; i < wreckCount; i++) {
+            // Random position on road
+            const isVertical = Math.random() < 0.5;
+            let x, z, rot;
+            
+            if (isVertical) {
+                const roadIdx = Math.floor(Math.random() * (gridSize - 1));
+                x = (roadIdx * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+                z = (Math.random() - 0.5) * offset * 2;
+                rot = (Math.random() - 0.5) * 0.5; // Slight angle
+            } else {
+                const roadIdx = Math.floor(Math.random() * (gridSize - 1));
+                z = (roadIdx * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+                x = (Math.random() - 0.5) * offset * 2;
+                rot = Math.PI/2 + (Math.random() - 0.5) * 0.5;
+            }
+
+            // Avoid spawn (0,0)
+            if (Math.abs(x) < 5 && Math.abs(z) < 5) continue;
+
+            dummy.position.set(x, 0.25, z);
+            dummy.rotation.set(Math.random() * 0.1, rot, Math.random() * 0.1); // Tilted
+            dummy.scale.setScalar(1);
+            dummy.updateMatrix();
+            
+            if (this.instanced.carWrecks.count < 50) {
+                const idx = this.instanced.carWrecks.count++;
+                this.instanced.carWrecks.setMatrixAt(idx, dummy.matrix);
+                
+                // Add collision
+                const collider = new THREE.Mesh(
+                    new THREE.BoxGeometry(1.2, 1, 2.0),
+                    new THREE.MeshBasicMaterial({ visible: false })
+                );
+                collider.position.set(x, 0.5, z);
+                collider.rotation.y = rot;
+                this.scene.add(collider);
+                this.props.push(collider);
+                // Use addCollisionBox to ensure Player collides with it
+                this.addCollisionBox(collider, new THREE.Vector3(1.2, 1, 2.0));
+            }
+        }
+    }
+
+    createPark(x, z, size) {
+        const group = new THREE.Group();
+        group.position.set(x, 0, z);
+
+        // Grass Base
+        const grassGeo = new THREE.PlaneGeometry(size, size);
+        const grassMat = new THREE.MeshStandardMaterial({ color: 0x228B22, roughness: 1.0 });
+        const grass = new THREE.Mesh(grassGeo, grassMat);
+        grass.rotation.x = -Math.PI / 2;
+        grass.position.y = 0.08; // Slightly above road to prevent Z-fighting
+        grass.receiveShadow = true;
+        group.add(grass);
+
+        // Fountain in center
+        const fBase = new THREE.Mesh(
+            new THREE.CylinderGeometry(2, 2, 0.5, 16),
+            new THREE.MeshStandardMaterial({ color: 0xAAAAAA })
+        );
+        fBase.position.y = 0.25;
+        fBase.castShadow = true;
+        group.add(fBase);
+
+        const fWater = new THREE.Mesh(
+            new THREE.CylinderGeometry(1.5, 1.5, 0.1, 16),
+            new THREE.MeshStandardMaterial({ color: 0x4444FF, roughness: 0.1 })
+        );
+        fWater.position.y = 0.5;
+        group.add(fWater);
+        
+        const fSpout = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.2, 0.2, 1.5, 8),
+            new THREE.MeshStandardMaterial({ color: 0xAAAAAA })
+        );
+        fSpout.position.y = 1.0;
+        fSpout.castShadow = true;
+        group.add(fSpout);
+
+        // Trees
+        const treeCount = 8;
+        for (let i = 0; i < treeCount; i++) {
+            const angle = (i / treeCount) * Math.PI * 2;
+            const r = size * 0.35;
+            const tx = Math.cos(angle) * r;
+            const tz = Math.sin(angle) * r;
+            
+            const trunk = new THREE.Mesh(this.assets.treeTrunkGeo, this.assets.treeTrunkMat);
+            trunk.position.set(tx, 0.5, tz);
+            trunk.castShadow = true;
+            group.add(trunk);
+            
+            const leaves = new THREE.Mesh(this.assets.treeLeavesGeo, this.assets.treeLeavesMat);
+            leaves.position.set(tx, 2.0, tz);
+            leaves.castShadow = true;
+            group.add(leaves);
+        }
+
+        // Benches (using InstancedMesh for these would be tricky inside a group, 
+        // so we'll just add simple meshes here or use the instanced ones if we calculate world pos.
+        // Simpler to just add meshes for the park since it's unique)
+        const benchGeo = new THREE.BoxGeometry(1.5, 0.4, 0.5);
+        const benchMat = new THREE.MeshStandardMaterial({ color: 0x5C4033 });
+        
+        const b1 = new THREE.Mesh(benchGeo, benchMat);
+        b1.position.set(3, 0.2, 3);
+        b1.rotation.y = -Math.PI / 4;
+        b1.castShadow = true;
+        group.add(b1);
+
+        const b2 = new THREE.Mesh(benchGeo, benchMat);
+        b2.position.set(-3, 0.2, 3);
+        b2.rotation.y = Math.PI / 4;
+        b2.castShadow = true;
+        group.add(b2);
+
+        this.scene.add(group);
+        this.props.push(group);
+        
+        // Collision for Fountain (World Space)
+        // We create a separate collider because fBase is local to group
+        const fCollider = new THREE.Mesh(
+            new THREE.BoxGeometry(4, 2, 4),
+            new THREE.MeshBasicMaterial({ visible: false })
+        );
+        fCollider.position.set(x, 1, z); // Center of park
+        this.scene.add(fCollider);
+        this.props.push(fCollider);
+        this.addCollisionBox(fCollider, new THREE.Vector3(4, 2, 4));
     }
 
     createStreetLights(gridSize, blockSize, roadWidth, offset) {
         const lightHeight = 4;
-        const poleGeo = new THREE.CylinderGeometry(0.1, 0.1, lightHeight);
-        const poleMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
-        const lampGeo = new THREE.BoxGeometry(0.3, 0.4, 0.3);
-        const lampMat = new THREE.MeshStandardMaterial({ 
-            color: 0xFFDDAA, // Dim warm white
-            emissive: 0xFFDDAA,
-            emissiveIntensity: 0.2 // Reduced from 0.5
-        });
+        const dummy = new THREE.Object3D();
+        
+        let poleIdx = this.instanced.poles.count;
+        let lampIdx = this.instanced.lamps.count;
+
+        const addLight = (x, z) => {
+            // Pole
+            dummy.position.set(x, lightHeight/2, z);
+            dummy.rotation.set(0, 0, 0);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            this.instanced.poles.setMatrixAt(poleIdx++, dummy.matrix);
+            
+            // Lamp
+            dummy.position.set(x, lightHeight, z);
+            dummy.updateMatrix();
+            this.instanced.lamps.setMatrixAt(lampIdx++, dummy.matrix);
+        };
 
         // Vertical roads
         for (let x = 0; x < gridSize - 1; x++) {
@@ -94,27 +538,8 @@ export class CityMap extends BaseMap {
             
             // Place lights along the road every 10 units
             for (let z = -offset; z < offset; z += 10) {
-                // Left side
-                const leftPole = new THREE.Mesh(poleGeo, poleMat);
-                leftPole.position.set(rx - roadWidth/2 + 0.5, lightHeight/2, z);
-                this.scene.add(leftPole);
-                this.props.push(leftPole);
-                
-                const leftLamp = new THREE.Mesh(lampGeo, lampMat);
-                leftLamp.position.set(rx - roadWidth/2 + 0.5, lightHeight, z);
-                this.scene.add(leftLamp);
-                this.props.push(leftLamp);
-                
-                // Right side
-                const rightPole = new THREE.Mesh(poleGeo, poleMat);
-                rightPole.position.set(rx + roadWidth/2 - 0.5, lightHeight/2, z);
-                this.scene.add(rightPole);
-                this.props.push(rightPole);
-                
-                const rightLamp = new THREE.Mesh(lampGeo, lampMat);
-                rightLamp.position.set(rx + roadWidth/2 - 0.5, lightHeight, z);
-                this.scene.add(rightLamp);
-                this.props.push(rightLamp);
+                addLight(rx - roadWidth/2 + 0.5, z); // Left
+                addLight(rx + roadWidth/2 - 0.5, z); // Right
             }
         }
 
@@ -123,43 +548,24 @@ export class CityMap extends BaseMap {
             const rz = (z * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
             
             for (let x = -offset; x < offset; x += 10) {
-                // Top side
-                const topPole = new THREE.Mesh(poleGeo, poleMat);
-                topPole.position.set(x, lightHeight/2, rz - roadWidth/2 + 0.5);
-                this.scene.add(topPole);
-                this.props.push(topPole);
-                
-                const topLamp = new THREE.Mesh(lampGeo, lampMat);
-                topLamp.position.set(x, lightHeight, rz - roadWidth/2 + 0.5);
-                this.scene.add(topLamp);
-                this.props.push(topLamp);
-                
-                // Bottom side
-                const bottomPole = new THREE.Mesh(poleGeo, poleMat);
-                bottomPole.position.set(x, lightHeight/2, rz + roadWidth/2 - 0.5);
-                this.scene.add(bottomPole);
-                this.props.push(bottomPole);
-                
-                const bottomLamp = new THREE.Mesh(lampGeo, lampMat);
-                bottomLamp.position.set(x, lightHeight, rz + roadWidth/2 - 0.5);
-                this.scene.add(bottomLamp);
-                this.props.push(bottomLamp);
+                addLight(x, rz - roadWidth/2 + 0.5); // Top
+                addLight(x, rz + roadWidth/2 - 0.5); // Bottom
             }
         }
+        
+        this.instanced.poles.count = poleIdx;
+        this.instanced.lamps.count = lampIdx;
     }
 
     createTrafficLights(gridSize, blockSize, roadWidth, offset) {
         const poleHeight = 3.5;
-        const poleGeo = new THREE.CylinderGeometry(0.08, 0.08, poleHeight);
-        const poleMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
-        const boxGeo = new THREE.BoxGeometry(0.3, 0.8, 0.2);
-        const boxMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-        const lightGeo = new THREE.CircleGeometry(0.1, 16);
+        const dummy = new THREE.Object3D();
         
-        // Traffic light materials
-        const redMat = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-        const yellowMat = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
-        const greenMat = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+        let poleIdx = this.instanced.tlPoles.count;
+        let boxIdx = this.instanced.tlBoxes.count;
+        let redIdx = this.instanced.tlReds.count;
+        let yellowIdx = this.instanced.tlYellows.count;
+        let greenIdx = this.instanced.tlGreens.count;
 
         // Calculate intersection positions
         const verticalRoadPositions = [];
@@ -176,36 +582,44 @@ export class CityMap extends BaseMap {
         // Place traffic lights at intersections
         for (let vx of verticalRoadPositions) {
             for (let hz of horizontalRoadPositions) {
-                // Create traffic light on corner
-                const pole = new THREE.Mesh(poleGeo, poleMat);
-                pole.position.set(vx + roadWidth/2, poleHeight/2, hz + roadWidth/2);
-                this.scene.add(pole);
-                this.props.push(pole);
+                const x = vx + roadWidth/2;
+                const z = hz + roadWidth/2;
                 
-                const box = new THREE.Mesh(boxGeo, boxMat);
-                box.position.set(vx + roadWidth/2, poleHeight, hz + roadWidth/2);
-                this.scene.add(box);
-                this.props.push(box);
+                // Pole
+                dummy.position.set(x, poleHeight/2, z);
+                dummy.rotation.set(0, 0, 0);
+                dummy.scale.set(1, 1, 1);
+                dummy.updateMatrix();
+                this.instanced.tlPoles.setMatrixAt(poleIdx++, dummy.matrix);
                 
-                // Red light (top)
-                const red = new THREE.Mesh(lightGeo, redMat);
-                red.position.set(vx + roadWidth/2, poleHeight + 0.25, hz + roadWidth/2 + 0.11);
-                this.scene.add(red);
-                this.props.push(red);
+                // Box
+                dummy.position.set(x, poleHeight, z);
+                dummy.updateMatrix();
+                this.instanced.tlBoxes.setMatrixAt(boxIdx++, dummy.matrix);
                 
-                // Yellow light (middle)
-                const yellow = new THREE.Mesh(lightGeo, yellowMat);
-                yellow.position.set(vx + roadWidth/2, poleHeight, hz + roadWidth/2 + 0.11);
-                this.scene.add(yellow);
-                this.props.push(yellow);
+                // Lights (Red, Yellow, Green)
+                // Red
+                dummy.position.set(x, poleHeight + 0.25, z + 0.11);
+                dummy.updateMatrix();
+                this.instanced.tlReds.setMatrixAt(redIdx++, dummy.matrix);
                 
-                // Green light (bottom)
-                const green = new THREE.Mesh(lightGeo, greenMat);
-                green.position.set(vx + roadWidth/2, poleHeight - 0.25, hz + roadWidth/2 + 0.11);
-                this.scene.add(green);
-                this.props.push(green);
+                // Yellow
+                dummy.position.set(x, poleHeight, z + 0.11);
+                dummy.updateMatrix();
+                this.instanced.tlYellows.setMatrixAt(yellowIdx++, dummy.matrix);
+                
+                // Green
+                dummy.position.set(x, poleHeight - 0.25, z + 0.11);
+                dummy.updateMatrix();
+                this.instanced.tlGreens.setMatrixAt(greenIdx++, dummy.matrix);
             }
         }
+        
+        this.instanced.tlPoles.count = poleIdx;
+        this.instanced.tlBoxes.count = boxIdx;
+        this.instanced.tlReds.count = redIdx;
+        this.instanced.tlYellows.count = yellowIdx;
+        this.instanced.tlGreens.count = greenIdx;
     }
 
     createRoadDebris(gridSize, blockSize, roadWidth, offset) {
@@ -215,20 +629,70 @@ export class CityMap extends BaseMap {
         for (let i = 0; i < debrisCount; i++) {
             // Random position on the road network
             const isVerticalRoad = Math.random() < 0.5;
+            let rx, rz;
             
             if (isVerticalRoad && gridSize > 1) {
                 const roadIndex = Math.floor(Math.random() * (gridSize - 1));
-                const rx = (roadIndex * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
-                const rz = (Math.random() - 0.5) * offset * 2;
-                this.createRubble(rx, rz);
+                rx = (roadIndex * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+                rz = (Math.random() - 0.5) * offset * 2;
             } else if (gridSize > 1) {
                 const roadIndex = Math.floor(Math.random() * (gridSize - 1));
-                const rz = (roadIndex * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
-                const rx = (Math.random() - 0.5) * offset * 2;
+                rz = (roadIndex * (blockSize + roadWidth)) - offset + blockSize + roadWidth/2;
+                rx = (Math.random() - 0.5) * offset * 2;
+            }
+            
+            if (rx !== undefined) {
                 this.createRubble(rx, rz);
             }
         }
     }
+    
+    createRubble(x, z) {
+        // Use Instanced Rubble if possible, but we also need collision.
+        // For now, we'll add to instanced mesh AND create a collision box (invisible or just use the position).
+        // Since BaseMap handles collision via `this.obstacles`, we might need a separate collision mesh or just a bounding box.
+        // The original createRubble (not shown in previous view_file, but inferred) likely added a mesh to props and obstacles.
+        
+        // Let's check if we can just use the instanced mesh for visuals and add a simple invisible box for collision.
+        
+        const dummy = new THREE.Object3D();
+        dummy.position.set(x, 0.25, z);
+        dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        dummy.scale.setScalar(0.8 + Math.random() * 0.5);
+        dummy.updateMatrix();
+        
+        const idx = this.instanced.rubble.count++;
+        this.instanced.rubble.setMatrixAt(idx, dummy.matrix);
+        
+        // Collision
+        // We need to add something to this.obstacles for the player to collide with.
+        // BaseMap usually expects meshes in obstacles.
+        // We can create a simple invisible box.
+        const collider = new THREE.Mesh(
+            new THREE.BoxGeometry(1, 1, 1),
+            new THREE.MeshBasicMaterial({ visible: false })
+        );
+        collider.position.set(x, 0.5, z);
+        this.scene.add(collider);
+        this.props.push(collider); // For cleanup
+        
+        // Assuming BaseMap has an obstacles array or we need to push to it.
+        // Looking at Game.js, it uses this.world.walls (which are usually buildings).
+        // Debris might just be visual or minor obstacles.
+        // If they are obstacles, we should add them.
+        // Let's assume we need to add to a list.
+        // In the original code, createRubble wasn't fully visible but likely added to scene.
+        // I'll add the collider to props.
+        
+        // Note: If `createRubble` was used by `createRuinedBuilding`, that one creates individual meshes.
+        // `createRuinedBuilding` calls `createRubble`? No, it has "Enhanced debris at base" loop which creates meshes manually.
+        // I should update `createRuinedBuilding` to use instanced rubble too if possible, but that's local to the building group.
+        // InstancedMesh is world-space. It's hard to attach to a group.
+        // So for `createRuinedBuilding`, we might keep individual meshes OR calculate world pos.
+        // Calculating world pos is complex during generation if groups are used.
+        // So I will leave `createRuinedBuilding` debris as is (local meshes) and only use InstancedMesh for the road debris.
+    }
+
 
     createCityBlock(x, z, size) {
         // A block consists of 1-4 buildings
@@ -381,21 +845,52 @@ export class CityMap extends BaseMap {
         const towerWidth = width * 0.35;
         const towerHeight = height - podiumHeight;
         
+        // Tower 1 Group
+        const t1Group = new THREE.Group();
+        t1Group.position.set(-width/4, podiumHeight, -width/4);
+        group.add(t1Group);
+
         const t1 = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
-        t1.position.set(-width/4, podiumHeight + towerHeight/2, -width/4);
+        t1.position.y = towerHeight/2;
         t1.scale.set(towerWidth, towerHeight, towerWidth);
         t1.castShadow = true;
         t1.receiveShadow = true;
-        group.add(t1);
+        t1Group.add(t1);
+
+        // Windows for Tower 1
+        this.addWindows(t1Group, towerWidth, towerHeight, towerWidth, 0);
+
+        // Tower 2 Group
+        const t2Group = new THREE.Group();
+        t2Group.position.set(width/4, podiumHeight, width/4);
+        group.add(t2Group);
 
         const t2 = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
-        t2.position.set(width/4, podiumHeight + towerHeight/2, width/4);
+        t2.position.y = towerHeight/2;
         t2.scale.set(towerWidth, towerHeight, towerWidth);
         t2.castShadow = true;
         t2.receiveShadow = true;
-        group.add(t2);
+        t2Group.add(t2);
 
-        // Note: Windows omitted to prevent overlap with complex geometry
+        // Windows for Tower 2
+        this.addWindows(t2Group, towerWidth, towerHeight, towerWidth, 0);
+
+        // Skybridge
+        const bridgeHeight = 1.5;
+        const bridgeY = towerHeight * 0.66;
+        // Calculate distance and angle between towers
+        const dx = (width/4) - (-width/4); // width/2
+        const dz = (width/4) - (-width/4); // width/2
+        const dist = Math.sqrt(dx*dx + dz*dz); // sqrt( (w/2)^2 + (w/2)^2 ) = sqrt(2 * (w/2)^2) = sqrt(2) * w/2
+        // Towers are at (-w/4, -w/4) and (w/4, w/4). The line connecting them is at 45 degrees to Z-axis.
+        // So rotation.y should be Math.PI/4.
+
+        const bridge = new THREE.Mesh(this.assets.buildingGeo, new THREE.MeshStandardMaterial({ color: 0x444444, metalness: 0.8 }));
+        bridge.position.set(0, podiumHeight + bridgeY, 0);
+        bridge.rotation.y = Math.PI/4; 
+        bridge.scale.set(dist, bridgeHeight, towerWidth * 0.6);
+        bridge.castShadow = true;
+        group.add(bridge);
 
         this.scene.add(group);
         this.props.push(group);
@@ -432,33 +927,58 @@ export class CityMap extends BaseMap {
         group.position.set(x, 0, z);
 
         // Office Building (small)
-        const officeHeight = 3;
-        const officeWidth = width * 0.4;
+        const officeHeight = 3.5;
+        const officeWidth = width * 0.35;
         const office = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
-        office.position.set(-width/4, officeHeight/2, -width/4);
+        office.position.set(-width/3.5, officeHeight/2, -width/3.5);
         office.scale.set(officeWidth, officeHeight, officeWidth);
         office.castShadow = true;
         office.receiveShadow = true;
         group.add(office);
 
+        // Office Door
+        const doorGeo = new THREE.PlaneGeometry(1.2, 2.2);
+        const doorMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.5 });
+        const door = new THREE.Mesh(doorGeo, doorMat);
+        door.position.set(-width/3.5 + officeWidth/2 + 0.05, 1.1, -width/3.5);
+        door.rotation.y = Math.PI/2;
+        group.add(door);
+
+        // Office Window
+        const winGeo = new THREE.PlaneGeometry(2, 1.5);
+        const winMat = new THREE.MeshStandardMaterial({ color: 0x88CCFF, emissive: 0x112244, roughness: 0.2 });
+        const windowMesh = new THREE.Mesh(winGeo, winMat);
+        windowMesh.position.set(-width/3.5, 2, -width/3.5 + officeWidth/2 + 0.05);
+        group.add(windowMesh);
+
         // Canopy
-        const canopyHeight = 0.2;
-        const canopyY = 3.5;
-        const canopy = new THREE.Mesh(this.assets.buildingGeo, this.assets.asphaltMat);
-        canopy.position.set(0, canopyY, 0);
-        canopy.scale.set(width * 0.9, canopyHeight, width * 0.9);
+        const canopyHeight = 0.5;
+        const canopyY = 4.5;
+        const canopyWidth = width * 0.8;
+        const canopyDepth = width * 0.5;
+        
+        const canopy = new THREE.Mesh(this.assets.buildingGeo, new THREE.MeshStandardMaterial({ color: 0xEEEEEE }));
+        canopy.position.set(width/6, canopyY, width/6);
+        canopy.scale.set(canopyWidth, canopyHeight, canopyDepth);
         canopy.castShadow = true;
         group.add(canopy);
 
+        // Canopy Rim (Brand Color - Red)
+        const rimGeo = new THREE.BoxGeometry(canopyWidth + 0.1, 0.6, canopyDepth + 0.1);
+        const rimMat = new THREE.MeshStandardMaterial({ color: 0xCC0000 });
+        const rim = new THREE.Mesh(rimGeo, rimMat);
+        rim.position.set(width/6, canopyY, width/6);
+        group.add(rim);
+
         // Support Pillars
-        const pillarGeo = new THREE.CylinderGeometry(0.2, 0.2, canopyY);
-        const pillarMat = new THREE.MeshStandardMaterial({ color: 0xCCCCCC });
+        const pillarGeo = new THREE.CylinderGeometry(0.25, 0.25, canopyY);
+        const pillarMat = new THREE.MeshStandardMaterial({ color: 0xDDDDDD });
         
         const pillarPositions = [
-            [-width/3, canopyY/2, -width/3],
-            [width/3, canopyY/2, -width/3],
-            [-width/3, canopyY/2, width/3],
-            [width/3, canopyY/2, width/3]
+            [width/6 - canopyWidth/2 + 0.5, canopyY/2, width/6 - canopyDepth/2 + 0.5],
+            [width/6 + canopyWidth/2 - 0.5, canopyY/2, width/6 - canopyDepth/2 + 0.5],
+            [width/6 - canopyWidth/2 + 0.5, canopyY/2, width/6 + canopyDepth/2 - 0.5],
+            [width/6 + canopyWidth/2 - 0.5, canopyY/2, width/6 + canopyDepth/2 - 0.5]
         ];
 
         pillarPositions.forEach(pos => {
@@ -468,22 +988,62 @@ export class CityMap extends BaseMap {
             group.add(pillar);
         });
 
-        // Fuel Pumps
-        const pumpGeo = new THREE.BoxGeometry(0.6, 1.5, 0.4);
-        const pumpMat = new THREE.MeshStandardMaterial({ color: 0xFF3333 }); // Red pumps
+        // Pump Islands
+        const islandGeo = new THREE.BoxGeometry(2.5, 0.2, 1.2);
+        const islandMat = new THREE.MeshStandardMaterial({ color: 0x999999 });
         
         const pumpPositions = [
-            [-1.5, 0.75, 1],
-            [0, 0.75, 1],
-            [1.5, 0.75, 1]
+            [width/6 - 2, 0.1, width/6],
+            [width/6 + 2, 0.1, width/6]
         ];
 
         pumpPositions.forEach(pos => {
+            // Island
+            const island = new THREE.Mesh(islandGeo, islandMat);
+            island.position.set(...pos);
+            island.receiveShadow = true;
+            group.add(island);
+
+            // Pump Body
+            const pumpGeo = new THREE.BoxGeometry(0.8, 1.8, 0.5);
+            const pumpMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
             const pump = new THREE.Mesh(pumpGeo, pumpMat);
-            pump.position.set(...pos);
+            pump.position.set(pos[0], 1.0, pos[2]);
             pump.castShadow = true;
             group.add(pump);
+
+            // Pump Screen (Black)
+            const screenGeo = new THREE.PlaneGeometry(0.5, 0.4);
+            const screenMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
+            const screen = new THREE.Mesh(screenGeo, screenMat);
+            screen.position.set(pos[0], 1.4, pos[2] + 0.26);
+            group.add(screen);
+            const screen2 = screen.clone();
+            screen2.rotation.y = Math.PI;
+            screen2.position.z = pos[2] - 0.26;
+            group.add(screen2);
         });
+
+        // Price Sign (Tall)
+        const poleGeo = new THREE.CylinderGeometry(0.15, 0.15, 8);
+        const poleMat = new THREE.MeshStandardMaterial({ color: 0x666666 });
+        const pole = new THREE.Mesh(poleGeo, poleMat);
+        pole.position.set(width/2 - 1, 4, -width/2 + 1);
+        pole.castShadow = true;
+        group.add(pole);
+
+        const signGeo = new THREE.BoxGeometry(2.5, 1.5, 0.3);
+        const signMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
+        const sign = new THREE.Mesh(signGeo, signMat);
+        sign.position.set(width/2 - 1, 7, -width/2 + 1);
+        sign.castShadow = true;
+        group.add(sign);
+
+        // Sign Border
+        const signRimGeo = new THREE.BoxGeometry(2.6, 1.6, 0.2);
+        const signRim = new THREE.Mesh(signRimGeo, rimMat);
+        signRim.position.set(width/2 - 1, 7, -width/2 + 1);
+        group.add(signRim);
 
         this.scene.add(group);
         this.props.push(group);
@@ -503,6 +1063,27 @@ export class CityMap extends BaseMap {
         base.receiveShadow = true;
         group.add(base);
 
+        // Pillars (Classic look)
+        const pillarCount = 4;
+        const pillarGeo = new THREE.CylinderGeometry(0.3, 0.3, baseHeight);
+        const pillarMat = new THREE.MeshStandardMaterial({ color: 0xDDDDDD });
+        
+        // Front pillars
+        for(let i=0; i<pillarCount; i++) {
+            const p = new THREE.Mesh(pillarGeo, pillarMat);
+            const px = (i - (pillarCount-1)/2) * (width/pillarCount);
+            p.position.set(px, baseHeight/2, width/2 + 0.2);
+            p.castShadow = true;
+            group.add(p);
+        }
+
+        // Cornice (Ring below dome)
+        const corniceGeo = new THREE.BoxGeometry(width + 0.5, 0.4, width + 0.5);
+        const cornice = new THREE.Mesh(corniceGeo, pillarMat);
+        cornice.position.y = baseHeight;
+        cornice.castShadow = true;
+        group.add(cornice);
+
         // Dome (using sphere)
         const domeRadius = width * 0.6;
         const domeGeo = new THREE.SphereGeometry(domeRadius, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -517,13 +1098,6 @@ export class CityMap extends BaseMap {
         dome.receiveShadow = true;
         group.add(dome);
 
-        // Entrance (small protrusion)
-        const entrance = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
-        entrance.position.set(0, 1, width/2 + 0.5);
-        entrance.scale.set(width * 0.3, 2, 1);
-        entrance.castShadow = true;
-        group.add(entrance);
-
         // Add windows to base building
         this.addWindows(group, width, baseHeight, width, 0);
 
@@ -535,10 +1109,10 @@ export class CityMap extends BaseMap {
     createLShapedBuilding(x, z, width) {
         const group = new THREE.Group();
         group.position.set(x, 0, z);
-
+    
         const height = 8 + Math.random() * 8;
         const wingWidth = width * 0.4;
-
+    
         // Wing 1 (horizontal)
         const wing1 = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
         wing1.position.set(-width/4, height/2, 0);
@@ -950,6 +1524,28 @@ export class CityMap extends BaseMap {
         factory.receiveShadow = true;
         group.add(factory);
 
+        // Windows (Industrial style - fewer, larger)
+        // We can use addWindows but maybe with different params if possible, or just standard
+        this.addWindows(group, width, buildingHeight, width, 1); // Start higher up
+
+        // Loading Dock
+        const dockWidth = width * 0.4;
+        const dockHeight = 1.5;
+        const dockDepth = 2;
+        const dock = new THREE.Mesh(this.assets.buildingGeo, this.assets.concreteMat);
+        dock.position.set(0, dockHeight/2, width/2 + dockDepth/2);
+        dock.scale.set(dockWidth, dockHeight, dockDepth);
+        dock.castShadow = true;
+        dock.receiveShadow = true;
+        group.add(dock);
+
+        // Dock Door
+        const doorGeo = new THREE.PlaneGeometry(dockWidth * 0.8, dockHeight * 0.8);
+        const doorMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.8, roughness: 0.4 }); // Metal door
+        const door = new THREE.Mesh(doorGeo, doorMat);
+        door.position.set(0, dockHeight/2, width/2 + dockDepth + 0.05);
+        group.add(door);
+
         // Smokestack (tall chimney)
         const stackHeight = 12 + Math.random() * 4;
         const stackGeo = new THREE.CylinderGeometry(0.5, 0.6, stackHeight);
@@ -966,21 +1562,21 @@ export class CityMap extends BaseMap {
         group.add(rim);
 
         // Industrial vents/pipes
-        const pipeCount = 2 + Math.floor(Math.random() * 2);
+        const pipeCount = 4 + Math.floor(Math.random() * 3);
         const pipeGeo = new THREE.CylinderGeometry(0.2, 0.2, 4);
         const pipeMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.6 });
         
         for (let i = 0; i < pipeCount; i++) {
             const pipe = new THREE.Mesh(pipeGeo, pipeMat);
             pipe.position.set(
-                (Math.random() - 0.5) * width * 0.6,
-                buildingHeight + 2,
-                (Math.random() - 0.5) * width * 0.6
+                (Math.random() - 0.5) * width * 0.7,
+                buildingHeight + 1 + Math.random(),
+                (Math.random() - 0.5) * width * 0.7
             );
             pipe.rotation.set(
-                (Math.random() - 0.5) * 0.3,
+                (Math.random() - 0.5) * 0.5,
                 Math.random() * Math.PI,
-                (Math.random() - 0.5) * 0.3
+                (Math.random() - 0.5) * 0.5
             );
             group.add(pipe);
         }
@@ -1095,8 +1691,8 @@ export class CityMap extends BaseMap {
     }
 
     createRoads(gridSize, blockSize, roadWidth, offset) {
-        const sidewalkWidth = 0.8;
-        const curbHeight = 0.2;
+        const sidewalkWidth = 1.5; // Widened
+        const curbHeight = 0.15; // Lowered
         
         // Calculate all intersection positions
         const verticalRoadPositions = [];
@@ -1120,7 +1716,7 @@ export class CityMap extends BaseMap {
             for (let i = 0; i <= horizontalRoadPositions.length; i++) {
                 const segmentStart = currentZ;
                 const segmentEnd = i < horizontalRoadPositions.length 
-                    ? horizontalRoadPositions[i] - roadWidth/2 - 0.5
+                    ? horizontalRoadPositions[i] - roadWidth/2 - 1.0 // Leave gap for crosswalk
                     : offset;
                 
                 if (segmentEnd > segmentStart) {
@@ -1129,7 +1725,7 @@ export class CityMap extends BaseMap {
                     
                     // Left sidewalk segment
                     const leftSidewalk = new THREE.Mesh(this.assets.roadGeo, this.assets.sidewalkMat);
-                    leftSidewalk.position.set(rx - roadWidth/2 + sidewalkWidth/2, 0.05, segmentCenter);
+                    leftSidewalk.position.set(rx - roadWidth/2 - sidewalkWidth/2, 0.05, segmentCenter); // Positioned OUTSIDE road
                     leftSidewalk.rotation.x = -Math.PI / 2;
                     leftSidewalk.scale.set(sidewalkWidth, segmentLength, 1);
                     this.scene.add(leftSidewalk);
@@ -1137,14 +1733,14 @@ export class CityMap extends BaseMap {
                     
                     // Left curb segment
                     const leftCurb = new THREE.Mesh(this.assets.buildingGeo, this.assets.curbMat);
-                    leftCurb.position.set(rx - roadWidth/2 + sidewalkWidth, curbHeight/2, segmentCenter);
+                    leftCurb.position.set(rx - roadWidth/2, curbHeight/2, segmentCenter); // On edge of road
                     leftCurb.scale.set(0.1, curbHeight, segmentLength);
                     this.scene.add(leftCurb);
                     this.props.push(leftCurb);
                     
                     // Right sidewalk segment
                     const rightSidewalk = new THREE.Mesh(this.assets.roadGeo, this.assets.sidewalkMat);
-                    rightSidewalk.position.set(rx + roadWidth/2 - sidewalkWidth/2, 0.05, segmentCenter);
+                    rightSidewalk.position.set(rx + roadWidth/2 + sidewalkWidth/2, 0.05, segmentCenter); // Positioned OUTSIDE road
                     rightSidewalk.rotation.x = -Math.PI / 2;
                     rightSidewalk.scale.set(sidewalkWidth, segmentLength, 1);
                     this.scene.add(rightSidewalk);
@@ -1152,23 +1748,30 @@ export class CityMap extends BaseMap {
                     
                     // Right curb segment
                     const rightCurb = new THREE.Mesh(this.assets.buildingGeo, this.assets.curbMat);
-                    rightCurb.position.set(rx + roadWidth/2 - sidewalkWidth, curbHeight/2, segmentCenter);
+                    rightCurb.position.set(rx + roadWidth/2, curbHeight/2, segmentCenter); // On edge of road
                     rightCurb.scale.set(0.1, curbHeight, segmentLength);
                     this.scene.add(rightCurb);
                     this.props.push(rightCurb);
                 }
                 
                 if (i < horizontalRoadPositions.length) {
-                    currentZ = horizontalRoadPositions[i] + roadWidth/2 + 0.5;
+                    currentZ = horizontalRoadPositions[i] + roadWidth/2 + 1.0;
                 }
             }
             
             // Yellow lane markings
             for (let z = -offset; z < offset; z += 4) {
+                // Skip intersections
+                let inIntersection = false;
+                for (const hz of horizontalRoadPositions) {
+                    if (Math.abs(z - hz) < roadWidth/2 + 3.0) inIntersection = true; // Increased gap
+                }
+                if (inIntersection) continue;
+
                 const dash = new THREE.Mesh(this.assets.roadGeo, this.assets.yellowLineMat);
-                dash.position.set(rx, 0.05, z);
+                dash.position.set(rx, 0.02, z);
                 dash.rotation.x = -Math.PI / 2;
-                dash.scale.set(0.5, 2, 1);
+                dash.scale.set(0.2, 2, 1); // Thinner
                 this.scene.add(dash);
                 this.props.push(dash);
             }
@@ -1184,7 +1787,7 @@ export class CityMap extends BaseMap {
             for (let i = 0; i <= verticalRoadPositions.length; i++) {
                 const segmentStart = currentX;
                 const segmentEnd = i < verticalRoadPositions.length 
-                    ? verticalRoadPositions[i] - roadWidth/2 - 0.5
+                    ? verticalRoadPositions[i] - roadWidth/2 - 1.0
                     : offset;
                 
                 if (segmentEnd > segmentStart) {
@@ -1193,7 +1796,7 @@ export class CityMap extends BaseMap {
                     
                     // Top sidewalk segment
                     const topSidewalk = new THREE.Mesh(this.assets.roadGeo, this.assets.sidewalkMat);
-                    topSidewalk.position.set(segmentCenter, 0.05, rz - roadWidth/2 + sidewalkWidth/2);
+                    topSidewalk.position.set(segmentCenter, 0.05, rz - roadWidth/2 - sidewalkWidth/2);
                     topSidewalk.rotation.x = -Math.PI / 2;
                     topSidewalk.scale.set(segmentLength, sidewalkWidth, 1);
                     this.scene.add(topSidewalk);
@@ -1201,61 +1804,114 @@ export class CityMap extends BaseMap {
                     
                     // Top curb segment
                     const topCurb = new THREE.Mesh(this.assets.buildingGeo, this.assets.curbMat);
-                    topCurb.position.set(segmentCenter, curbHeight/2, rz - roadWidth/2 + sidewalkWidth);
+                    topCurb.position.set(segmentCenter, curbHeight/2, rz - roadWidth/2);
                     topCurb.scale.set(segmentLength, curbHeight, 0.1);
                     this.scene.add(topCurb);
                     this.props.push(topCurb);
                     
                     // Bottom sidewalk segment
-                    const bottomSidewalk = new THREE.Mesh(this.assets.roadGeo, this.assets.sidewalkMat);
-                    bottomSidewalk.position.set(segmentCenter, 0.05, rz + roadWidth/2 - sidewalkWidth/2);
-                    bottomSidewalk.rotation.x = -Math.PI / 2;
-                    bottomSidewalk.scale.set(segmentLength, sidewalkWidth, 1);
-                    this.scene.add(bottomSidewalk);
-                    this.props.push(bottomSidewalk);
+                    const botSidewalk = new THREE.Mesh(this.assets.roadGeo, this.assets.sidewalkMat);
+                    botSidewalk.position.set(segmentCenter, 0.05, rz + roadWidth/2 + sidewalkWidth/2);
+                    botSidewalk.rotation.x = -Math.PI / 2;
+                    botSidewalk.scale.set(segmentLength, sidewalkWidth, 1);
+                    this.scene.add(botSidewalk);
+                    this.props.push(botSidewalk);
                     
                     // Bottom curb segment
-                    const bottomCurb = new THREE.Mesh(this.assets.buildingGeo, this.assets.curbMat);
-                    bottomCurb.position.set(segmentCenter, curbHeight/2, rz + roadWidth/2 - sidewalkWidth);
-                    bottomCurb.scale.set(segmentLength, curbHeight, 0.1);
-                    this.scene.add(bottomCurb);
-                    this.props.push(bottomCurb);
+                    const botCurb = new THREE.Mesh(this.assets.buildingGeo, this.assets.curbMat);
+                    botCurb.position.set(segmentCenter, curbHeight/2, rz + roadWidth/2);
+                    botCurb.scale.set(segmentLength, curbHeight, 0.1);
+                    this.scene.add(botCurb);
+                    this.props.push(botCurb);
                 }
                 
                 if (i < verticalRoadPositions.length) {
-                    currentX = verticalRoadPositions[i] + roadWidth/2 + 0.5;
+                    currentX = verticalRoadPositions[i] + roadWidth/2 + 1.0;
                 }
             }
-            
+
             // Yellow lane markings
             for (let x = -offset; x < offset; x += 4) {
+                let inIntersection = false;
+                for (const vx of verticalRoadPositions) {
+                    if (Math.abs(x - vx) < roadWidth/2 + 3.0) inIntersection = true; // Increased gap
+                }
+                if (inIntersection) continue;
+
                 const dash = new THREE.Mesh(this.assets.roadGeo, this.assets.yellowLineMat);
-                dash.position.set(x, 0.05, rz);
+                dash.position.set(x, 0.02, rz);
                 dash.rotation.x = -Math.PI / 2;
-                dash.scale.set(2, 0.5, 1);
+                dash.scale.set(2, 0.2, 1);
                 this.scene.add(dash);
                 this.props.push(dash);
+            }
+        }
+
+        // Crosswalks & Intersections
+        const zebraMat = new THREE.MeshStandardMaterial({ color: 0xAAAAAA, roughness: 0.9 });
+        const stripeCount = 6;
+        const stripeWidth = 0.4;
+        const stripeGap = 0.4;
+        const crosswalkLength = (stripeCount * stripeWidth) + ((stripeCount-1) * stripeGap);
+        const crosswalkOffset = roadWidth/2 + 0.5 + crosswalkLength/2;
+
+        // Intersection center patch (to ensure clean look)
+        const intersectionGeo = new THREE.PlaneGeometry(roadWidth + 2, roadWidth + 2); // Slightly larger to cover corners
+        const intersectionMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9 });
+
+        for (let x = 0; x < gridSize - 1; x++) {
+            for (let z = 0; z < gridSize - 1; z++) {
+                const ix = verticalRoadPositions[x];
+                const iz = horizontalRoadPositions[z];
+
+                // Intersection Patch
+                const patch = new THREE.Mesh(intersectionGeo, intersectionMat);
+                patch.rotation.x = -Math.PI / 2;
+                patch.position.set(ix, 0.04, iz); // Below crosswalks
+                this.scene.add(patch);
+                this.props.push(patch);
+
+                // 4 Crosswalks per intersection
+                const positions = [
+                    { x: ix, z: iz - crosswalkOffset, rot: 0 }, // Top
+                    { x: ix, z: iz + crosswalkOffset, rot: 0 }, // Bottom
+                    { x: ix - crosswalkOffset, z: iz, rot: Math.PI/2 }, // Left
+                    { x: ix + crosswalkOffset, z: iz, rot: Math.PI/2 }  // Right
+                ];
+
+                positions.forEach(pos => {
+                    const group = new THREE.Group();
+                    group.position.set(pos.x, 0.05, pos.z); // Slightly higher
+                    group.rotation.y = pos.rot;
+
+                    for(let s=0; s<stripeCount; s++) {
+                        const stripe = new THREE.Mesh(this.assets.roadGeo, zebraMat);
+                        stripe.scale.set(roadWidth, stripeWidth, 1);
+                        stripe.rotation.x = -Math.PI/2;
+                        stripe.position.z = (s - stripeCount/2) * (stripeWidth + stripeGap) + (stripeWidth+stripeGap)/2;
+                        group.add(stripe);
+                    }
+                    this.scene.add(group);
+                    this.props.push(group);
+                });
             }
         }
     }
 
     createRubble(x, z) {
-        const count = 3 + Math.floor(Math.random() * 5);
-        for(let i=0; i<count; i++) {
-            const mesh = new THREE.Mesh(this.assets.rubbleGeo, this.assets.rubbleMat);
-            mesh.position.set(
-                x + (Math.random() - 0.5) * 5,
-                0.5,
-                z + (Math.random() - 0.5) * 5
-            );
-            mesh.rotation.set(Math.random(), Math.random(), Math.random());
-            mesh.scale.setScalar(0.5 + Math.random());
-            mesh.castShadow = true;
-            this.scene.add(mesh);
-            this.props.push(mesh);
-            // Small rubble doesn't need collision usually, or simple box
-            this.addCollisionBox(mesh, new THREE.Vector3(1, 1, 1));
-        }
+        const mesh = new THREE.Mesh(this.assets.rubbleGeo, this.assets.rubbleMat);
+        mesh.position.set(
+            x + (Math.random() - 0.5) * 5,
+            0.5,
+            z + (Math.random() - 0.5) * 5
+        );
+        mesh.rotation.set(Math.random(), Math.random(), Math.random());
+        mesh.scale.setScalar(0.5 + Math.random());
+        mesh.castShadow = true;
+        this.scene.add(mesh);
+        this.props.push(mesh);
+        // Small rubble doesn't need collision usually, or simple box
+        this.addCollisionBox(mesh, new THREE.Vector3(1, 1, 1));
     }
 
     createConvenienceStore(x, z) {

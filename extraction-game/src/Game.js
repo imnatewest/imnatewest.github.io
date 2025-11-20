@@ -7,6 +7,7 @@ import { Item } from './entities/Item.js';
 import { World } from './World.js';
 import { ParticleSystem } from './systems/ParticleSystem.js';
 import { AudioManager } from './systems/AudioManager.js';
+import { OcclusionSystem } from './systems/OcclusionSystem.js';
 
 export class Game {
     constructor() {
@@ -15,6 +16,7 @@ export class Game {
         this.particleSystem = new ParticleSystem(this.renderer.scene); // Init before World
         this.audioManager = new AudioManager();
         this.world = new World(this.renderer.scene, this.particleSystem);
+        this.occlusionSystem = new OcclusionSystem();
         this.player = null;
         this.enemies = [];
         this.items = [];
@@ -287,6 +289,15 @@ export class Game {
             const y = (-(hudPos.y * .5) + .5) * window.innerHeight;
             
             this.uiHud.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
+
+            // Occlusion System
+            if (this.world.currentMap) {
+                this.occlusionSystem.update(
+                    this.renderer.camera, 
+                    this.player.mesh, 
+                    this.world.currentMap.props
+                );
+            }
         }
 
         this.renderer.render();
@@ -422,11 +433,15 @@ export class Game {
         }
 
         const move = this.input.getMovementVector();
+        // Update Entities
         this.player.update(deltaTime, move, this.world.walls);
+        
+        // Update World (e.g. Map animations)
+        this.world.update(deltaTime);
 
         // Enemies
         this.enemies.forEach(enemy => {
-            enemy.update(deltaTime, this.player.mesh.position);
+            enemy.update(deltaTime, this.player.mesh.position, this.world.currentMap.obstacles);
             
             // Despawn if too far (recycle slots)
             if (enemy.mesh.position.distanceTo(this.player.mesh.position) > 80) {

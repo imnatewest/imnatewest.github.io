@@ -33,7 +33,14 @@ export class World {
         }
     }
 
+    update(deltaTime) {
+        if (this.currentMap && this.currentMap.update) {
+            this.currentMap.update(deltaTime);
+        }
+    }
+
     // Proxy properties to current map
+    get walls() { return this.currentMap ? this.currentMap.walls : []; }
     get obstacles() { return this.currentMap ? this.currentMap.obstacles : []; }
     get breakables() { return this.currentMap ? this.currentMap.breakables : []; }
     get walls() { return this.currentMap ? this.currentMap.walls : []; }
