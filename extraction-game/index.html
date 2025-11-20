@@ -4,31 +4,61 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Isometric Extraction</title>
+    <title>Dark Harvest</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-DKLViabE.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DUlMZ5Wq.css">
+    <script type="module" crossorigin src="./assets/index-CA3OpGCL.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BbimGPLA.css">
   </head>
   <body>
     <div id="game-container"></div>
     <div id="ui-layer">
       <div id="fog-overlay" class="hidden"></div>
-      <canvas id="minimap" width="200" height="200"></canvas>
+      <canvas id="minimap" class="hidden" width="200" height="200"></canvas>
       
       <!-- Start Screen -->
       <div id="start-screen">
-        <h1 class="title">EXTRACTION ZONE</h1>
-        <div class="controls-guide">
-          <p><strong>WASD</strong> to Move</p>
-          <p><strong>SPACE</strong> to Attack</p>
-          <p>Scavenge. Survive. Extract.</p>
-        </div>
-        <div class="map-selection">
-            <h3>Select Map</h3>
-            <div class="map-buttons">
-                <button id="btn-map-forest" class="primary-btn map-btn">Forest</button>
-                <button id="btn-map-city" class="primary-btn map-btn">City</button>
+        <div class="start-content">
+          <div class="title-section">
+            <h1 class="title">DARK HARVEST</h1>
+            <p class="subtitle">Scavenge. Survive. Extract.</p>
+          </div>
+          
+          <div class="controls-section">
+            <h3 class="section-header">Controls</h3>
+            <div class="controls-container">
+              <div class="wasd-container">
+                <div class="wasd-label">Move</div>
+                <div class="wasd-keys">
+                  <div class="key-row">
+                    <div class="control-key">W</div>
+                  </div>
+                  <div class="key-row">
+                    <div class="control-key">A</div>
+                    <div class="control-key">S</div>
+                    <div class="control-key">D</div>
+                  </div>
+                </div>
+              </div>
+              <div class="control-item">
+                <div class="control-key space-key">SPACE</div>
+                <div class="control-label">Attack</div>
+              </div>
             </div>
+          </div>
+          
+          <div class="map-selection">
+            <h3 class="section-header">Select Mission</h3>
+            <div class="map-buttons">
+              <button id="btn-map-forest" class="primary-btn map-btn">
+                <span class="map-icon">🌲</span>
+                <span class="map-name">Forest</span>
+              </button>
+              <button id="btn-map-city" class="primary-btn map-btn">
+                <span class="map-icon">🏙️</span>
+                <span class="map-name">City</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -113,9 +143,24 @@
             
             <button id="btn-next-level" class="primary-btn">Enter Next Level</button>
         </div>
+        
+        <!-- Pause Menu -->
+        <div id="pause-screen" class="hidden">
+            <h1>Paused</h1>
+            <button id="btn-resume" class="primary-btn">Resume</button>
+            <button id="btn-back-to-menu" class="primary-btn">Back to Menu</button>
+        </div>
+        
         <div id="game-over-screen" class="hidden">
             <h1>Game Over</h1>
             <button id="restart-btn" class="primary-btn">Try Again</button>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile-controls" class="hidden">
+            <button id="btn-mobile-pause" class="mobile-btn">⏸️</button>
+            <button id="btn-mobile-attack" class="mobile-btn">⚔️</button>
+            <button id="btn-mobile-fullscreen" class="mobile-btn">⛶</button>
         </div>
     </div>
   </body>
