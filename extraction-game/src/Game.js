@@ -88,6 +88,7 @@ export class Game {
         document.getElementById('btn-back-to-menu').addEventListener('click', () => this.backToMenu());
         
         // Mobile Controls
+        this.fullscreenTarget = document.getElementById('game-container') || document.documentElement;
         this.uiMobileControls = document.getElementById('mobile-controls');
         this.btnMobilePause = document.getElementById('btn-mobile-pause');
         this.btnMobileAttack = document.getElementById('btn-mobile-attack');
@@ -119,15 +120,7 @@ export class Game {
         if (this.btnMobileFullscreen) {
             this.btnMobileFullscreen.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
-                    });
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    }
-                }
+                this.toggleFullscreen();
             });
             // Prevent touch propagation
             this.btnMobileFullscreen.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
@@ -187,6 +180,24 @@ export class Game {
             this.world.loadMap(this.currentMapType); // Reload map
             this.spawnEntities();
             this.animate(0);
+        }
+    }
+
+    // Cross-browser fullscreen toggle for mobile (supports iOS Safari prefix)
+    toggleFullscreen() {
+        const doc = document;
+        const isFull = doc.fullscreenElement || doc.webkitFullscreenElement || doc.msFullscreenElement;
+        if (!isFull) {
+            const el = this.fullscreenTarget || doc.documentElement;
+            const request = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+            if (request) {
+                request.call(el).catch((err) => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            }
+        } else {
+            const exit = doc.exitFullscreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+            if (exit) exit.call(doc);
         }
     }
 
@@ -904,4 +915,3 @@ export class Game {
         this.timeOfDay = 0;
     }
 }
-
