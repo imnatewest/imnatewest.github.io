@@ -25,6 +25,8 @@ export class Enemy {
         r.geometries.cylinderWheel = new THREE.CylinderGeometry(0.3, 0.3, 0.2);
         r.geometries.boxHeadlight = new THREE.BoxGeometry(0.2, 0.1, 0.1);
         r.geometries.boxEyeSmall = new THREE.BoxGeometry(0.2, 0.2, 0.1);
+        r.geometries.droneBody = new THREE.SphereGeometry(0.5, 8, 8);
+        r.geometries.droneWing = new THREE.BoxGeometry(0.8, 0.05, 0.3);
 
         // Materials (Base)
         r.materials.slime = new THREE.MeshStandardMaterial({ 
@@ -41,7 +43,10 @@ export class Enemy {
         r.materials.carCabin = new THREE.MeshStandardMaterial({ color: 0x333333 });
         r.materials.carWheel = new THREE.MeshStandardMaterial({ color: 0x111111 });
         r.materials.carLight = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+        r.materials.carLight = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
         r.materials.eyeBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        r.materials.droneBody = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.2 });
+        r.materials.droneEye = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
         this.resources.loaded = true;
     }
@@ -78,6 +83,12 @@ export class Enemy {
                 this.health = 5;
                 this.damage = 3;
                 this.createCarModel();
+                break;
+            case 'drone':
+                this.speed = 7.0;
+                this.health = 2;
+                this.damage = 1;
+                this.createDroneModel();
                 break;
             case 'slime':
             default:
@@ -199,6 +210,30 @@ export class Enemy {
         this.body.add(l2);
     }
 
+    createDroneModel() {
+        const r = Enemy.resources;
+        // Body
+        this.body = new THREE.Mesh(r.geometries.droneBody, r.materials.droneBody.clone());
+        this.body.position.y = 1.5; // Fly high
+        this.body.castShadow = true;
+        this.mesh.add(this.body);
+
+        // Eye
+        const eye = new THREE.Mesh(r.geometries.boxEyeSmall, r.materials.droneEye);
+        eye.position.set(0, 0, 0.4);
+        eye.scale.set(0.5, 0.5, 0.5);
+        this.body.add(eye);
+
+        // Wings (4 distinct wings)
+        for (let i = 0; i < 4; i++) {
+            const wing = new THREE.Mesh(r.geometries.droneWing, r.materials.droneBody);
+            wing.position.y = 0.2;
+            wing.rotation.y = (i / 4) * Math.PI * 2;
+            wing.translateZ(0.6); // Move out from center
+            this.body.add(wing);
+        }
+    }
+
     addEyes(zOffset, yOffset) {
         const r = Enemy.resources;
         const eyeL = new THREE.Mesh(r.geometries.boxEyeSmall, r.materials.eyeBlack);
@@ -241,6 +276,8 @@ export class Enemy {
             this.mesh.rotation.z = Math.sin(this.time * 0.5) * 0.05; // Lumbering
         } else if (this.type === 'car') {
             this.body.position.y = 0.5 + Math.sin(this.time * 20) * 0.02; // Engine vibration
+        } else if (this.type === 'drone') {
+            this.body.position.y = 1.5 + Math.sin(this.time * 3) * 0.2; // Hover
         }
         
         // Rotate to face player

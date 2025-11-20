@@ -34,6 +34,7 @@ export class Game {
         this.playerDamage = 1; // Persistent Stat
         this.playerSpeed = 10; // Persistent Stat
         this.isGameOver = false;
+        this.isPaused = false;
         
         this.collected = 0;
         this.quota = 5;
@@ -80,6 +81,57 @@ export class Game {
         // Screens
         this.uiSuccess = document.getElementById('success-screen');
         this.uiGameOver = document.getElementById('game-over-screen');
+        this.uiPause = document.getElementById('pause-screen');
+        
+        // Pause Buttons
+        document.getElementById('btn-resume').addEventListener('click', () => this.resumeGame());
+        document.getElementById('btn-back-to-menu').addEventListener('click', () => this.backToMenu());
+        
+        // Mobile Controls
+        this.uiMobileControls = document.getElementById('mobile-controls');
+        this.btnMobilePause = document.getElementById('btn-mobile-pause');
+        this.btnMobileAttack = document.getElementById('btn-mobile-attack');
+
+        if (this.btnMobilePause) {
+            this.btnMobilePause.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.togglePause();
+            });
+            // Prevent touch from propagating to canvas
+            this.btnMobilePause.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
+        }
+
+        if (this.btnMobileAttack) {
+            this.btnMobileAttack.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent canvas touch
+                this.input.keys.attack = true;
+            }, { passive: false });
+            
+            this.btnMobileAttack.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.input.keys.attack = false;
+            }, { passive: false });
+        }
+        
+        this.btnMobileFullscreen = document.getElementById('btn-mobile-fullscreen');
+        if (this.btnMobileFullscreen) {
+            this.btnMobileFullscreen.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+            // Prevent touch propagation
+            this.btnMobileFullscreen.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
+        }
         
         const minimapCanvas = document.getElementById('minimap');
         this.minimapCtx = minimapCanvas.getContext('2d');
@@ -100,6 +152,12 @@ export class Game {
         // Note: btn-next-level is inside the shop screen now, handled by this.btnNextLevel binding below
         // document.getElementById('next-level-btn').addEventListener('click', () => this.restart(true));
         
+        // Setup Escape key handler for pause
+        this.input.onEscapePressed = () => this.togglePause();
+        
+        // Setup Input dependencies for touch controls (will be set when game starts)
+        // These will be initialized in start() method
+        
         // Auto-start only if triggered by "Next Level" (flag in sessionStorage)
         const shouldAutoStart = sessionStorage.getItem('rpg_auto_start') === 'true';
         
@@ -119,7 +177,9 @@ export class Game {
 
         this.uiStart.classList.add('hidden');
         this.uiHud.classList.remove('hidden');
+        if (this.uiMobileControls) this.uiMobileControls.classList.remove('hidden');
         this.uiFog.classList.remove('hidden');
+        document.getElementById('minimap').classList.remove('hidden');
         this.uiLevel.innerText = this.level;
         
         // Only generate if not already generated (to avoid double gen if called multiple times safely)
@@ -137,14 +197,38 @@ export class Game {
         this.player.damage = this.playerDamage;
         this.player.speed = this.playerSpeed;
         
+        // Set spawn position from map if available
+        if (this.world.currentMap && this.world.currentMap.playerSpawn) {
+            this.player.mesh.position.copy(this.world.currentMap.playerSpawn);
+        }
+        
+        // Setup Input dependencies for touch controls
+        this.input.setDependencies(this.renderer.camera, this.renderer.renderer);
+        
         // Items
         // Items
         // Spawn Items (Mushrooms)
         if (this.world.allowItems) {
-            for (let i = 0; i < 15; i++) {
-                const x = (Math.random() - 0.5) * 100;
-                const z = (Math.random() - 0.5) * 100;
-                this.items.push(new Item(this.renderer.scene, new THREE.Vector3(x, 0, z), this.currentMapType));
+            const spawnCount = 15;
+            
+            // Use map-specific safe spawns if available
+            if (this.world.currentMap && this.world.currentMap.itemSpawns && this.world.currentMap.itemSpawns.length > 0) {
+                const spawns = [...this.world.currentMap.itemSpawns];
+                // Shuffle
+                for (let i = spawns.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [spawns[i], spawns[j]] = [spawns[j], spawns[i]];
+                }
+                
+                for (let i = 0; i < Math.min(spawnCount, spawns.length); i++) {
+                    this.items.push(new Item(this.renderer.scene, spawns[i], this.currentMapType));
+                }
+            } else {
+                for (let i = 0; i < spawnCount; i++) {
+                    const x = (Math.random() - 0.5) * 100;
+                    const z = (Math.random() - 0.5) * 100;
+                    this.items.push(new Item(this.renderer.scene, new THREE.Vector3(x, 0, z), this.currentMapType));
+                }
             }
             
             // Force one spawn near player for testing
@@ -173,7 +257,8 @@ export class Game {
         let type = 'slime';
         
         if (this.currentMapType === 'city') {
-            type = 'car';
+            // City Enemies: Car (50%), Drone (50%)
+            type = Math.random() > 0.5 ? 'car' : 'drone';
         } else {
             // Forest Enemies
             const rand = Math.random();
@@ -237,6 +322,7 @@ export class Game {
         this.uiSuccess.classList.add('hidden');
         this.uiGameOver.classList.add('hidden');
         this.uiHud.classList.remove('hidden');
+        if (this.uiMobileControls) this.uiMobileControls.classList.remove('hidden');
         this.uiLevel.innerText = this.level;
         this.updateUI();
         
@@ -255,7 +341,7 @@ export class Game {
         const deltaTime = (time - this.lastTime) / 1000;
         this.lastTime = time;
 
-        if (!this.isGameOver && this.player) {
+        if (!this.isGameOver && !this.isPaused && this.player) {
             this.update(deltaTime);
             
             // Ambient Fireflies
@@ -289,6 +375,13 @@ export class Game {
             const y = (-(hudPos.y * .5) + .5) * window.innerHeight;
             
             this.uiHud.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
+
+            // Update Directional Light to follow player (for shadows)
+            // Maintain the original offset (20, 40, 10) defined in Renderer.js
+            const lightOffset = new THREE.Vector3(20, 40, 10);
+            this.renderer.dirLight.position.copy(target).add(lightOffset);
+            this.renderer.dirLight.target.position.copy(target);
+            this.renderer.dirLight.target.updateMatrixWorld(); // Important for target to update
 
             // Occlusion System
             if (this.world.currentMap) {
@@ -361,7 +454,7 @@ export class Game {
     }
 
     update(deltaTime) {
-        if (this.isShopOpen) return; // Pause game when shop is open
+        if (this.isShopOpen || this.isPaused) return; // Pause game when shop is open or paused
 
         // Update Time
         this.timeOfDay += deltaTime / this.dayDuration;
@@ -432,6 +525,9 @@ export class Game {
             }
         }
 
+        // Update player position for touch controls
+        this.input.setPlayerPosition(this.player.mesh.position);
+        
         const move = this.input.getMovementVector();
         // Update Entities
         this.player.update(deltaTime, move, this.world.walls);
@@ -528,6 +624,7 @@ export class Game {
         // Show Shop
         this.uiSuccess.classList.add('hidden');
         this.uiShop.classList.remove('hidden');
+        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
         this.updateShopUI();
         
         // Hide HUD
@@ -641,11 +738,13 @@ export class Game {
         this.isGameOver = true;
         this.uiGameOver.classList.remove('hidden');
         this.uiHud.classList.add('hidden');
+        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
     }
 
     win() {
         this.isGameOver = true;
         this.uiSuccess.classList.remove('hidden');
+        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
     }
 
     updateDayNightCycle() {
@@ -744,6 +843,65 @@ export class Game {
         if (this.player && this.player.lanternLight) {
             this.player.lanternLight.intensity = lanternInt;
         }
+    }
+    
+    togglePause() {
+        // Only allow pause during active gameplay (not in menu, shop, game over, or success)
+        if (!this.player || this.isGameOver || this.isShopOpen || !this.uiStart.classList.contains('hidden')) {
+            return;
+        }
+        
+        this.isPaused = !this.isPaused;
+        
+        if (this.isPaused) {
+            this.uiPause.classList.remove('hidden');
+        } else {
+            this.uiPause.classList.add('hidden');
+        }
+    }
+    
+    resumeGame() {
+        this.isPaused = false;
+        this.uiPause.classList.add('hidden');
+    }
+    
+    backToMenu() {
+        // Reset game state
+        this.isPaused = false;
+        this.uiPause.classList.add('hidden');
+        this.uiHud.classList.add('hidden');
+        this.uiFog.classList.add('hidden');
+        document.getElementById('minimap').classList.add('hidden');
+        
+        // Clear world
+        this.world.clear();
+        this.particleSystem.clear();
+        
+        if (this.player) {
+            this.player.dispose();
+            this.renderer.scene.remove(this.player.mesh);
+            this.player = null;
+        }
+        
+        this.enemies.forEach(e => {
+            e.dispose();
+            this.renderer.scene.remove(e.mesh);
+        });
+        this.enemies = [];
+        
+        this.items.forEach(i => {
+            i.dispose();
+            this.renderer.scene.remove(i.mesh);
+        });
+        this.items = [];
+        
+        // Show start screen
+        this.uiStart.classList.remove('hidden');
+        
+        // Reset game state
+        this.isGameOver = false;
+        this.collected = 0;
+        this.timeOfDay = 0;
     }
 }
 

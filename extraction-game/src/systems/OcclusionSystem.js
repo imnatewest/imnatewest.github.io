@@ -4,9 +4,10 @@ export class OcclusionSystem {
     constructor() {
         this.raycaster = new THREE.Raycaster();
         this.occludedObjects = new Set(); // Set of root objects (Groups) currently faded
+        this.fadeStates = new Map(); // Map<Object3D, { timeSinceHit: number }>
     }
 
-    update(camera, playerMesh, obstacles) {
+    update(camera, playerMesh, obstacles, deltaTime = 0.016) {
         if (!playerMesh) return;
 
         // Raycast from camera to player
@@ -21,49 +22,50 @@ export class OcclusionSystem {
         this.raycaster.far = distance; // Only check objects BETWEEN camera and player
 
         // Intersect against obstacles (props)
-        // obstacles is an array of objects. We need to raycast against their meshes.
-        // BaseMap.props contains the meshes/groups directly.
         const intersects = this.raycaster.intersectObjects(obstacles, true); // Recursive
 
-        const currentOccluders = new Set();
+        const currentFrameOccluders = new Set();
 
         for (const hit of intersects) {
             let obj = hit.object;
 
-            // Ignore Player itself (if it somehow gets in list)
+            // Ignore Player itself
             if (obj === playerMesh || playerMesh.getObjectById(obj.id)) continue;
 
-            // Ignore InstancedMesh (can't fade individual instances easily)
+            // Ignore InstancedMesh
             if (obj.isInstancedMesh) continue;
 
-            // Find the root group (e.g. the Tree group, Building group)
-            // We assume props are added to scene as Groups or Meshes.
-            // We traverse up until we hit the Scene or a parent that is in the 'obstacles' list.
-            // Actually, 'obstacles' passed in might be the list of props.
-            // Let's traverse up to find the top-most parent that is NOT the scene.
+            // Find the root group
             let root = obj;
             while (root.parent && root.parent.type !== 'Scene') {
                 root = root.parent;
             }
 
-            currentOccluders.add(root);
+            currentFrameOccluders.add(root);
         }
 
-        // Handle Fading
-        
-        // 1. Restore objects that are no longer occluding
-        for (const obj of this.occludedObjects) {
-            if (!currentOccluders.has(obj)) {
-                this.restoreObject(obj);
-                this.occludedObjects.delete(obj);
-            }
-        }
-
-        // 2. Fade new occluders
-        for (const obj of currentOccluders) {
+        // Update Fade States
+        // 1. For objects currently hit: Reset timer
+        for (const obj of currentFrameOccluders) {
+            this.fadeStates.set(obj, { timeSinceHit: 0 });
+            
             if (!this.occludedObjects.has(obj)) {
                 this.fadeObject(obj);
                 this.occludedObjects.add(obj);
+            }
+        }
+
+        // 2. For objects NOT hit: Increment timer
+        for (const [obj, state] of this.fadeStates) {
+            if (!currentFrameOccluders.has(obj)) {
+                state.timeSinceHit += deltaTime;
+                
+                // Only restore after a grace period (e.g. 0.2 seconds)
+                if (state.timeSinceHit > 0.2) {
+                    this.restoreObject(obj);
+                    this.occludedObjects.delete(obj);
+                    this.fadeStates.delete(obj);
+                }
             }
         }
     }
