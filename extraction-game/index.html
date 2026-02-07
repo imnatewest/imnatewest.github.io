@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dark Harvest</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-DoNNBQie.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BbimGPLA.css">
+    <script type="module" crossorigin src="./assets/index-D8dNwHp1.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BpDPTwJf.css">
   </head>
   <body>
     <div id="game-container"></div>
@@ -17,46 +17,63 @@
       
       <!-- Start Screen -->
       <div id="start-screen">
+        <div class="start-background-overlay"></div>
         <div class="start-content">
-          <div class="title-section">
+          <div class="hero-section">
             <h1 class="title">DARK HARVEST</h1>
-            <p class="subtitle">Scavenge. Survive. Extract.</p>
+            <p class="subtitle">SCAVENGE <span class="separator">•</span> SURVIVE <span class="separator">•</span> EXTRACT</p>
           </div>
           
-          <div class="controls-section">
-            <h3 class="section-header">Controls</h3>
-            <div class="controls-container">
-              <div class="wasd-container">
-                <div class="wasd-label">Move</div>
-                <div class="wasd-keys">
-                  <div class="key-row">
-                    <div class="control-key">W</div>
+          <div class="menu-grid">
+            <div class="menu-column left-col">
+              <h3 class="section-header">OPERATIONS</h3>
+              <div class="map-selection">
+                <button id="btn-map-forest" class="menu-card map-card">
+                  <div class="card-bg"></div>
+                  <span class="map-icon">🌲</span>
+                  <div class="card-info">
+                    <span class="map-name">FOREST</span>
+                    <span class="map-desc">Low Risk • Standard Yield</span>
                   </div>
-                  <div class="key-row">
-                    <div class="control-key">A</div>
-                    <div class="control-key">S</div>
-                    <div class="control-key">D</div>
+                </button>
+                <button id="btn-map-city" class="menu-card map-card">
+                  <div class="card-bg"></div>
+                  <span class="map-icon">🏙️</span>
+                  <div class="card-info">
+                    <span class="map-name">CITY</span>
+                    <span class="map-desc">High Risk • High Yield</span>
                   </div>
-                </div>
-              </div>
-              <div class="control-item">
-                <div class="control-key space-key">SPACE</div>
-                <div class="control-label">Attack</div>
+                </button>
+                <button id="btn-map-asylum" class="menu-card map-card">
+                  <div class="card-bg"></div>
+                  <span class="map-icon">🏥</span>
+                  <div class="card-info">
+                    <span class="map-name">ASYLUM</span>
+                    <span class="map-desc">Extreme Risk • Cramped</span>
+                  </div>
+                </button>
               </div>
             </div>
-          </div>
-          
-          <div class="map-selection">
-            <h3 class="section-header">Select Mission</h3>
-            <div class="map-buttons">
-              <button id="btn-map-forest" class="primary-btn map-btn">
-                <span class="map-icon">🌲</span>
-                <span class="map-name">Forest</span>
-              </button>
-              <button id="btn-map-city" class="primary-btn map-btn">
-                <span class="map-icon">🏙️</span>
-                <span class="map-name">City</span>
-              </button>
+
+            <div class="menu-column right-col">
+              <h3 class="section-header">SYSTEMS</h3>
+              <div class="controls-panel">
+                <div class="control-group">
+                  <span class="control-label">MOVEMENT</span>
+                  <div class="wasd-layout">
+                    <div class="key w-key">W</div>
+                    <div class="row-keys">
+                      <div class="key">A</div>
+                      <div class="key">S</div>
+                      <div class="key">D</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <span class="control-label">ACTION</span>
+                  <div class="key space-key">SPACE</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
