@@ -48,13 +48,22 @@ export class Enemy {
         r.materials.droneBody = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.5, roughness: 0.2 });
         r.materials.droneEye = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 
+        // Patient Assets
+        r.geometries.patientBody = new THREE.CylinderGeometry(0.3, 0.3, 1.0);
+        r.geometries.patientHead = new THREE.SphereGeometry(0.25, 8, 8);
+        r.geometries.patientLimb = new THREE.CylinderGeometry(0.08, 0.08, 0.8);
+        
+        r.materials.patientGown = new THREE.MeshStandardMaterial({ color: 0xADD8E6 }); // Light Blue
+        r.materials.patientSkin = new THREE.MeshStandardMaterial({ color: 0xE0D0C0 }); // Pale Flesh
+
         this.resources.loaded = true;
     }
 
-    constructor(scene, position, type = 'slime') {
+    constructor(scene, position, type = 'slime', particleSystem = null) {
         Enemy.loadResources(); // Ensure loaded
         
         this.scene = scene;
+        this.particleSystem = particleSystem;
         this.type = type;
         this.mesh = new THREE.Group();
         this.mesh.position.copy(position);
@@ -89,6 +98,12 @@ export class Enemy {
                 this.health = 2;
                 this.damage = 1;
                 this.createDroneModel();
+                break;
+            case 'patient':
+                this.speed = 4.5; // Fast but not spider fast
+                this.health = 4;
+                this.damage = 2;
+                this.createPatientModel();
                 break;
             case 'slime':
             default:
@@ -234,6 +249,70 @@ export class Enemy {
         }
     }
 
+    createPatientModel() {
+        const r = Enemy.resources;
+        
+        // Group for the whole character
+        this.character = new THREE.Group();
+        // Scale up the character (2.5x larger - Giant)
+        this.character.scale.set(2.5, 2.5, 2.5);
+        this.mesh.add(this.character);
+
+        // Torso (Upper Gown) - Slightly thinner
+        const torsoGeo = new THREE.BoxGeometry(0.35, 0.5, 0.2);
+        this.torso = new THREE.Mesh(torsoGeo, r.materials.patientGown.clone());
+        this.torso.position.y = 0.9; // Higher up due to longer legs
+        this.torso.castShadow = true;
+        this.character.add(this.torso);
+
+        // Lower Gown (Skirt-like)
+        const skirtGeo = new THREE.CylinderGeometry(0.2, 0.28, 0.4, 8);
+        this.skirt = new THREE.Mesh(skirtGeo, r.materials.patientGown);
+        this.skirt.position.y = -0.45; // Relative to torso
+        this.torso.add(this.skirt);
+
+        // Head - Smaller relative to body for creepiness
+        const head = new THREE.Mesh(r.geometries.patientHead, r.materials.patientSkin);
+        head.scale.set(0.7, 0.8, 0.75);
+        head.position.y = 0.4; // Relative to torso
+        this.torso.add(head);
+        this.head = head;
+
+        // Legs - Longer and thinner
+        this.legs = [];
+        const legGeo = new THREE.BoxGeometry(0.08, 0.7, 0.08); // Longer (0.5 -> 0.7)
+        
+        const legL = new THREE.Mesh(legGeo, r.materials.patientSkin);
+        legL.position.set(0.1, 0.35, 0); // Adjusted Y
+        this.character.add(legL);
+        this.legs.push(legL);
+
+        const legR = new THREE.Mesh(legGeo, r.materials.patientSkin);
+        legR.position.set(-0.1, 0.35, 0);
+        this.character.add(legR);
+        this.legs.push(legR);
+
+        // Arms - Longer and thinner (slender man vibes)
+        this.arms = [];
+        const armGeo = new THREE.BoxGeometry(0.07, 0.7, 0.07); // Longer (0.5 -> 0.7)
+        
+        const armL = new THREE.Mesh(armGeo, r.materials.patientSkin);
+        armL.position.set(0.25, 0.15, 0); // Relative to torso
+        // Pivot at shoulder
+        armL.geometry.translate(0, -0.3, 0); // Move pivot to top
+        this.torso.add(armL);
+        this.arms.push(armL);
+
+        const armR = new THREE.Mesh(armGeo, r.materials.patientSkin);
+        armR.position.set(-0.25, 0.15, 0);
+        armR.geometry.translate(0, -0.3, 0);
+        this.torso.add(armR);
+        this.arms.push(armR);
+        
+        // Set main body reference for damage flash
+        this.body = this.torso;
+    }
+
     addEyes(zOffset, yOffset) {
         const r = Enemy.resources;
         const eyeL = new THREE.Mesh(r.geometries.boxEyeSmall, r.materials.eyeBlack);
@@ -278,6 +357,58 @@ export class Enemy {
             this.body.position.y = 0.5 + Math.sin(this.time * 20) * 0.02; // Engine vibration
         } else if (this.type === 'drone') {
             this.body.position.y = 1.5 + Math.sin(this.time * 3) * 0.2; // Hover
+        } else if (this.type === 'patient') {
+            // Walk Cycle (Slower, more deliberate but lurching)
+            const stride = 0.5; // Larger stride
+            
+            // Legs
+            if (this.legs) {
+                this.legs[0].rotation.x = Math.sin(this.time * 1.5) * stride;
+                this.legs[1].rotation.x = Math.sin(this.time * 1.5 + Math.PI) * stride;
+            }
+            
+            // Arms (Flailing/Twitching)
+            if (this.arms) {
+                // Base swing
+                this.arms[0].rotation.x = Math.sin(this.time * 1.5 + Math.PI) * stride * 0.5;
+                this.arms[1].rotation.x = Math.sin(this.time * 1.5) * stride * 0.5;
+                
+                // Random spasms
+                this.arms[0].rotation.z = Math.sin(this.time * 10) * 0.2 + 0.2; // Flail out
+                this.arms[1].rotation.z = -Math.sin(this.time * 12) * 0.2 - 0.2;
+            }
+            
+            // Horror Twitching (Intensified)
+            // Randomly snap head violently
+            if (Math.random() < 0.08) {
+                this.head.rotation.y = (Math.random() - 0.5) * 1.5; // 90 degree snaps
+                this.head.rotation.z = (Math.random() - 0.5) * 0.8;
+            } else {
+                // Return to center
+                this.head.rotation.y *= 0.8;
+                this.head.rotation.z *= 0.8;
+            }
+            
+            // Torso Shiver (Violent)
+            this.torso.rotation.z = Math.sin(this.time * 30) * 0.08;
+            this.torso.rotation.x = Math.sin(this.time * 25) * 0.05; // Forward/back shake
+            
+            // Bobbing
+            this.character.position.y = Math.abs(Math.sin(this.time * 1.5)) * 0.1;
+            
+            // Blood Drips
+            if (this.particleSystem && Math.random() < 0.2) { // 20% chance per frame
+                // Emit from random body part
+                const part = Math.random() > 0.5 ? this.torso : (Math.random() > 0.5 ? this.arms[0] : this.arms[1]);
+                const worldPos = new THREE.Vector3();
+                part.getWorldPosition(worldPos);
+                // Add some randomness to position
+                worldPos.x += (Math.random() - 0.5) * 0.3;
+                worldPos.z += (Math.random() - 0.5) * 0.3;
+                worldPos.y -= 0.2; // Drip from bottom
+                
+                this.particleSystem.emit(worldPos, 'blood', 1);
+            }
         }
         
         // Rotate to face player

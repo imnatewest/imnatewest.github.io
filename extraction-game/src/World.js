@@ -9,6 +9,7 @@
 
 import { ForestMap } from './maps/ForestMap.js';
 import { CityMap } from './maps/CityMap.js';
+import { AsylumMap } from './maps/AsylumMap.js';
 
 export class World {
     /**
@@ -39,6 +40,8 @@ export class World {
             this.currentMap = new ForestMap(this.scene, this.particleSystem);
         } else if (mapType === 'city') {
             this.currentMap = new CityMap(this.scene, this.particleSystem);
+        } else if (mapType === 'asylum') {
+            this.currentMap = new AsylumMap(this.scene, this.particleSystem);
         } else {
             // Fallback to forest if unknown map type requested
             console.warn(`Map type '${mapType}' not found, defaulting to Forest.`);

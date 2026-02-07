@@ -135,6 +135,17 @@ export class ParticleSystem {
                     (Math.random() - 0.5) * 0.5
                 );
                 p.decay = 4.0;  // Slow decay (0.25s lifespan)
+                
+            } else if (type === 'blood') {
+                // Dripping blood
+                p.scale.setScalar(0.15);
+                p.color.setHex(0x8a0303);  // Dark Red
+                p.velocity.set(
+                    (Math.random() - 0.5) * 0.2,  // Very slight spread
+                    0,                            // Starts falling immediately (gravity handles it)
+                    (Math.random() - 0.5) * 0.2
+                );
+                p.decay = 1.5;  // Medium decay
             }
         }
     }

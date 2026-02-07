@@ -58,6 +58,34 @@ export class Item {
             top.rotation.x = -Math.PI / 2;  // Face upward
             this.mesh.add(top);
             
+        } else if (mapType === 'asylum') {
+            // ------------------------------------------------------------
+            // ASYLUM ITEM: Pill Bottle
+            // ------------------------------------------------------------
+            
+            // Orange bottle (cylinder)
+            const bottleGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.35, 16);
+            const bottleMat = new THREE.MeshStandardMaterial({ color: 0xffa500, transparent: true, opacity: 0.9 });
+            const bottle = new THREE.Mesh(bottleGeo, bottleMat);
+            bottle.position.y = 0.175;
+            bottle.castShadow = true;
+            this.mesh.add(bottle);
+
+            // White cap
+            const capGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.1, 16);
+            const capMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const cap = new THREE.Mesh(capGeo, capMat);
+            cap.position.y = 0.4;
+            cap.castShadow = true;
+            this.mesh.add(cap);
+            
+            // Label
+            const labelGeo = new THREE.CylinderGeometry(0.125, 0.125, 0.15, 16);
+            const labelMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const label = new THREE.Mesh(labelGeo, labelMat);
+            label.position.y = 0.2;
+            this.mesh.add(label);
+
         } else {
             // ------------------------------------------------------------
             // FOREST ITEM: Mushroom

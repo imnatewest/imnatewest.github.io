@@ -8,6 +8,7 @@ import { World } from './World.js';
 import { ParticleSystem } from './systems/ParticleSystem.js';
 import { AudioManager } from './systems/AudioManager.js';
 import { OcclusionSystem } from './systems/OcclusionSystem.js';
+import { AsylumMap } from './maps/AsylumMap.js';
 
 export class Game {
     constructor() {
@@ -141,6 +142,12 @@ export class Game {
             this.audioManager.startAmbience();
             this.start('city');
         });
+
+        document.getElementById('btn-map-asylum').addEventListener('click', () => {
+            this.audioManager.resume();
+            this.audioManager.startAmbience();
+            this.start('asylum');
+        });
         document.getElementById('restart-btn').addEventListener('click', () => this.restart(false));
         // Note: btn-next-level is inside the shop screen now, handled by this.btnNextLevel binding below
         // document.getElementById('next-level-btn').addEventListener('click', () => this.restart(true));
@@ -164,9 +171,11 @@ export class Game {
         this.currentMapType = mapType;
         
         // Update item icon based on map
-        if (this.itemIconElement) {
-            this.itemIconElement.textContent = mapType === 'city' ? '🥫' : '🍄';
-        }
+    if (this.itemIconElement) {
+        if (mapType === 'city') this.itemIconElement.textContent = '🥫';
+        else if (mapType === 'asylum') this.itemIconElement.textContent = '💊';
+        else this.itemIconElement.textContent = '🍄';
+    }
 
         this.uiStart.classList.add('hidden');
         this.uiHud.classList.remove('hidden');
@@ -218,9 +227,12 @@ export class Game {
         
         // Items
         // Items
-        // Spawn Items (Mushrooms)
+        // Spawn Items (Mushrooms/Pills)
         if (this.world.allowItems) {
-            const spawnCount = 15;
+            let spawnCount = 15;
+            if (this.currentMapType === 'asylum') {
+                spawnCount = this.quota + 1;
+            }
             
             // Use map-specific safe spawns if available
             if (this.world.currentMap && this.world.currentMap.itemSpawns && this.world.currentMap.itemSpawns.length > 0) {
@@ -270,6 +282,9 @@ export class Game {
         if (this.currentMapType === 'city') {
             // City Enemies: Car (50%), Drone (50%)
             type = Math.random() > 0.5 ? 'car' : 'drone';
+        } else if (this.currentMapType === 'asylum') {
+            // Asylum Enemies: Patient (100%)
+            type = 'patient';
         } else {
             // Forest Enemies
             const rand = Math.random();
@@ -277,7 +292,7 @@ export class Game {
             else if (rand > 0.5) type = 'spider'; // 30%
         }
         
-        this.enemies.push(new Enemy(this.renderer.scene, pos, type));
+        this.enemies.push(new Enemy(this.renderer.scene, pos, type, this.particleSystem));
     }
 
     restart(nextLevel = false) {

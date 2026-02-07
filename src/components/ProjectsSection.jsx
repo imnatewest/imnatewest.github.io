@@ -1,68 +1,44 @@
-import { containerClass } from '../constants/layout'
-import Reveal from './Reveal'
+import React from 'react';
+import { Github, ExternalLink } from 'lucide-react';
 
-function ProjectsSection({ projects }) {
+const ProjectsSection = ({ projects }) => {
   return (
-    <Reveal as="section" id="projects" className="py-16">
-      <div className={containerClass}>
-        <div className="max-w-3xl">
-          <p className="uppercase tracking-[0.3em] text-xs font-semibold text-mist dark:text-nightMuted">Selected work</p>
-          <h2 className="mt-3 text-3xl font-semibold leading-tight text-ink dark:text-white">
-            Projects that mirror the work I want to do
-          </h2>
-        </div>
-        <div className="mt-10 space-y-6">
-          {projects.map((project, index) => (
-            <article
-              key={project.title}
-              className="rounded-3xl border border-slate-200 bg-white p-8 shadow-card transition duration-300 hover:-translate-y-1 motion-safe:animate-fade-in-up dark:border-slate-700/60 dark:bg-nightSurface"
-              style={{ animationDelay: `${index * 120}ms` }}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-mist dark:text-nightMuted">
-                <p>{project.period}</p>
-                <a className="font-semibold text-accent hover:underline" href={project.link} target="_blank" rel="noreferrer">
-                  View source ↗
+    <div className="space-y-10">
+      {projects.map((project) => (
+        <div key={project.title} className="group">
+          <div className="flex justify-between items-baseline mb-2">
+            <h4 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+              {project.title}
+            </h4>
+            <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-gray-900">
+                  <ExternalLink className="w-4 h-4" />
                 </a>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <h3 className="text-2xl font-semibold text-ink dark:text-white">{project.title}</h3>
-                {project.status && (
-                  <span className="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-200">
-                    {project.status}
-                  </span>
-                )}
-              </div>
-              <p className="mt-3 text-mist dark:text-nightMuted">{project.description}</p>
-              {project.categories?.length > 0 && (
-                <ul className="mt-4 flex flex-wrap gap-2 text-sm">
-                  {project.categories.map((category) => (
-                    <li
-                      key={category}
-                      className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-mist dark:border-slate-600 dark:text-nightMuted"
-                    >
-                      {category}
-                    </li>
-                  ))}
-                </ul>
               )}
-              <div className="mt-4 border-t border-slate-200/70 dark:border-slate-700/60" />
-              <p className="mt-3 font-medium text-ink dark:text-white">{project.impact}</p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {project.tech.map((tech) => (
-                  <li
-                    key={tech}
-                    className="rounded-full bg-accent/10 px-3 py-1 text-sm font-medium text-accent dark:bg-white/10 dark:text-white"
-                  >
-                    {tech}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </div>
-    </Reveal>
-  )
-}
+              {project.link && project.link.includes('github') && (
+                 <a href={project.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-gray-900">
+                   <Github className="w-4 h-4" />
+                 </a>
+              )}
+            </div>
+          </div>
 
-export default ProjectsSection
+          <p className="text-gray-600 mb-3 leading-relaxed">
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((tech) => (
+              <span key={tech} className="text-xs font-mono text-gray-500 bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ProjectsSection;
