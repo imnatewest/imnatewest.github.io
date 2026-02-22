@@ -51,7 +51,7 @@ export const portfolio = {
       impact:
         "Building SwiftUI flows for adding/editing ingredients, Firebase auth + storage, and ML receipt parsing for automatic inventory updates.",
       tech: ["Swift", "SwiftUI", "OpenAI API", "Firebase"],
-      image: "/projects/fridgeiq.png",
+      images: ["/projects/fridgeiq.png"],
       link: "https://github.com/imnatewest/ai-fridge-app",
     },
     {
@@ -69,7 +69,7 @@ export const portfolio = {
         "Google Maps API",
         "OpenAI API",
       ],
-      image: "/projects/tripwise.png",
+      images: ["/projects/tripwise.png"],
       link: "https://github.com/imnatewest/TravelMate",
     },
     {
@@ -81,8 +81,36 @@ export const portfolio = {
       impact:
         "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
       tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
-      image: "/projects/stampede.png",
+      images: ["/projects/stampede.png"],
       link: "https://github.com/Stampede-SWE/Stampede",
+    },
+    {
+      title: "PlantARium",
+      period: "2024",
+      categories: ["Augmented Reality", "Science Education", "Mobile"],
+      description:
+        "Education app using AR and leveraging AI to help users make informed decisions on plant-care.",
+      impact:
+        "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
+      tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
+      images: ["/projects/plantarium1.png", "/projects/plantarium2.png"],
+      link: "https://github.com/imnatewest/PlantARium",
+    },
+    {
+      title: "Boksu",
+      period: "2026",
+      categories: ["Education", "Flashcards", "Mobile"],
+      description:
+        "Flashcard app using a spaced-repetition algorithm for improved studying.",
+      impact:
+        "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
+      tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
+      images: [
+        "/projects/boksu1.png",
+        "/projects/boksu2.png",
+        "/projects/boksu3.png",
+      ],
+      link: "https://github.com/imnatewest/",
     },
   ],
   experience: [

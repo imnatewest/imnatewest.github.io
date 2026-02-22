@@ -1,20 +1,62 @@
-import React from "react";
-import { Github, ExternalLink } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Github, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ProjectCard = ({ project }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageOpacity, setImageOpacity] = useState(1);
+  const images = project.images || (project.image ? [project.image] : []);
+  const hasMultipleImages = images.length > 1;
+
+  useEffect(() => {
+    setImageOpacity(0);
+    const timer = setTimeout(() => setImageOpacity(1), 50);
+    return () => clearTimeout(timer);
+  }, [currentImageIndex]);
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
   return (
     <article
       tabIndex={0}
       aria-labelledby={`project-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
       className="group bg-white border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition focus:outline-none"
     >
-      {project.image ? (
-        <img
-          src={project.image}
-          alt={`${project.title} screenshot`}
-          loading="lazy"
-          className="w-full h-64 object-contain bg-gray-50 p-1"
-        />
+      {images.length > 0 ? (
+        <div className="relative w-full h-64 bg-gray-50 overflow-hidden">
+          <img
+            src={images[currentImageIndex]}
+            alt={`${project.title} screenshot ${currentImageIndex + 1}`}
+            loading="lazy"
+            className={`w-full h-64 object-contain bg-gray-50 p-2 transform transition-all duration-500 ${imageOpacity === 0 ? "opacity-0" : "opacity-100"}`}
+          />
+          {hasMultipleImages && (
+            <>
+              <button
+                onClick={goToPrevious}
+                aria-label="Previous image"
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/25 hover:bg-black/50 text-white p-1 rounded-full transition opacity-0 group-hover:opacity-100"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={goToNext}
+                aria-label="Next image"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/25 hover:bg-black/50 text-white p-1 rounded-full transition opacity-0 group-hover:opacity-100"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <div className="absolute bottom-2 right-2 bg-black/25 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                {currentImageIndex + 1}/{images.length}
+              </div>
+            </>
+          )}
+        </div>
       ) : (
         <div className="w-full h-64 bg-gray-50 flex items-center justify-center">
           <svg
