@@ -92,7 +92,7 @@ export const portfolio = {
         "Education app using AR and leveraging AI to help users make informed decisions on plant-care.",
       impact:
         "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
-      tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
+      tech: ["C#", "Unity", "Vuforia", "OpenAI API"],
       images: ["/projects/plantarium1.png", "/projects/plantarium2.png"],
       link: "https://github.com/imnatewest/PlantARium",
     },
@@ -104,7 +104,7 @@ export const portfolio = {
         "Flashcard app using a spaced-repetition algorithm for improved studying.",
       impact:
         "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
-      tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
+      tech: ["Swift"],
       images: [
         "/projects/boksu1.png",
         "/projects/boksu2.png",
