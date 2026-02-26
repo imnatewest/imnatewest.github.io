@@ -5,6 +5,8 @@ export const portfolio = {
     availability: "Open to new-grad roles",
     summary:
       "Software Developer who enjoys building complex projects from the ground up. My work primarily consists of designing full-stack apps, data-rich APIs, and other fun projects that pique my interest.",
+    extendedSummary:
+      "I gravitate toward products where performance, usability, and measurable outcomes matter. Recently I optimized 50+ Express APIs for storm monitoring, redesigned StormAlert’s dashboard, and onboarded new geolocation data to unlock 10K+ more users.",
     location: "Tampa, FL · Open to Relocation · Remote-friendly",
     email: "imnathanwest@gmail.com",
     phone: "727-459-5304",
@@ -48,10 +50,8 @@ export const portfolio = {
       categories: ["Mobile", "AI", "Consumer"],
       description:
         "iOS app for food management that recommends meals via AI based on what is already in the fridge.",
-      impact:
-        "Building SwiftUI flows for adding/editing ingredients, Firebase auth + storage, and ML receipt parsing for automatic inventory updates.",
       tech: ["Swift", "SwiftUI", "OpenAI API", "Firebase"],
-      images: ["/projects/fridgeiq.png"],
+      images: ["/projects/fridgeiq.webp"],
       link: "https://github.com/imnatewest/ai-fridge-app",
     },
     {
@@ -60,8 +60,6 @@ export const portfolio = {
       categories: ["Full-stack", "Travel", "AI"],
       description:
         "Full-stack AI trip planner that generates itineraries, budgets, and travel suggestions.",
-      impact:
-        "Shipped a scalable Rails + PostgreSQL API with auth, maps-powered routing inputs, and modular React UI for streamlined planning.",
       tech: [
         "JavaScript",
         "PostgreSQL",
@@ -69,7 +67,7 @@ export const portfolio = {
         "Google Maps API",
         "OpenAI API",
       ],
-      images: ["/projects/tripwise.png"],
+      images: ["/projects/tripwise.webp"],
       link: "https://github.com/imnatewest/TravelMate",
     },
     {
@@ -78,10 +76,8 @@ export const portfolio = {
       categories: ["Marketplace", "Web"],
       description:
         "Campus marketplace built with a four-person Agile team to enable peer-to-peer exchanges.",
-      impact:
-        "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
       tech: ["Ruby on Rails", "PostgreSQL", "JavaScript", "Bootstrap", "Git"],
-      images: ["/projects/stampede.png"],
+      images: ["/projects/stampede.webp"],
       link: "https://github.com/Stampede-SWE/Stampede",
     },
     {
@@ -90,10 +86,8 @@ export const portfolio = {
       categories: ["Augmented Reality", "Science Education", "Mobile"],
       description:
         "Education app using AR and leveraging AI to help users make informed decisions on plant-care.",
-      impact:
-        "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
       tech: ["C#", "Unity", "Vuforia", "OpenAI API"],
-      images: ["/projects/plantarium1.png", "/projects/plantarium2.png"],
+      images: ["/projects/plantarium1.webp", "/projects/plantarium2.webp"],
       link: "https://github.com/imnatewest/PlantARium",
     },
     {
@@ -102,31 +96,16 @@ export const portfolio = {
       categories: ["Education", "Flashcards", "Mobile"],
       description:
         "Flashcard app using a spaced-repetition algorithm for improved studying.",
-      impact:
-        "Achieved 50% student adoption by implementing secure listings, transactions, and responsive Bootstrap components.",
       tech: ["Swift"],
       images: [
-        "/projects/boksu1.png",
-        "/projects/boksu2.png",
-        "/projects/boksu3.png",
+        "/projects/boksu1.webp",
+        "/projects/boksu2.webp",
+        "/projects/boksu3.webp",
       ],
-      link: "https://github.com/imnatewest/",
+      link: "https://github.com/imnatewest/Boksu",
     },
   ],
   experience: [
-    {
-      role: "Programming Instructor",
-      org: "CodeWizardsHQ",
-      webLink:
-        "https://www.linkedin.com/company/codewizardshq/posts/?feedView=all",
-      period: "May 2024 – Present",
-      summary:
-        "Teach and mentor students (ages 8–18) across Python, Java, and modern web development tracks.",
-      achievements: [
-        "Guided 200+ learners through industry-style exercises while maintaining a 90% retention rate.",
-        "Designed capstone-style projects with Agile workflows to mirror real engineering teams.",
-      ],
-    },
     {
       role: "Software Engineer Intern",
       org: "Bell Automation Systems",
@@ -141,5 +120,18 @@ export const portfolio = {
         "Partnered with QA/DevOps to automate testing + CI/CD, accelerating releases.",
       ],
     },
+    {
+      role: "Programming Instructor",
+      org: "CodeWizardsHQ",
+      webLink:
+        "https://www.linkedin.com/company/codewizardshq/posts/?feedView=all",
+      period: "May 2024 – Present",
+      summary:
+        "Teach and mentor students (ages 8–18) across Python, Java, and modern web development tracks.",
+      achievements: [
+        "Guided 200+ learners through industry-style exercises while maintaining a 90% retention rate.",
+        "Designed capstone-style projects with Agile workflows to mirror real engineering teams.",
+      ],
+    }
   ],
 };

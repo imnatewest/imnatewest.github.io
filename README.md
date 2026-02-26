@@ -1,7 +1,5 @@
 # Nathan West — Portfolio
 
-A modern, content-driven portfolio for a recent computer science graduate. Built with React + Vite and styled with Tailwind CSS to stay clean, scannable, and ready for GitHub Pages.
-
 ## Development
 
 ```bash

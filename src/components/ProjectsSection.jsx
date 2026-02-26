@@ -8,7 +8,7 @@ const ProjectCard = ({ project }) => {
   const hasMultipleImages = images.length > 1;
 
   useEffect(() => {
-    setImageOpacity(0);
+    setTimeout(() => setImageOpacity(0), 0);
     const timer = setTimeout(() => setImageOpacity(1), 50);
     return () => clearTimeout(timer);
   }, [currentImageIndex]);
@@ -25,15 +25,15 @@ const ProjectCard = ({ project }) => {
     <article
       tabIndex={0}
       aria-labelledby={`project-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-      className="group bg-white border border-gray-100 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition focus:outline-none"
+      className="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md dark:shadow-none dark:hover:border-gray-700 transition focus:outline-none"
     >
       {images.length > 0 ? (
-        <div className="relative w-full h-64 bg-gray-50 overflow-hidden">
+        <div className="relative w-full h-64 bg-gray-50 dark:bg-gray-950 overflow-hidden">
           <img
             src={images[currentImageIndex]}
             alt={`${project.title} screenshot ${currentImageIndex + 1}`}
             loading="lazy"
-            className={`w-full h-64 object-contain bg-gray-50 p-2 transform transition-all duration-500 ${imageOpacity === 0 ? "opacity-0" : "opacity-100"}`}
+            className={`w-full h-64 object-contain bg-gray-50 dark:bg-gray-950 p-2 transform transition-all duration-500 ${imageOpacity === 0 ? "opacity-0" : "opacity-100"}`}
           />
           {hasMultipleImages && (
             <>
@@ -58,10 +58,10 @@ const ProjectCard = ({ project }) => {
           )}
         </div>
       ) : (
-        <div className="w-full h-64 bg-gray-50 flex items-center justify-center">
+        <div className="w-full h-64 bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16 text-gray-300"
+            className="h-16 w-16 text-gray-300 dark:text-gray-700"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -81,7 +81,7 @@ const ProjectCard = ({ project }) => {
         <div className="flex items-start justify-between">
           <h3
             id={`project-${project.title.replace(/\s+/g, "-").toLowerCase()}`}
-            className="text-lg font-semibold text-gray-900"
+            className="text-lg font-semibold text-gray-900 dark:text-gray-100"
           >
             {project.title}
           </h3>
@@ -91,7 +91,7 @@ const ProjectCard = ({ project }) => {
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="text-gray-400 hover:text-gray-900"
+                className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
               >
                 <ExternalLink className="w-4 h-4" />
               </a>
@@ -101,7 +101,7 @@ const ProjectCard = ({ project }) => {
                 href={project.link}
                 target="_blank"
                 rel="noreferrer"
-                className="text-gray-400 hover:text-gray-900"
+                className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
               >
                 <Github className="w-4 h-4" />
               </a>
@@ -109,7 +109,7 @@ const ProjectCard = ({ project }) => {
           </div>
         </div>
 
-        <p className="mt-3 mb-4 leading-relaxed text-base text-gray-700">
+        <p className="mt-3 mb-4 leading-relaxed text-base text-gray-700 dark:text-gray-300">
           {project.description}
         </p>
 
@@ -117,7 +117,7 @@ const ProjectCard = ({ project }) => {
           {project.tech?.map((tech) => (
             <span
               key={tech}
-              className="text-xs font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded-md"
+              className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md"
             >
               {tech}
             </span>
@@ -142,7 +142,7 @@ const ProjectCard = ({ project }) => {
                 href={project.repo}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-md border border-gray-100 transition"
+                className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-100 dark:border-gray-700 transition"
               >
                 Code
                 <Github className="w-4 h-4" />
@@ -151,7 +151,7 @@ const ProjectCard = ({ project }) => {
           </div>
 
           {project.metrics?.length > 0 && (
-            <div className="text-sm text-gray-600">{project.metrics[0]}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{project.metrics[0]}</div>
           )}
         </div>
       </div>
