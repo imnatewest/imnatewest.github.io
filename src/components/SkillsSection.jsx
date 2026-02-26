@@ -1,18 +1,45 @@
 import React from 'react';
 
+const iconMap = {
+  "C": "devicon-c-plain",
+  "C++": "devicon-cplusplus-plain",
+  "C#": "devicon-csharp-plain",
+  "Python": "devicon-python-plain",
+  "Java": "devicon-java-plain",
+  "JavaScript": "devicon-javascript-plain",
+  "Ruby": "devicon-ruby-plain",
+  "SQL": "devicon-azuresqldatabase-plain",
+  "Swift": "devicon-swift-plain",
+  "React": "devicon-react-original",
+  "Node.js": "devicon-nodejs-plain",
+  "Express.js": "devicon-express-original",
+  "Ruby on Rails": "devicon-rails-plain",
+  "Firebase": "devicon-firebase-plain",
+  "PostgreSQL": "devicon-postgresql-plain",
+  "MySQL": "devicon-mysql-plain",
+  "Git": "devicon-git-plain",
+  "Figma": "devicon-figma-plain",
+};
+
 const SkillsSection = ({ skills }) => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-12">
       {skills.map((category) => (
         <div key={category.label}>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">
+          <h4 className="text-xl font-black text-black dark:text-white uppercase tracking-tight mb-4 border-b-4 border-black dark:border-white pb-2 inline-block">
             {category.label}
           </h4>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4 mt-2">
             {category.items.map((item) => (
-              <span key={item} className="text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-md">
-                {item}
-              </span>
+              <div 
+                key={item} 
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-transform cursor-default"
+              >
+                <i className={`${iconMap[item] || 'devicon-devicon-plain'} colored text-xl`}></i>
+                <span className="text-sm font-bold text-black dark:text-white">
+                  {item}
+                </span>
+              </div>
             ))}
           </div>
         </div>

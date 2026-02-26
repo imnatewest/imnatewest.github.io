@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Layout from './components/Layout';
+import Nav from './components/Nav';
 import Hero from './components/Hero';
 import ExperienceSection from './components/ExperienceSection';
 import ProjectsSection from './components/ProjectsSection';
@@ -9,70 +10,68 @@ import ContactSection from './components/ContactSection';
 import { portfolio } from './data/content';
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      setTimeout(() => setIsDark(true), 0);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+    if (!isDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };
 
+  const brutalistBlockClass = "border-[3px] sm:border-4 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] dark:sm:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-5 sm:p-10 transition-transform";
+
   return (
     <Layout>
-      <motion.div 
-        id="home"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-      >
+      {/* 1. Hero / Intro */}
+      <section id="home" className={`${brutalistBlockClass} bg-[#FF90E8] dark:bg-[#831843]`}>
         <Hero hero={portfolio.hero} />
-      </motion.div>
-      
-      <motion.section 
-        id="experience" 
-        className="mb-16 pt-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-      >
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8 border-b border-gray-100 dark:border-gray-800 pb-2">Work Experience</h2>
+        <Nav isDark={isDark} toggleDarkMode={toggleDarkMode} />
+      </section>
+
+      {/* 2. Experience */}
+      <section id="experience" className={`${brutalistBlockClass} bg-[#FFC900] dark:bg-[#713f12]`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Work Experience</h2>
         <ExperienceSection experience={portfolio.experience} />
-      </motion.section>
+      </section>
 
-      <motion.section 
-        id="projects" 
-        className="mb-16 pt-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-      >
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8 border-b border-gray-100 dark:border-gray-800 pb-2">Projects</h2>
+      {/* 3. Projects */}
+      <section id="projects" className={`${brutalistBlockClass} bg-[#23A094] dark:bg-[#134e4a]`}>
+        <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight border-b-[3px] sm:border-b-4 border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Featured Projects</h2>
         <ProjectsSection projects={portfolio.projects} />
-      </motion.section>
+      </section>
 
-      <motion.section 
-        id="skills" 
-        className="mb-16 pt-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-      >
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8 border-b border-gray-100 dark:border-gray-800 pb-2">Skills</h2>
+      {/* 4. Skills */}
+      <section id="skills" className={`${brutalistBlockClass} bg-[#90A8ED] dark:bg-[#1e3a8a]`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Tech Stack</h2>
         <SkillsSection skills={portfolio.skills} />
-      </motion.section>
+      </section>
 
-      <motion.section 
-        id="contact" 
-        className="mb-16 pt-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        variants={fadeInUp}
-      >
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8 border-b border-gray-100 dark:border-gray-800 pb-2">Contact</h2>
+      {/* 5. Contact */}
+      <section id="contact" className={`${brutalistBlockClass} bg-white dark:bg-black`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Let's Connect</h2>
         <ContactSection />
-      </motion.section>
+      </section>
+
     </Layout>
   );
 }

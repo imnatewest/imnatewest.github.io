@@ -2,31 +2,34 @@ import React from "react";
 
 const ExperienceSection = ({ experience }) => {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {experience.map((exp) => (
-        <div key={exp.org} className="group">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
-            <h4 className="text-lg font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              <a href={exp.webLink} target="_blank" rel="noreferrer">
+        <div key={exp.org} className="group bg-white dark:bg-black border-[3px] sm:border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:sm:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] p-4 sm:p-8">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-baseline border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-4">
+            <h4 className="text-xl sm:text-2xl font-black text-black dark:text-white uppercase tracking-tight">
+              <a href={exp.webLink} target="_blank" rel="noreferrer" className="hover:underline decoration-[3px] sm:decoration-4 underline-offset-4 pointer-events-auto">
                 {exp.org.split("·")[0].trim()}
               </a>
             </h4>
 
-            <span className="text-sm font-mono text-gray-500 dark:text-gray-400">
+            <span className="text-base font-bold bg-black dark:bg-white text-white dark:text-black px-3 py-1 mt-2 md:mt-0 uppercase">
               {exp.period}
             </span>
           </div>
 
-          <div className="text-base font-medium text-gray-700 dark:text-gray-300 mb-4">
+          <div className="text-xl font-bold bg-[#FF90E8] dark:bg-[#831843] text-black dark:text-white inline-block px-3 py-1 border-2 border-black dark:border-white mb-6 uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
             {exp.role}
           </div>
 
-          <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{exp.summary}</p>
+          <p className="text-lg font-medium text-black dark:text-gray-300 mb-6 leading-relaxed">
+            {exp.summary}
+          </p>
 
-          <ul className="list-disc list-outside ml-5 space-y-2 text-gray-600 dark:text-gray-400">
+          <ul className="list-none space-y-3 font-medium text-black dark:text-gray-300">
             {exp.achievements.map((achievement, i) => (
-              <li key={i} className="pl-1 marker:text-gray-300 dark:marker:text-gray-600">
-                {achievement}
+              <li key={i} className="flex gap-3">
+                <span className="text-2xl leading-none text-[#23A094] dark:text-[#5eead4]">▹</span>
+                <span>{achievement}</span>
               </li>
             ))}
           </ul>

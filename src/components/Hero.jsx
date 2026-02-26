@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, FileText, MapPin, Check } from 'lucide-react';
+import Typewriter from 'typewriter-effect';
 
 const Hero = ({ hero }) => {
   const [toast, setToast] = useState({ show: false, message: '' });
@@ -14,37 +15,59 @@ const Hero = ({ hero }) => {
   };
 
   return (
-    <div className="mb-16">
+    <div>
       <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-50 mb-4 tracking-tight">
         {hero.name}
       </h1>
-      <h2 className="text-xl text-gray-600 dark:text-gray-300 mb-6 font-medium">
-        {hero.title}
-      </h2>
+      <div className="text-xl text-gray-600 dark:text-gray-300 mb-6 font-medium h-[28px]">
+        <Typewriter
+          options={{
+            strings: [
+              hero.title,
+              'Fullstack Developer',
+              'Software Engineer',
+              'Computer Science New-Grad'
+            ],
+            autoStart: true,
+            loop: true,
+            delay: 50,
+            deleteSpeed: 30,
+            pauseFor: 2000,
+          }}
+        />
+      </div>
       
-      <div className="flex flex-wrap gap-y-2 gap-x-6 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <div className="flex items-center gap-2 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-default">
-          <MapPin className="w-4 h-4" />
+      <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 text-sm font-bold uppercase mt-8 mb-6">
+        <div className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] cursor-default w-full sm:w-auto">
+          <MapPin className="w-5 h-5" />
           <span>{hero.location.split('·')[0].trim()}</span>
         </div>
+        
         <button 
           onClick={() => copyToClipboard(hero.email, 'Email')}
-          className="flex items-center gap-2 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+          className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:active:shadow-none w-full sm:w-auto"
           aria-label="Copy email address"
         >
-          <Mail className="w-4 h-4" />
-          <span>{hero.email}</span>
+          <Mail className="w-5 h-5" />
+          <span>Email</span>
         </button>
+
         <button 
           onClick={() => copyToClipboard(hero.phone, 'Phone number')}
-          className="flex items-center gap-2 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+          className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:active:shadow-none w-full sm:w-auto"
           aria-label="Copy phone number"
         >
-          <Phone className="w-4 h-4" />
-          <span>{hero.phone}</span>
+          <Phone className="w-5 h-5" />
+          <span>Phone</span>
         </button>
-        <a href={hero.resumeUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-          <FileText className="w-4 h-4" />
+
+        <a 
+          href={hero.resumeUrl} 
+          target="_blank" 
+          rel="noreferrer" 
+          className="flex items-center justify-center gap-2 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none dark:active:shadow-none w-full sm:w-auto"
+        >
+          <FileText className="w-5 h-5" />
           <span>Resume</span>
         </a>
       </div>
