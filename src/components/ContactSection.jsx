@@ -40,7 +40,7 @@ const ContactSection = () => {
             name="name"
             type="text"
             required
-            className="w-full px-4 py-3 bg-white dark:bg-black border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium"
+            className="w-full px-4 py-3 bg-white dark:bg-gray-900 border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium"
             placeholder="John Doe"
           />
         </div>
@@ -53,7 +53,7 @@ const ContactSection = () => {
             name="email"
             type="email"
             required
-            className="w-full px-4 py-3 bg-white dark:bg-black border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium"
+            className="w-full px-4 py-3 bg-white dark:bg-gray-900 border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium"
             placeholder="john@example.com"
           />
         </div>
@@ -67,7 +67,7 @@ const ContactSection = () => {
           name="message"
           required
           rows={5}
-          className="w-full px-4 py-3 bg-white dark:bg-black border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium resize-none"
+          className="w-full px-4 py-3 bg-white dark:bg-gray-900 border-4 border-black dark:border-white text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] focus:outline-none focus:-translate-y-1 focus:translate-x-1 focus:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all font-medium resize-none"
           placeholder="Hi Nathan, I'd love to chat about..."
         />
       </div>

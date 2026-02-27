@@ -2,18 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Github, ExternalLink, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ProjectModal = ({ project, onClose }) => {
+const ProjectModal = ({ project, onClose, contained = false }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = project.images || (project.image ? [project.image] : []);
   const hasMultipleImages = images.length > 1;
 
-  // Prevent background scrolling when modal is open
+  // Prevent background scrolling when modal is open (skip in contained/desktop mode)
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, []);
+    if (!contained) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "unset";
+      };
+    }
+  }, [contained]);
 
   const goToPrevious = (e) => {
     e.stopPropagation();
@@ -28,7 +30,7 @@ const ProjectModal = ({ project, onClose }) => {
   if (!project) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+    <div className={`${contained ? 'absolute' : 'fixed'} inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-hidden`}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -43,7 +45,7 @@ const ProjectModal = ({ project, onClose }) => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="relative w-full max-w-4xl bg-white dark:bg-black border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex flex-col max-h-[90vh]"
+        className={`relative w-full max-w-2xl bg-white dark:bg-black border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] flex flex-col ${contained ? 'max-h-full' : 'max-h-[90vh]'}`}
       >
         <button
           onClick={onClose}
@@ -271,12 +273,12 @@ const ProjectCard = ({ project, onClick }) => {
   );
 };
 
-const ProjectsSection = ({ projects }) => {
+const ProjectsSection = ({ projects, contained = false }) => {
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
     <section>
-      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-6 max-w-3xl mx-auto" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
         {projects.map((project) => (
           <ProjectCard 
             key={project.title} 
@@ -290,7 +292,8 @@ const ProjectsSection = ({ projects }) => {
         {selectedProject && (
           <ProjectModal 
             project={selectedProject} 
-            onClose={() => setSelectedProject(null)} 
+            onClose={() => setSelectedProject(null)}
+            contained={contained}
           />
         )}
       </AnimatePresence>

@@ -69,7 +69,7 @@ const Nav = ({ isDark, toggleDarkMode }) => {
   return (
     <>
       {/* Desktop Inline Table of Contents */}
-      <nav ref={navRef} className="hidden sm:block mt-12 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-8">
+      <nav ref={navRef} className="hidden lg:block mt-12 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-8">
         <h3 className="text-xl font-black uppercase tracking-tight text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-2 inline-block">Table of Contents</h3>
         <ul className="flex flex-col space-y-4">
           {navItems.map((item) => (
@@ -96,8 +96,8 @@ const Nav = ({ isDark, toggleDarkMode }) => {
 
       {/* Mobile Hamburger Button */}
       <button 
-        onClick={() => setIsMenuOpen(true)}
-        className="sm:hidden fixed top-6 right-6 z-40 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+        onClick={() => setIsMenuOpen(prev => !prev)}
+        className="mobile-nav-toggle fixed top-6 right-6 z-40 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
         aria-label="Open menu"
       >
         <div className="w-6 h-1 bg-black dark:bg-white mb-1.5"></div>
@@ -107,7 +107,7 @@ const Nav = ({ isDark, toggleDarkMode }) => {
 
       {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
-        <div className="sm:hidden fixed top-20 right-6 z-50 w-64 bg-white dark:bg-black flex flex-col items-stretch border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] animate-in slide-in-from-top-4 duration-200">
+        <div className="mobile-nav-toggle fixed top-20 right-6 z-50 w-64 bg-white dark:bg-black flex flex-col items-stretch border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] animate-in slide-in-from-top-4 duration-200">
           <ul className="flex flex-col w-full text-left">
             {navItems.map((item) => (
               <li key={`mobile-${item.id}`} className="border-b-4 border-black dark:border-white last:border-b-0">

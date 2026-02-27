@@ -7,10 +7,29 @@ import ExperienceSection from './components/ExperienceSection';
 import ProjectsSection from './components/ProjectsSection';
 import SkillsSection from './components/SkillsSection';
 import ContactSection from './components/ContactSection';
+import DesktopShell from './components/desktop/DesktopShell';
 import { portfolio } from './data/content';
+
+// Custom hook for desktop breakpoint detection
+function useIsDesktop(breakpoint = 1024) {
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= breakpoint : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= breakpoint);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [breakpoint]);
+
+  return isDesktop;
+}
 
 function App() {
   const [isDark, setIsDark] = useState(false);
+  const isDesktop = useIsDesktop();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -33,11 +52,12 @@ function App() {
     }
   };
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
+  // Desktop: render the XP-style desktop environment
+  if (isDesktop) {
+    return <DesktopShell isDark={isDark} toggleDarkMode={toggleDarkMode} />;
+  }
 
+  // Mobile / Tablet: render current scrollable brutalist layout
   const brutalistBlockClass = "border-[3px] sm:border-4 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] dark:sm:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-5 sm:p-10 transition-transform";
 
   return (
@@ -77,3 +97,4 @@ function App() {
 }
 
 export default App;
+

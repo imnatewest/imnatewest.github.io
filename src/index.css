@@ -49,7 +49,67 @@
   .font-barcode {
     font-family: 'Libre Barcode 39', cursive;
   }
+
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-nav-toggle {
+      display: none;
+    }
+  }
+
+  .retro-aqua-bg {
+    background-image: linear-gradient(
+      to bottom,
+      #0a58fa 0%, #0a58fa 10%,
+      #256cfb 10%, #256cfb 20%,
+      #3c80fc 20%, #3c80fc 30%,
+      #5393fd 30%, #5393fd 40%,
+      #68a6fe 40%, #68a6fe 50%,
+      #7bb8ff 50%, #7bb8ff 60%,
+      #8ec9ff 60%, #8ec9ff 70%,
+      #a1daff 70%, #a1daff 80%,
+      #b4ebff 80%, #b4ebff 90%,
+      #c7fdff 90%, #c7fdff 100%
+    );
+  }
+
+  .dark .retro-aqua-bg {
+    background-image: linear-gradient(
+      to bottom,
+      #001a4d 0%, #001a4d 10%,
+      #002466 10%, #002466 20%,
+      #002e80 20%, #002e80 30%,
+      #003899 30%, #003899 40%,
+      #0043b3 40%, #0043b3 50%,
+      #004ccc 50%, #004ccc 60%,
+      #0057e6 60%, #0057e6 70%,
+      #0061ff 70%, #0061ff 80%,
+      #1a71ff 80%, #1a71ff 90%,
+      #3381ff 90%, #3381ff 100%
+    );
+  }
 }
 
 @layer utilities {
+  /* Custom brutalist cursors — only on desktop environment */
+  @media (min-width: 1024px) {
+    *, *::before, *::after {
+      cursor: url('/cursors/cursor-default.svg') 1 1, auto;
+    }
+    
+    a, a *, 
+    button, button *, 
+    [role="button"], [role="button"] *, 
+    input[type="submit"], input[type="button"],
+    select, summary, 
+    label[for], label[for] *,
+    .cursor-pointer, .cursor-pointer *,
+    .cursor-grab, .cursor-grab *,
+    .cursor-grabbing, .cursor-grabbing * {
+      cursor: url('/cursors/cursor-pointer.svg') 8 0, pointer !important;
+    }
+  }
 }
