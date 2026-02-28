@@ -16,15 +16,44 @@ const DesktopWindow = ({
   color = 'bg-white dark:bg-black'
 }) => {
   const windowRef = useRef(null);
-  const [position, setPosition] = useState(defaultPosition || { x: 120, y: 80 });
+  const [position, setPosition] = useState(
+    typeof defaultPosition === 'object' ? defaultPosition : { x: 0, y: 0 }
+  );
   const [size, setSize] = useState({ width: 700, height: 500 });
+  const [isReady, setIsReady] = useState(typeof defaultPosition === 'object');
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [resizeDir, setResizeDir] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
+  const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0, posX: 0, posY: 0 });
   const [isMaximized, setIsMaximized] = useState(false);
   const [preMaxState, setPreMaxState] = useState(null);
+
+  // ── Auto-center on mount ─────────────────────────────
+  useEffect(() => {
+    if (defaultPosition === 'center' && windowRef.current) {
+      const parent = windowRef.current.parentElement;
+      if (parent) {
+        const pw = parent.clientWidth;
+        const ph = parent.clientHeight;
+        
+        // Ensure default size is not larger than screen
+        let newW = Math.min(700, pw - 40);
+        let newH = Math.min(500, ph - 40);
+        
+        setSize({ width: newW, height: newH });
+        setPosition({
+          x: Math.max(0, (pw - newW) / 2),
+          y: Math.max(0, (ph - newH) / 2)
+        });
+        
+        // Slight delay to ensure paint happens with correct dimensions
+        requestAnimationFrame(() => setIsReady(true));
+      } else {
+        setIsReady(true);
+      }
+    }
+  }, [defaultPosition]);
 
   // ── Dragging ──────────────────────────────────────────
   const handleTitleMouseDown = useCallback((e) => {
@@ -64,49 +93,50 @@ const DesktopWindow = ({
     onFocus?.();
     setIsResizing(true);
     setResizeDir(direction);
-    setResizeStart({
+    resizeStartRef.current = {
       x: e.clientX,
       y: e.clientY,
       width: size.width,
       height: size.height,
       posX: position.x,
       posY: position.y,
-    });
+    };
   }, [isMaximized, size, position, onFocus]);
 
   useEffect(() => {
     if (!isResizing || !resizeDir) return;
 
     const handleMouseMove = (e) => {
-      const dx = e.clientX - resizeStart.x;
-      const dy = e.clientY - resizeStart.y;
+      const rs = resizeStartRef.current;
+      const dx = e.clientX - rs.x;
+      const dy = e.clientY - rs.y;
 
-      let newWidth = resizeStart.width;
-      let newHeight = resizeStart.height;
-      let newX = resizeStart.posX;
-      let newY = resizeStart.posY;
+      let newWidth = rs.width;
+      let newHeight = rs.height;
+      let newX = rs.posX;
+      let newY = rs.posY;
 
       // Horizontal
       if (resizeDir.includes('e')) {
-        newWidth = Math.max(MIN_WIDTH, resizeStart.width + dx);
+        newWidth = Math.max(MIN_WIDTH, rs.width + dx);
       }
       if (resizeDir.includes('w')) {
-        const proposedWidth = resizeStart.width - dx;
+        const proposedWidth = rs.width - dx;
         if (proposedWidth >= MIN_WIDTH) {
           newWidth = proposedWidth;
-          newX = resizeStart.posX + dx;
+          newX = rs.posX + dx;
         }
       }
 
       // Vertical
       if (resizeDir.includes('s')) {
-        newHeight = Math.max(MIN_HEIGHT, resizeStart.height + dy);
+        newHeight = Math.max(MIN_HEIGHT, rs.height + dy);
       }
       if (resizeDir.includes('n')) {
-        const proposedHeight = resizeStart.height - dy;
+        const proposedHeight = rs.height - dy;
         if (proposedHeight >= MIN_HEIGHT) {
           newHeight = proposedHeight;
-          newY = resizeStart.posY + dy;
+          newY = rs.posY + dy;
         }
       }
 
@@ -125,7 +155,7 @@ const DesktopWindow = ({
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isResizing, resizeDir, resizeStart]);
+  }, [isResizing, resizeDir]);
 
   // ── Maximize ──────────────────────────────────────────
   const handleMaximize = () => {
@@ -144,7 +174,7 @@ const DesktopWindow = ({
   if (isMinimized) return null;
 
   const windowStyle = isMaximized 
-    ? { top: 0, left: 0, right: 0, bottom: 48, zIndex } 
+    ? { top: 0, left: 0, right: 0, bottom: 0, zIndex } 
     : { left: position.x, top: position.y, width: size.width, height: size.height, zIndex };
 
   // Resize handle definitions: position classes + cursor
@@ -164,8 +194,16 @@ const DesktopWindow = ({
   return (
     <div
       ref={windowRef}
-      className={`absolute flex flex-col border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] ${isDragging ? 'cursor-grabbing' : ''} ${isResizing ? 'select-none' : ''}`}
-      style={windowStyle}
+      className={`absolute flex flex-col bg-[#c0c0c0] dark:bg-[#3a3a3a] ${isDragging ? 'cursor-grabbing' : ''} ${isResizing ? 'select-none' : ''}`}
+      style={{
+        ...windowStyle,
+        borderTop: '2px solid #ffffff',
+        borderLeft: '2px solid #ffffff',
+        borderRight: '2px solid #404040',
+        borderBottom: '2px solid #404040',
+        boxShadow: 'inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 3px 3px 0 rgba(0,0,0,0.3)',
+        visibility: isReady ? 'visible' : 'hidden',
+      }}
       onMouseDown={() => onFocus?.()}
     >
       {/* Resize Handles (hidden when maximized) */}
@@ -177,43 +215,70 @@ const DesktopWindow = ({
         />
       ))}
 
-      {/* Title Bar */}
+      {/* Title Bar — XP gradient */}
       <div
         onMouseDown={handleTitleMouseDown}
-        className="flex items-center justify-between bg-black dark:bg-white text-white dark:text-black px-4 py-2 cursor-grab active:cursor-grabbing select-none shrink-0"
+        className="flex items-center justify-between px-2 py-1 cursor-grab active:cursor-grabbing select-none shrink-0"
+        style={{ background: 'linear-gradient(180deg, #0997ff 0%, #0053ee 50%, #0044cc 100%)' }}
       >
-        <span className="text-sm font-black uppercase tracking-widest truncate">{title}</span>
-        <div className="flex items-center gap-1 shrink-0 ml-4">
+        <span className="text-[13px] font-bold text-white truncate drop-shadow-[1px_1px_0px_rgba(0,0,0,0.4)]" style={{ fontFamily: 'Tahoma, Geneva, sans-serif' }}>{title}</span>
+        <div className="flex items-center gap-[2px] shrink-0 ml-4">
           {/* Minimize */}
           <button
             onClick={(e) => { e.stopPropagation(); onMinimize?.(); }}
-            className="w-7 h-7 bg-yellow-300 border-2 border-white dark:border-black flex items-center justify-center hover:bg-yellow-400 transition-colors"
+            className="w-[21px] h-[21px] flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
+              borderTop: '1px solid #ffffff80',
+              borderLeft: '1px solid #ffffff80',
+              borderRight: '1px solid #00000040',
+              borderBottom: '1px solid #00000040',
+              borderRadius: '3px',
+            }}
             aria-label="Minimize"
           >
-            <span className="text-black font-black text-xs leading-none">—</span>
+            <span className="text-white text-[11px] font-bold leading-none mt-[2px]">_</span>
           </button>
           {/* Maximize */}
           <button
             onClick={(e) => { e.stopPropagation(); handleMaximize(); }}
-            className="w-7 h-7 bg-green-400 border-2 border-white dark:border-black flex items-center justify-center hover:bg-green-500 transition-colors"
+            className="w-[21px] h-[21px] flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
+              borderTop: '1px solid #ffffff80',
+              borderLeft: '1px solid #ffffff80',
+              borderRight: '1px solid #00000040',
+              borderBottom: '1px solid #00000040',
+              borderRadius: '3px',
+            }}
             aria-label="Maximize"
           >
-            <span className="text-black font-black text-xs leading-none">{isMaximized ? '❐' : '□'}</span>
+            <span className="text-white text-[10px] font-bold leading-none">{isMaximized ? '❐' : '□'}</span>
           </button>
           {/* Close */}
           <button
             onClick={(e) => { e.stopPropagation(); onClose?.(); }}
-            className="w-7 h-7 bg-red-500 border-2 border-white dark:border-black flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="w-[21px] h-[21px] flex items-center justify-center ml-[2px]"
+            style={{
+              background: 'linear-gradient(180deg, #e87961 0%, #c7321a 100%)',
+              borderTop: '1px solid #ffffff80',
+              borderLeft: '1px solid #ffffff80',
+              borderRight: '1px solid #00000040',
+              borderBottom: '1px solid #00000040',
+              borderRadius: '3px',
+            }}
             aria-label="Close"
           >
-            <span className="text-white font-black text-xs leading-none">✕</span>
+            <span className="text-white font-bold text-[11px] leading-none">✕</span>
           </button>
         </div>
       </div>
 
-      {/* Window Content */}
-      <div className={`${color} overflow-y-auto flex-1 p-6`}>
-        {children}
+      {/* Window Content — inset panel */}
+      <div className="mx-1 mb-1 flex-1 overflow-hidden" style={{ borderTop: '2px solid #808080', borderLeft: '2px solid #808080', borderRight: '2px solid #ffffff', borderBottom: '2px solid #ffffff' }}>
+        <div className={`${color} overflow-y-auto h-full p-6`}>
+          {children}
+        </div>
       </div>
 
       {/* Bottom-right resize grip indicator */}

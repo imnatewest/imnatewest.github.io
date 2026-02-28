@@ -1,8 +1,56 @@
 import React from "react";
 
-const ExperienceSection = ({ experience }) => {
+const ExperienceSection = ({ experience, contained = false }) => {
+  // ── Win95 retro style (desktop windows) ──
+  if (contained) {
+    return (
+      <div className="space-y-3 mx-auto w-full" style={{ fontFamily: 'Tahoma, Geneva, sans-serif', minWidth: '300px', maxWidth: '650px' }}>
+        {experience.map((exp) => (
+          <fieldset
+            key={exp.org}
+            className="p-3"
+            style={{
+              borderTop: '1px solid #808080',
+              borderLeft: '1px solid #808080',
+              borderRight: '1px solid #ffffff',
+              borderBottom: '1px solid #ffffff',
+            }}
+          >
+            <legend className="text-xs font-bold px-1" style={{ color: '#000' }}>
+              {exp.period}
+            </legend>
+            <div className="flex justify-between items-baseline mb-1">
+              <h4 className="text-sm font-bold" style={{ color: '#000' }}>
+                <a href={exp.webLink} target="_blank" rel="noreferrer" className="hover:underline pointer-events-auto text-[#0000ee]">
+                  {exp.org.split("·")[0].trim()}
+                </a>
+              </h4>
+              <span className="text-[11px] font-bold" style={{ color: '#555' }}>
+                {exp.role}
+              </span>
+            </div>
+
+            <p className="text-[12px] leading-relaxed mb-2" style={{ color: '#000' }}>
+              {exp.summary}
+            </p>
+
+            <ul className="list-none space-y-1 text-[12px]" style={{ color: '#000' }}>
+              {exp.achievements.map((achievement, i) => (
+                <li key={i} className="flex gap-1.5">
+                  <span style={{ color: '#000' }}>•</span>
+                  <span>{achievement}</span>
+                </li>
+              ))}
+            </ul>
+          </fieldset>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Original brutalist style (mobile) ──
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-3xl mx-auto">
       {experience.map((exp) => (
         <div key={exp.org} className="group bg-white dark:bg-black border-[3px] sm:border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] dark:sm:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] p-4 sm:p-8">
           <div className="flex flex-col md:flex-row md:justify-between md:items-baseline border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-4">

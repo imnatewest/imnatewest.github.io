@@ -21,7 +21,52 @@ const iconMap = {
   "Figma": "devicon-figma-plain",
 };
 
-const SkillsSection = ({ skills }) => {
+const SkillsSection = ({ skills, contained = false }) => {
+  // ── Win95 retro style (desktop windows) ──
+  if (contained) {
+    return (
+      <div className="space-y-4 mx-auto w-full" style={{ fontFamily: 'Tahoma, Geneva, sans-serif', minWidth: '300px', maxWidth: '600px' }}>
+        {skills.map((category) => (
+          <fieldset
+            key={category.label}
+            className="p-3 bg-[#d4d0c8]"
+            style={{
+              borderTop: '1px solid #808080',
+              borderLeft: '1px solid #808080',
+              borderRight: '1px solid #ffffff',
+              borderBottom: '1px solid #ffffff',
+            }}
+          >
+            <legend className="text-xs font-bold px-1" style={{ color: '#000' }}>
+              {category.label}
+            </legend>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {category.items.map((item) => (
+                <div 
+                  key={item} 
+                  className="flex items-center gap-1.5 px-2 py-1 bg-white"
+                  style={{
+                    borderTop: '2px solid #808080',
+                    borderLeft: '2px solid #808080',
+                    borderRight: '2px solid #dfdfdf',
+                    borderBottom: '2px solid #dfdfdf',
+                    color: '#000',
+                  }}
+                >
+                  <i className={`${iconMap[item] || 'devicon-devicon-plain'} colored text-[14px]`}></i>
+                  <span className="text-[11px]">
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        ))}
+      </div>
+    );
+  }
+
+  // ── Original brutalist style (mobile) ──
   return (
     <div className="space-y-12">
       {skills.map((category) => (

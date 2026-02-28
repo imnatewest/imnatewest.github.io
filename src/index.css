@@ -60,36 +60,73 @@
     }
   }
 
-  .retro-aqua-bg {
-    background-image: linear-gradient(
+  .crt-noise-bg {
+    background-color: #23A094;
+    position: relative;
+  }
+
+  .dark .crt-noise-bg {
+    background-color: #134e4a;
+  }
+
+  .crt-noise-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+  }
+
+  .dark .crt-noise-bg::before {
+    opacity: 0.18;
+  }
+
+  /* CRT scanlines */
+  .crt-noise-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
       to bottom,
-      #0a58fa 0%, #0a58fa 10%,
-      #256cfb 10%, #256cfb 20%,
-      #3c80fc 20%, #3c80fc 30%,
-      #5393fd 30%, #5393fd 40%,
-      #68a6fe 40%, #68a6fe 50%,
-      #7bb8ff 50%, #7bb8ff 60%,
-      #8ec9ff 60%, #8ec9ff 70%,
-      #a1daff 70%, #a1daff 80%,
-      #b4ebff 80%, #b4ebff 90%,
-      #c7fdff 90%, #c7fdff 100%
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dark .crt-noise-bg::after {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.08) 2px,
+      rgba(0, 0, 0, 0.08) 4px
     );
   }
 
-  .dark .retro-aqua-bg {
-    background-image: linear-gradient(
-      to bottom,
-      #001a4d 0%, #001a4d 10%,
-      #002466 10%, #002466 20%,
-      #002e80 20%, #002e80 30%,
-      #003899 30%, #003899 40%,
-      #0043b3 40%, #0043b3 50%,
-      #004ccc 50%, #004ccc 60%,
-      #0057e6 60%, #0057e6 70%,
-      #0061ff 70%, #0061ff 80%,
-      #1a71ff 80%, #1a71ff 90%,
-      #3381ff 90%, #3381ff 100%
-    );
+  @keyframes gradient-move {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .bg-moving-gradient {
+    background: linear-gradient(-45deg, #5bb8d4, #6ba5eb, #818cf8, #5bb8d4);
+    background-size: 300% 300%;
+    animation: gradient-move 15s ease infinite;
+  }
+
+  .dark .bg-moving-gradient {
+    background: linear-gradient(-45deg, #2a7a94, #3f79c2, #4f46e5, #2a7a94);
+    background-size: 300% 300%;
+    animation: gradient-move 15s ease infinite;
   }
 }
 

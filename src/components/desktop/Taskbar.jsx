@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Moon, Sun, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 
 const DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 const MONTHS = [
@@ -78,52 +78,107 @@ const CalendarPopup = ({ onClose, clockRef }) => {
   return (
     <div
       ref={calRef}
-      className="absolute bottom-14 right-0 w-72 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[6px_-6px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_-6px_0px_0px_rgba(255,255,255,1)] z-[100] select-none"
+      className="absolute bottom-12 right-0 w-64 z-[100] select-none"
+      style={{
+        background: '#d4d0c8',
+        borderTop: '2px solid #ffffff',
+        borderLeft: '2px solid #ffffff',
+        borderRight: '2px solid #404040',
+        borderBottom: '2px solid #404040',
+        boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+        fontFamily: 'Tahoma, Geneva, sans-serif',
+      }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 border-b-4 border-black dark:border-white bg-[#FFC900] dark:bg-[#713f12]">
-        <button onClick={prevMonth} className="w-6 h-6 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
-          <ChevronLeft className="w-4 h-4 stroke-[3] text-black dark:text-white" />
+      {/* Title bar */}
+      <div
+        className="flex items-center justify-between px-2 py-1"
+        style={{ background: 'linear-gradient(90deg, #0058e6, #3a8df5)' }}
+      >
+        <button
+          onClick={prevMonth}
+          className="w-5 h-5 flex items-center justify-center text-white hover:opacity-80"
+          style={{
+            background: 'transparent',
+            borderTop: '1px solid rgba(255,255,255,0.4)',
+            borderLeft: '1px solid rgba(255,255,255,0.4)',
+            borderRight: '1px solid rgba(0,0,0,0.3)',
+            borderBottom: '1px solid rgba(0,0,0,0.3)',
+            fontSize: '10px',
+          }}
+        >
+          ◀
         </button>
-        <button onClick={goToToday} className="text-xs font-black uppercase tracking-wide text-black dark:text-white">
+        <button onClick={goToToday} className="text-[11px] font-bold text-white">
           {MONTHS[viewMonth]} {viewYear}
         </button>
-        <button onClick={nextMonth} className="w-6 h-6 flex items-center justify-center hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
-          <ChevronRight className="w-4 h-4 stroke-[3] text-black dark:text-white" />
+        <button
+          onClick={nextMonth}
+          className="w-5 h-5 flex items-center justify-center text-white hover:opacity-80"
+          style={{
+            background: 'transparent',
+            borderTop: '1px solid rgba(255,255,255,0.4)',
+            borderLeft: '1px solid rgba(255,255,255,0.4)',
+            borderRight: '1px solid rgba(0,0,0,0.3)',
+            borderBottom: '1px solid rgba(0,0,0,0.3)',
+            fontSize: '10px',
+          }}
+        >
+          ▶
         </button>
       </div>
 
-      {/* Day Headers */}
-      <div className="grid grid-cols-7 border-b-2 border-black dark:border-white">
-        {DAYS.map(d => (
-          <div key={d} className="text-center text-[10px] font-black uppercase py-1 text-black dark:text-white">
-            {d}
-          </div>
-        ))}
-      </div>
+      {/* Calendar body — sunken inset */}
+      <div
+        className="mx-2 mt-2 mb-1"
+        style={{
+          background: '#ffffff',
+          borderTop: '2px solid #808080',
+          borderLeft: '2px solid #808080',
+          borderRight: '2px solid #dfdfdf',
+          borderBottom: '2px solid #dfdfdf',
+        }}
+      >
+        {/* Day Headers */}
+        <div className="grid grid-cols-7" style={{ borderBottom: '1px solid #c0c0c0' }}>
+          {DAYS.map(d => (
+            <div key={d} className="text-center text-[10px] font-bold py-0.5" style={{ color: d === 'Su' || d === 'Sa' ? '#cc0000' : '#000' }}>
+              {d}
+            </div>
+          ))}
+        </div>
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 p-1 gap-px">
-        {cells.map((cell, i) => (
-          <div
-            key={i}
-            className={`text-center text-xs py-1.5 font-bold transition-colors
-              ${cell.current 
-                ? 'text-black dark:text-white' 
-                : 'text-gray-300 dark:text-gray-700'}
-              ${cell.current && isToday(cell.day) 
-                ? 'bg-[#FFC900] text-black font-black border-2 border-black' 
-                : ''}
-            `}
-          >
-            {cell.day}
-          </div>
-        ))}
+        {/* Calendar Grid */}
+        <div className="grid grid-cols-7">
+          {cells.map((cell, i) => (
+            <div
+              key={i}
+              className="text-center text-[11px] py-[3px]"
+              style={{
+                color: !cell.current ? '#aaa' : isToday(cell.day) ? '#fff' : '#000',
+                background: cell.current && isToday(cell.day) ? '#0058e6' : 'transparent',
+                fontWeight: cell.current && isToday(cell.day) ? 'bold' : 'normal',
+              }}
+            >
+              {cell.day}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="border-t-2 border-black dark:border-white px-3 py-1.5 text-center">
-        <button onClick={goToToday} className="text-[10px] font-black uppercase tracking-wide text-black dark:text-white hover:underline">
+      <div className="px-2 py-1 flex justify-center">
+        <button
+          onClick={goToToday}
+          className="text-[10px] px-3 py-0.5"
+          style={{
+            background: '#d4d0c8',
+            borderTop: '1px solid #ffffff',
+            borderLeft: '1px solid #ffffff',
+            borderRight: '1px solid #404040',
+            borderBottom: '1px solid #404040',
+            color: '#000',
+          }}
+        >
           Today: {MONTHS[today.getMonth()]} {today.getDate()}, {today.getFullYear()}
         </button>
       </div>
@@ -131,7 +186,236 @@ const CalendarPopup = ({ onClose, clockRef }) => {
   );
 };
 
-const Taskbar = ({ openWindows, onWindowClick, isDark, toggleDarkMode }) => {
+// WMO weather code → emoji + label
+const weatherCodes = {
+  0: ['☀️', 'Clear sky'],
+  1: ['🌤️', 'Mainly clear'], 2: ['⛅', 'Partly cloudy'], 3: ['☁️', 'Overcast'],
+  45: ['🌫️', 'Foggy'], 48: ['🌫️', 'Rime fog'],
+  51: ['🌦️', 'Light drizzle'], 53: ['🌦️', 'Drizzle'], 55: ['🌧️', 'Heavy drizzle'],
+  61: ['🌧️', 'Light rain'], 63: ['🌧️', 'Rain'], 65: ['🌧️', 'Heavy rain'],
+  71: ['🌨️', 'Light snow'], 73: ['🌨️', 'Snow'], 75: ['❄️', 'Heavy snow'],
+  77: ['🌨️', 'Snow grains'],
+  80: ['🌦️', 'Light showers'], 81: ['🌧️', 'Showers'], 82: ['⛈️', 'Heavy showers'],
+  85: ['🌨️', 'Snow showers'], 86: ['❄️', 'Heavy snow showers'],
+  95: ['⛈️', 'Thunderstorm'], 96: ['⛈️', 'Thunderstorm + hail'], 99: ['⛈️', 'Severe thunderstorm'],
+};
+
+const WeatherWidget = () => {
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const widgetRef = useRef(null);
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setError('No geolocation');
+      setLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph`
+          );
+          const data = await res.json();
+          setWeather(data.current);
+        } catch {
+          setError('Fetch failed');
+        }
+        setLoading(false);
+      },
+      () => {
+        setError('Location denied');
+        setLoading(false);
+      }
+    );
+  }, []);
+
+  // Close popup on click outside
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (
+        widgetRef.current && !widgetRef.current.contains(e.target) &&
+        btnRef.current && !btnRef.current.contains(e.target)
+      ) {
+        setShowPopup(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const code = weather?.weather_code ?? 0;
+  const [emoji, label] = weatherCodes[code] || ['🌡️', 'Unknown'];
+  const temp = weather ? Math.round(weather.temperature_2m) : '--';
+
+  return (
+    <>
+      <button
+        ref={btnRef}
+        onClick={() => setShowPopup(prev => !prev)}
+        className="h-6 flex items-center gap-1 hover:opacity-80 transition-all"
+        style={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px', fontWeight: 'bold', color: '#000000' }}
+      >
+        {loading ? (
+          <span className="animate-pulse">🌡️</span>
+        ) : error ? (
+          <span>🌡️</span>
+        ) : (
+          <>
+            <span style={{ fontSize: '14px' }}>{emoji}</span>
+            <span>{temp}°</span>
+          </>
+        )}
+      </button>
+
+      {showPopup && (
+        <div
+          ref={widgetRef}
+          className="absolute bottom-12 right-0 w-56 z-[100] select-none"
+          style={{
+            background: '#d4d0c8',
+            borderTop: '2px solid #ffffff',
+            borderLeft: '2px solid #ffffff',
+            borderRight: '2px solid #404040',
+            borderBottom: '2px solid #404040',
+            boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+          }}
+        >
+          <div className="px-3 py-1.5" style={{ background: 'linear-gradient(90deg, #0058e6, #3a8df5)', fontFamily: 'Tahoma, sans-serif' }}>
+            <span className="text-[11px] font-bold text-white">Local Weather</span>
+          </div>
+          {loading ? (
+            <div className="p-4 text-center text-sm font-bold" style={{ color: '#000' }}>Loading...</div>
+          ) : error ? (
+            <div className="p-4 text-center text-sm font-bold" style={{ color: '#000' }}>
+              {error === 'Location denied' ? '📍 Location access denied' : '⚠️ Could not load weather'}
+            </div>
+          ) : (
+            <div className="p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">{emoji}</span>
+                <div>
+                  <div className="text-2xl font-black" style={{ color: '#000' }}>{temp}°F</div>
+                  <div className="text-[10px] font-bold uppercase" style={{ color: '#666', fontFamily: 'Tahoma, sans-serif' }}>{label}</div>
+                </div>
+              </div>
+              <div className="pt-2 grid grid-cols-2 gap-1 text-[10px] font-bold uppercase" style={{ borderTop: '1px solid #808080', color: '#000', fontFamily: 'Tahoma, sans-serif' }}>
+                <div>Feels like</div>
+                <div className="text-right">{Math.round(weather.apparent_temperature)}°F</div>
+                <div>Humidity</div>
+                <div className="text-right">{weather.relative_humidity_2m}%</div>
+                <div>Wind</div>
+                <div className="text-right">{Math.round(weather.wind_speed_10m)} mph</div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+}; // Close WeatherWidget
+
+const WindowsLogo = () => (
+  <div className="grid grid-cols-2 gap-[1px] w-3.5 h-3.5 transform -skew-y-[12deg] mr-0.5 mt-0.5">
+    <div className="bg-[#f03020]" />
+    <div className="bg-[#108030]" />
+    <div className="bg-[#0050d0]" />
+    <div className="bg-[#f0a000]" />
+  </div>
+);
+
+const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (
+        menuRef.current && !menuRef.current.contains(e.target) &&
+        startBtnRef?.current && !startBtnRef.current.contains(e.target)
+      ) {
+        onClose();
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [onClose, startBtnRef]);
+
+  return (
+    <div
+      ref={menuRef}
+      className="absolute bottom-full left-0 mb-0 flex z-[100] select-none shadow-[2px_2px_10px_rgba(0,0,0,0.5)]"
+      style={{
+        background: '#c0c0c0',
+        borderTop: '2px solid #ffffff',
+        borderLeft: '2px solid #ffffff',
+        borderRight: '2px solid #404040',
+        borderBottom: '2px solid #404040',
+        padding: '2px',
+        minWidth: '220px',
+        fontFamily: 'Tahoma, sans-serif'
+      }}
+    >
+      <div 
+        className="w-8 flex flex-col justify-end items-center py-2 shrink-0"
+        style={{ background: 'linear-gradient(180deg, #000080 0%, #1084d0 100%)' }}
+      >
+        <div 
+          className="text-white font-bold tracking-widest"
+          style={{
+            writingMode: 'vertical-rl',
+            transform: 'rotate(180deg)',
+            fontSize: '14px',
+          }}
+        >
+          NateOS <span className="text-gray-300 font-normal">95</span>
+        </div>
+      </div>
+
+      <div className="flex-1 py-1 flex flex-col items-stretch bg-[#c0c0c0]">
+        {apps?.map((app) => (
+          <React.Fragment key={app.id}>
+            <button
+              onClick={() => { onAppClick(app.id); onClose(); }}
+              className="px-3 py-1.5 flex items-center gap-3 hover:bg-[#000080] hover:text-white group text-left transition-none"
+              style={{ fontSize: '13px', color: '#000' }}
+            >
+              <div className="w-10 h-10 flex items-center justify-center pointer-events-none drop-shadow-md" style={{ imageRendering: 'pixelated' }}>
+                <div style={{ transform: 'scale(0.70)', transformOrigin: 'center' }}>
+                  {app.icon}
+                </div>
+              </div>
+              <span className="font-bold cursor-pointer group-hover:text-white">{app.label}</span>
+            </button>
+            {(app.id === 'contact' || app.id === 'extraction') && (
+              <div className="mx-2 my-1" style={{ borderTop: '1px solid #808080', borderBottom: '1px solid #ffffff' }} />
+            )}
+          </React.Fragment>
+        ))}
+        
+        <button
+          onClick={() => { alert('It is now safe to turn off your computer.'); onClose(); }}
+          className="px-3 py-1 flex items-center gap-3 hover:bg-[#000080] hover:text-white group text-left transition-none"
+          style={{ fontSize: '13px', color: '#000' }}
+        >
+          <div className="w-8 h-8 flex items-center justify-center text-[18px] grayscale opacity-80 pointer-events-none group-hover:grayscale-0 group-hover:text-white">
+            ⏻
+          </div>
+          <span className="font-bold cursor-pointer group-hover:text-white">Shut Down...</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleDarkMode }) => {
+  const [showStartMenu, setShowStartMenu] = useState(false);
+  const startBtnRef = useRef(null);
   const [time, setTime] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const clockRef = useRef(null);
@@ -154,50 +438,101 @@ const Taskbar = ({ openWindows, onWindowClick, isDark, toggleDarkMode }) => {
   });
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 h-12 bg-white dark:bg-black border-t-4 border-black dark:border-white flex items-center justify-between px-2 z-50 select-none">
-      {/* Start / Branding */}
-      <div className="flex items-center gap-2 shrink-0">
-        <button className="h-8 px-4 bg-[#FF90E8] dark:bg-[#831843] border-4 border-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-xs font-black uppercase tracking-tight text-black dark:text-white">
-          NW
+    <div
+      className="h-12 flex items-center justify-between px-1 z-50 select-none shrink-0"
+      style={{
+        background: '#c0c0c0',
+        borderTop: '2px solid #ffffff',
+      }}
+    >
+      {/* Start Button */}
+      <div className="flex items-center shrink-0 relative">
+        <button
+          ref={startBtnRef}
+          onClick={() => setShowStartMenu(prev => !prev)}
+          className="h-8 flex items-center gap-1.5"
+          style={{
+            background: '#c0c0c0',
+            borderTop: showStartMenu ? '2px solid #808080' : '2px solid #ffffff',
+            borderLeft: showStartMenu ? '2px solid #808080' : '2px solid #ffffff',
+            borderRight: showStartMenu ? '2px solid #ffffff' : '2px solid #808080',
+            borderBottom: showStartMenu ? '2px solid #ffffff' : '2px solid #808080',
+            fontFamily: 'Tahoma, sans-serif',
+            paddingTop: showStartMenu ? '2px' : '0',
+            paddingLeft: showStartMenu ? '10px' : '8px',
+            paddingRight: showStartMenu ? '6px' : '8px',
+            paddingBottom: showStartMenu ? '0' : '2px', // Slight visual shift on click
+          }}
+        >
+          <WindowsLogo />
+          <span className="text-black font-bold text-[13px] tracking-wide">Start</span>
         </button>
+
+        {showStartMenu && (
+          <StartMenu apps={apps} onAppClick={onAppClick} onClose={() => setShowStartMenu(false)} startBtnRef={startBtnRef} />
+        )}
       </div>
 
       {/* Open Window Tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto flex-1 mx-2 no-scrollbar">
+      <div className="flex items-center gap-1 overflow-x-auto flex-1 mx-1 no-scrollbar">
         {openWindows.map((win) => (
           <button
             key={win.id}
             onClick={() => onWindowClick(win.id)}
-            className={`h-8 px-3 border-2 border-black dark:border-white text-xs font-bold uppercase tracking-tight truncate max-w-[150px] transition-all ${
-              win.isMinimized 
-                ? 'bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400' 
-                : 'bg-[#FFC900] dark:bg-[#713f12] text-black dark:text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]'
-            }`}
+            className="h-7 px-3 text-[11px] font-bold truncate max-w-[150px] transition-all"
+            style={{
+              fontFamily: 'Tahoma, Geneva, sans-serif',
+              background: '#c0c0c0',
+              borderTop: win.isMinimized ? '2px solid #ffffff' : '2px solid #808080',
+              borderLeft: win.isMinimized ? '2px solid #ffffff' : '2px solid #808080',
+              borderRight: win.isMinimized ? '2px solid #808080' : '2px solid #ffffff',
+              borderBottom: win.isMinimized ? '2px solid #808080' : '2px solid #ffffff',
+              color: '#000000',
+              paddingTop: win.isMinimized ? '0' : '2px', // shift text down when sunken
+              paddingLeft: win.isMinimized ? '12px' : '14px', // shift text right when sunken
+            }}
           >
             {win.title}
           </button>
         ))}
       </div>
 
-      {/* System Tray */}
-      <div className="flex items-center gap-2 shrink-0 relative">
+      {/* System Tray — sunken inset */}
+      <div
+        className="flex items-center gap-0 shrink-0 relative h-8 px-1"
+        style={{
+          borderTop: '1px solid #808080',
+          borderLeft: '1px solid #808080',
+          borderRight: '1px solid #ffffff',
+          borderBottom: '1px solid #ffffff',
+        }}
+      >
+        {/* Weather */}
+        <WeatherWidget />
+
+        {/* Divider */}
+        <div className="w-px h-5 mx-1" style={{ borderLeft: '1px solid #808080', borderRight: '1px solid #ffffff' }} />
+
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleDarkMode}
-          className="h-8 w-8 bg-yellow-300 dark:bg-blue-600 border-2 border-black dark:border-white flex items-center justify-center hover:opacity-80 transition-all"
+          className="h-6 w-6 flex items-center justify-center hover:opacity-80 transition-all"
           aria-label="Toggle dark mode"
+          style={{ color: '#000000' }}
         >
-          {isDark ? <Sun className="w-4 h-4 stroke-[3]" /> : <Moon className="w-4 h-4 stroke-[3]" />}
+          {isDark ? <Sun className="w-4 h-4 stroke-[2]" /> : <Moon className="w-4 h-4 stroke-[2]" />}
         </button>
+
+        {/* Divider */}
+        <div className="w-px h-5 mx-1" style={{ borderLeft: '1px solid #808080', borderRight: '1px solid #ffffff' }} />
 
         {/* Clock — click to toggle calendar */}
         <button
           ref={clockRef}
           onClick={() => setShowCalendar(prev => !prev)}
-          className="h-8 px-3 border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-900 flex flex-col items-end justify-center leading-none hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+          className="h-7 px-2 flex flex-col items-end justify-center leading-none hover:bg-white/20 transition-colors"
         >
-          <span className="text-[10px] font-bold text-black dark:text-white">{formattedTime}</span>
-          <span className="text-[8px] font-medium text-gray-500 dark:text-gray-400">{formattedDate}</span>
+          <span className="text-[11px] font-bold" style={{ fontFamily: 'Tahoma, sans-serif', color: '#000000' }}>{formattedTime}</span>
         </button>
 
         {/* Calendar Popup */}

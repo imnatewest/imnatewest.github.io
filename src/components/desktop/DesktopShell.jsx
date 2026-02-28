@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { User, Briefcase, Code, Cpu, Mail, FileText } from 'lucide-react';
 import DesktopIcon from './DesktopIcon';
+import BootSequence from './BootSequence';
 import DesktopWindow from './DesktopWindow';
 import Taskbar from './Taskbar';
 
@@ -11,57 +11,136 @@ import SkillsSection from '../SkillsSection';
 import ContactSection from '../ContactSection';
 import { portfolio } from '../../data/content';
 
-// Icon style for brutalist weight
-const iconClass = "w-8 h-8 stroke-[3]";
+// Classic Mac OS 9 style SVG icons (32x32 viewBox, rendered at 48px)
+
+// Classic Windows XP Style Glossy Icons
+const AboutIcon = () => (
+  <img 
+    src="/about-icon.png" 
+    alt="About Me" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const ExperienceIcon = () => (
+  <img 
+    src="/experience-icon.png" 
+    alt="Experience" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const ProjectsIcon = () => (
+  <img 
+    src="/projects-icon.png" 
+    alt="Projects" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const SkillsIcon = () => (
+  <img 
+    src="/skills-icon.png" 
+    alt="Skills" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const ContactIcon = () => (
+  <img 
+    src="/contact-icon.png" 
+    alt="Contact" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const ResumeIcon = () => (
+  <img 
+    src="/resume-icon.png" 
+    alt="Resume" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
+
+const ExtractionIcon = () => (
+  <img 
+    src="/extraction-icon.png" 
+    alt="Extraction Game" 
+    width="96" 
+    height="96" 
+    className="object-contain drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" 
+    style={{ imageRendering: 'pixelated' }} 
+  />
+);
 
 // Desktop app definitions
 const APPS = [
   { 
     id: 'about', 
-    icon: <User className={iconClass} />,
+    icon: <AboutIcon />,
     label: 'About Me', 
-    color: 'bg-[#FF90E8]',
     windowColor: 'bg-[#FF90E8] dark:bg-[#831843]',
   },
   { 
     id: 'experience', 
-    icon: <Briefcase className={iconClass} />,
+    icon: <ExperienceIcon />,
     label: 'Experience', 
-    color: 'bg-[#FFC900]',
     windowColor: 'bg-[#FFC900] dark:bg-[#713f12]',
   },
   { 
     id: 'projects', 
-    icon: <Code className={iconClass} />,
+    icon: <ProjectsIcon />,
     label: 'Projects', 
-    color: 'bg-[#23A094]',
     windowColor: 'bg-[#23A094] dark:bg-[#134e4a]',
   },
   { 
     id: 'skills', 
-    icon: <Cpu className={iconClass} />,
+    icon: <SkillsIcon />,
     label: 'Skills', 
-    color: 'bg-[#90A8ED]',
     windowColor: 'bg-[#90A8ED] dark:bg-[#1e3a8a]',
   },
   { 
     id: 'contact', 
-    icon: <Mail className={iconClass} />,
+    icon: <ContactIcon />,
     label: 'Contact', 
-    color: 'bg-white dark:bg-gray-800',
     windowColor: 'bg-white dark:bg-black',
   },
   { 
     id: 'resume', 
-    icon: <FileText className={iconClass} />,
+    icon: <ResumeIcon />,
     label: 'Resume', 
-    color: 'bg-yellow-300',
     isLink: true,
     href: portfolio.hero.resumeUrl,
+  },
+  { 
+    id: 'extraction', 
+    icon: <ExtractionIcon />,
+    label: 'Dark Harvest', 
+    isLink: true,
+    href: '/extraction-game/index.html',
   },
 ];
 
 const DesktopShell = ({ isDark, toggleDarkMode }) => {
+  const [booting, setBooting] = useState(() => !sessionStorage.getItem('nateos-booted'));
   // Windows state: { [id]: { isOpen, isMinimized, zIndex } }
   const [windows, setWindows] = useState({});
   const [topZ, setTopZ] = useState(10);
@@ -127,28 +206,24 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
     }
   }, [windows, topZ, minimizeWindow]);
 
-  // Generate staggered positions for windows
+  // Spawn new windows in the exact center of the screen
   const getDefaultPosition = (appId) => {
-    const index = APPS.findIndex(a => a.id === appId);
-    return {
-      x: 100 + (index * 40),
-      y: 60 + (index * 30),
-    };
+    return 'center';
   };
 
   // Render window content based on app id
   const renderWindowContent = (appId) => {
     switch (appId) {
       case 'about':
-        return <Hero hero={portfolio.hero} />;
+        return <Hero hero={portfolio.hero} contained />;
       case 'experience':
-        return <ExperienceSection experience={portfolio.experience} />;
+        return <ExperienceSection experience={portfolio.experience} contained />;
       case 'projects':
         return <ProjectsSection projects={portfolio.projects} contained />;
       case 'skills':
-        return <SkillsSection skills={portfolio.skills} />;
+        return <SkillsSection skills={portfolio.skills} contained />;
       case 'contact':
-        return <ContactSection />;
+        return <ContactSection contained />;
       default:
         return null;
     }
@@ -166,19 +241,36 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
   });
 
   return (
-    <div className="fixed inset-0 bg-[#fdfaf6] dark:bg-gray-900 text-black dark:text-white font-mono selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-hidden">
-      {/* Monitor Bezel */}
-      <div className="absolute inset-4 lg:inset-8 xl:inset-12 border-[6px] border-black dark:border-white shadow-[inset_0_0_0_4px_rgba(0,0,0,0.1)] dark:shadow-[inset_0_0_0_4px_rgba(255,255,255,0.1)] flex flex-col overflow-hidden bg-gradient-to-br from-[#fdfaf6] via-[#f0ebe3] to-[#e8e0d4] dark:from-gray-900 dark:via-gray-850 dark:to-gray-800">
-        
-        {/* Bezel Top Bar (monitor brand) */}
-        <div className="h-8 bg-black dark:bg-white flex items-center justify-between px-4 shrink-0">
-          <span className="text-[10px] font-bold tracking-[0.3em] text-white dark:text-black uppercase">NateOS™ v1.0</span>
-        </div>
+    <div className="fixed inset-0 bg-[#2c2c2c] dark:bg-[#1a1a1a] text-black dark:text-white font-mono overflow-hidden flex flex-col items-center justify-center">
+      {booting && <BootSequence onComplete={() => setBooting(false)} />}
+      {/* Monitor Bezel — CRT style with curvature */}
+      <div
+        className="w-full flex flex-col overflow-hidden"
+        style={{
+          aspectRatio: '4/3',
+          maxWidth: '1200px',
+          maxHeight: '85vh',
+          background: 'linear-gradient(180deg, #d8d0c0 0%, #c4baa8 50%, #b8ae9c 100%)',
+          borderRadius: '18px',
+          padding: '12px 14px 10px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.3)',
+        }}
+      >
+        {/* Brand label on bezel - removed from top */}
 
-        {/* Desktop Area */}
-        <div className="flex-1 relative p-8 overflow-hidden retro-aqua-bg border-t-[3px] border-b-[3px] border-black dark:border-white">
+        {/* Screen area — inset into bezel */}
+        <div
+          className="flex-1 flex flex-col overflow-hidden relative"
+          style={{
+            borderRadius: '6px',
+            border: '3px solid #1a1a1a',
+            boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3), inset 0 0 60px rgba(0,0,0,0.1)',
+          }}
+        >
+          {/* Desktop Area */}
+          <div className="flex-1 relative p-8 overflow-hidden bg-moving-gradient">
           {/* Icon Grid */}
-          <div className="grid grid-cols-2 gap-4 w-fit">
+          <div className="grid grid-cols-2 flex-col gap-1 w-fit">
             {APPS.map((app) => (
               <DesktopIcon
                 key={app.id}
@@ -215,12 +307,29 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
 
         {/* Taskbar */}
         <Taskbar
+          apps={APPS}
+          onAppClick={openWindow}
           openWindows={openWindowsList}
           onWindowClick={handleTaskbarClick}
           isDark={isDark}
           toggleDarkMode={toggleDarkMode}
         />
-      </div>
+        </div>{/* /screen area */}
+
+        {/* Bottom Bezel Content */}
+        <div className="flex items-center justify-between px-6 mt-1 shrink-0">
+          <div className="flex-1" />
+          <div className="flex items-center justify-center">
+            <span className="text-[9px] font-bold tracking-[0.3em] text-[#666] uppercase" style={{ fontFamily: 'Tahoma, sans-serif' }}>NateOS™</span>
+          </div>
+          <div className="flex-1 flex justify-end">
+            {/* Power LED */}
+            <div className="w-2 h-2 rounded-full bg-[#4ade80] shadow-[0_0_4px_#4ade80]" />
+          </div>
+        </div>
+      </div>{/* /bezel */}
+
+
     </div>
   );
 };
