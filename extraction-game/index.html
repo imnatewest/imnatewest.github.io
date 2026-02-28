@@ -5,14 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dark Harvest</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-D8dNwHp1.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BpDPTwJf.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-BTQxZrEI.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/three-CviwGrnM.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-BcedFh6s.css">
   </head>
   <body>
     <div id="game-container"></div>
+    <div id="fog-overlay" class="hidden"></div>
     <div id="ui-layer">
-      <div id="fog-overlay" class="hidden"></div>
       <canvas id="minimap" class="hidden" width="200" height="200"></canvas>
       
       <!-- Start Screen -->
@@ -56,7 +57,7 @@
             </div>
 
             <div class="menu-column right-col">
-              <h3 class="section-header">SYSTEMS</h3>
+              <h3 class="section-header">CONTROLS</h3>
               <div class="controls-panel">
                 <div class="control-group">
                   <span class="control-label">MOVEMENT</span>
@@ -172,13 +173,7 @@
             <h1>Game Over</h1>
             <button id="restart-btn" class="primary-btn">Try Again</button>
         </div>
-
-        <!-- Mobile Controls -->
-        <div id="mobile-controls" class="hidden">
-            <button id="btn-mobile-pause" class="mobile-btn">⏸️</button>
-            <button id="btn-mobile-attack" class="mobile-btn">⚔️</button>
-            <button id="btn-mobile-fullscreen" class="mobile-btn">⛶</button>
-        </div>
     </div>
+    <div id="crt-overlay"></div>
   </body>
 </html>
