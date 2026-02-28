@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import Layout from './components/Layout';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
@@ -58,37 +57,37 @@ function App() {
   }
 
   // Mobile / Tablet: render current scrollable brutalist layout
-  const brutalistBlockClass = "border-[3px] sm:border-4 border-black dark:border-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] dark:sm:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] p-5 sm:p-10 transition-transform";
+  const brutalistBlockClass = "border-[3px] sm:border-4 border-black dark:border-gray-200 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] sm:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[6px_6px_0px_0px_rgba(229,231,235,1)] dark:sm:shadow-[8px_8px_0px_0px_rgba(229,231,235,1)] p-5 sm:p-10 transition-transform";
 
   return (
     <Layout>
       {/* 1. Hero / Intro */}
-      <section id="home" className={`${brutalistBlockClass} bg-[#FF90E8] dark:bg-[#831843]`}>
+      <section id="home" className={`${brutalistBlockClass} bg-[#FF90E8] dark:bg-[#500f29]`}>
         <Hero hero={portfolio.hero} />
         <Nav isDark={isDark} toggleDarkMode={toggleDarkMode} />
       </section>
 
       {/* 2. Experience */}
-      <section id="experience" className={`${brutalistBlockClass} bg-[#FFC900] dark:bg-[#713f12]`}>
-        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Work Experience</h2>
+      <section id="experience" className={`${brutalistBlockClass} bg-[#FFC900] dark:bg-[#45260c]`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-gray-200 pb-3 sm:pb-4 mb-6 sm:mb-8 dark:text-gray-100">Work Experience</h2>
         <ExperienceSection experience={portfolio.experience} />
       </section>
 
       {/* 3. Projects */}
-      <section id="projects" className={`${brutalistBlockClass} bg-[#23A094] dark:bg-[#134e4a]`}>
-        <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight border-b-[3px] sm:border-b-4 border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Featured Projects</h2>
+      <section id="projects" className={`${brutalistBlockClass} bg-[#23A094] dark:bg-[#0b2f2d]`}>
+        <h2 className="text-2xl sm:text-3xl font-black text-white dark:text-gray-100 uppercase tracking-tight border-b-[3px] sm:border-b-4 border-white dark:border-gray-200 pb-3 sm:pb-4 mb-6 sm:mb-8">Featured Projects</h2>
         <ProjectsSection projects={portfolio.projects} />
       </section>
 
       {/* 4. Skills */}
-      <section id="skills" className={`${brutalistBlockClass} bg-[#90A8ED] dark:bg-[#1e3a8a]`}>
-        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Tech Stack</h2>
+      <section id="skills" className={`${brutalistBlockClass} bg-[#90A8ED] dark:bg-[#11214d]`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-gray-200 pb-3 sm:pb-4 mb-6 sm:mb-8 dark:text-gray-100">Tech Stack</h2>
         <SkillsSection skills={portfolio.skills} />
       </section>
 
       {/* 5. Contact */}
-      <section id="contact" className={`${brutalistBlockClass} bg-white dark:bg-black`}>
-        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-white pb-3 sm:pb-4 mb-6 sm:mb-8">Let's Connect</h2>
+      <section id="contact" className={`${brutalistBlockClass} bg-white dark:bg-neutral-900`}>
+        <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight border-b-[3px] sm:border-b-4 border-black dark:border-gray-200 pb-3 sm:pb-4 mb-6 sm:mb-8 dark:text-gray-100">Let's Connect</h2>
         <ContactSection />
       </section>
 

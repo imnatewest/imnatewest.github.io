@@ -88,45 +88,6 @@ export class Game {
         document.getElementById('btn-resume').addEventListener('click', () => this.resumeGame());
         document.getElementById('btn-back-to-menu').addEventListener('click', () => this.backToMenu());
         
-        // Mobile Controls
-        this.fullscreenTarget = document.getElementById('game-container') || document.documentElement;
-        this.uiMobileControls = document.getElementById('mobile-controls');
-        this.btnMobilePause = document.getElementById('btn-mobile-pause');
-        this.btnMobileAttack = document.getElementById('btn-mobile-attack');
-
-        if (this.btnMobilePause) {
-            this.btnMobilePause.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.togglePause();
-            });
-            // Prevent touch from propagating to canvas
-            this.btnMobilePause.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
-        }
-
-        if (this.btnMobileAttack) {
-            this.btnMobileAttack.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                e.stopPropagation(); // Prevent canvas touch
-                this.input.keys.attack = true;
-            }, { passive: false });
-            
-            this.btnMobileAttack.addEventListener('touchend', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.input.keys.attack = false;
-            }, { passive: false });
-        }
-        
-        this.btnMobileFullscreen = document.getElementById('btn-mobile-fullscreen');
-        if (this.btnMobileFullscreen) {
-            this.btnMobileFullscreen.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggleFullscreen();
-            });
-            // Prevent touch propagation
-            this.btnMobileFullscreen.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
-        }
-        
         const minimapCanvas = document.getElementById('minimap');
         this.minimapCtx = minimapCanvas.getContext('2d');
         this.minimapSize = minimapCanvas.width; // 200
@@ -179,7 +140,6 @@ export class Game {
 
         this.uiStart.classList.add('hidden');
         this.uiHud.classList.remove('hidden');
-        if (this.uiMobileControls) this.uiMobileControls.classList.remove('hidden');
         this.uiFog.classList.remove('hidden');
         document.getElementById('minimap').classList.remove('hidden');
         this.uiLevel.innerText = this.level;
@@ -348,7 +308,6 @@ export class Game {
         this.uiSuccess.classList.add('hidden');
         this.uiGameOver.classList.add('hidden');
         this.uiHud.classList.remove('hidden');
-        if (this.uiMobileControls) this.uiMobileControls.classList.remove('hidden');
         this.uiLevel.innerText = this.level;
         this.updateUI();
         
@@ -650,7 +609,6 @@ export class Game {
         // Show Shop
         this.uiSuccess.classList.add('hidden');
         this.uiShop.classList.remove('hidden');
-        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
         this.updateShopUI();
         
         // Hide HUD
@@ -764,13 +722,11 @@ export class Game {
         this.isGameOver = true;
         this.uiGameOver.classList.remove('hidden');
         this.uiHud.classList.add('hidden');
-        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
     }
 
     win() {
         this.isGameOver = true;
         this.uiSuccess.classList.remove('hidden');
-        if (this.uiMobileControls) this.uiMobileControls.classList.add('hidden');
     }
 
     updateDayNightCycle() {

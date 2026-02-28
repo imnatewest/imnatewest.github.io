@@ -69,8 +69,8 @@ const Nav = ({ isDark, toggleDarkMode }) => {
   return (
     <>
       {/* Desktop Inline Table of Contents */}
-      <nav ref={navRef} className="hidden lg:block mt-12 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] p-8">
-        <h3 className="text-xl font-black uppercase tracking-tight text-black dark:text-white mb-6 border-b-4 border-black dark:border-white pb-2 inline-block">Table of Contents</h3>
+      <nav ref={navRef} className="hidden lg:block mt-12 bg-white dark:bg-neutral-900 border-4 border-black dark:border-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(229,231,235,1)] p-8">
+        <h3 className="text-xl font-black uppercase tracking-tight text-black dark:text-gray-100 mb-6 border-b-4 border-black dark:border-gray-200 pb-2 inline-block">Table of Contents</h3>
         <ul className="flex flex-col space-y-4">
           {navItems.map((item) => (
             <li key={item.id}>
@@ -80,10 +80,10 @@ const Nav = ({ isDark, toggleDarkMode }) => {
               >
                 <div className={`flex items-center gap-4 text-2xl font-black uppercase tracking-tight ${
                   activeSection === item.id
-                    ? 'text-black dark:text-white'
-                    : 'text-gray-400 dark:text-gray-600 hover:text-black dark:hover:text-white'
+                    ? 'text-black dark:text-gray-100'
+                    : 'text-gray-400 dark:text-gray-500 hover:text-black dark:hover:text-gray-100'
                 }`}>
-                  <span className={`w-4 h-4 border-4 border-black dark:border-white transition-colors ${
+                  <span className={`w-4 h-4 border-4 border-black dark:border-gray-200 transition-colors ${
                     activeSection === item.id ? 'bg-[#FF90E8] dark:bg-[#FF90E8]' : 'bg-transparent group-hover:bg-[#FFC900] dark:group-hover:bg-[#FFC900]'
                   }`}></span>
                   <span className="group-hover:translate-x-2 transition-transform">{item.label}</span>
@@ -97,20 +97,20 @@ const Nav = ({ isDark, toggleDarkMode }) => {
       {/* Mobile Hamburger Button */}
       <button 
         onClick={() => setIsMenuOpen(prev => !prev)}
-        className="mobile-nav-toggle fixed top-6 right-6 z-40 p-3 bg-white dark:bg-black border-4 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
+        className="mobile-nav-toggle fixed top-6 right-6 z-40 p-3 bg-white dark:bg-neutral-900 border-4 border-black dark:border-gray-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(229,231,235,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[2px_2px_0px_0px_rgba(229,231,235,1)] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none transition-all"
         aria-label="Open menu"
       >
-        <div className="w-6 h-1 bg-black dark:bg-white mb-1.5"></div>
-        <div className="w-6 h-1 bg-black dark:bg-white mb-1.5"></div>
-        <div className="w-6 h-1 bg-black dark:bg-white"></div>
+        <div className="w-6 h-1 bg-black dark:bg-gray-200 mb-1.5"></div>
+        <div className="w-6 h-1 bg-black dark:bg-gray-200 mb-1.5"></div>
+        <div className="w-6 h-1 bg-black dark:bg-gray-200"></div>
       </button>
 
       {/* Mobile Dropdown Menu */}
       {isMenuOpen && (
-        <div className="mobile-nav-toggle fixed top-20 right-6 z-50 w-64 bg-white dark:bg-black flex flex-col items-stretch border-4 border-black dark:border-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] animate-in slide-in-from-top-4 duration-200">
+        <div className="mobile-nav-toggle fixed top-20 right-6 z-50 w-64 bg-white dark:bg-neutral-900 flex flex-col items-stretch border-4 border-black dark:border-gray-200 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(229,231,235,1)] animate-in slide-in-from-top-4 duration-200">
           <ul className="flex flex-col w-full text-left">
             {navItems.map((item) => (
-              <li key={`mobile-${item.id}`} className="border-b-4 border-black dark:border-white last:border-b-0">
+              <li key={`mobile-${item.id}`} className="border-b-4 border-black dark:border-gray-200 last:border-b-0">
                 <button
                   onClick={() => {
                     scrollTo(item.id);
@@ -118,8 +118,8 @@ const Nav = ({ isDark, toggleDarkMode }) => {
                   }}
                   className={`w-full text-xl font-black uppercase tracking-tight transition-all p-4 text-left active:bg-gray-200 dark:active:bg-gray-800 ${
                     activeSection === item.id 
-                    ? 'bg-black dark:bg-white text-white dark:text-black'
-                    : 'bg-white dark:bg-black text-black dark:text-white'
+                    ? 'bg-black dark:bg-gray-200 text-white dark:text-neutral-900'
+                    : 'bg-white dark:bg-neutral-900 text-black dark:text-gray-100'
                   }`}
                 >
                   {item.label}
@@ -127,7 +127,7 @@ const Nav = ({ isDark, toggleDarkMode }) => {
               </li>
             ))}
             
-            <li className="border-t-4 border-black dark:border-white">
+            <li className="border-t-4 border-black dark:border-gray-200">
                {/* Dark mode toggle rendered in Nav for mobile */}
                <button
                   onClick={() => {

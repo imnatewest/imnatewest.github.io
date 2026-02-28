@@ -13,12 +13,18 @@ const DesktopWindow = ({
   isMinimized,
   zIndex = 10,
   defaultPosition,
-  color = 'bg-white dark:bg-black'
+  color = 'bg-white dark:bg-black',
+  isDark = false
 }) => {
   const windowRef = useRef(null);
   const [position, setPosition] = useState(
     typeof defaultPosition === 'object' ? defaultPosition : { x: 0, y: 0 }
   );
+  const positionRef = useRef(position);
+  
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
   const [size, setSize] = useState({ width: 700, height: 500 });
   const [isReady, setIsReady] = useState(typeof defaultPosition === 'object');
   const [isDragging, setIsDragging] = useState(false);
@@ -61,22 +67,26 @@ const DesktopWindow = ({
     onFocus?.();
     setIsDragging(true);
     setDragOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+      x: e.clientX - positionRef.current.x,
+      y: e.clientY - positionRef.current.y,
     });
-  }, [isMaximized, position, onFocus]);
+  }, [isMaximized, onFocus]);
 
   useEffect(() => {
     if (!isDragging) return;
     const handleMouseMove = (e) => {
-      const newX = e.clientX - dragOffset.x;
-      const newY = e.clientY - dragOffset.y;
-      setPosition({
-        x: Math.max(0, newX),
-        y: Math.max(0, newY),
-      });
+      const newX = Math.max(0, e.clientX - dragOffset.x);
+      const newY = Math.max(0, e.clientY - dragOffset.y);
+      positionRef.current = { x: newX, y: newY };
+      if (windowRef.current) {
+        windowRef.current.style.left = `${newX}px`;
+        windowRef.current.style.top = `${newY}px`;
+      }
     };
-    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setPosition(positionRef.current);
+    };
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
     return () => {
@@ -98,10 +108,10 @@ const DesktopWindow = ({
       y: e.clientY,
       width: size.width,
       height: size.height,
-      posX: position.x,
-      posY: position.y,
+      posX: positionRef.current.x,
+      posY: positionRef.current.y,
     };
-  }, [isMaximized, size, position, onFocus]);
+  }, [isMaximized, size, onFocus]);
 
   useEffect(() => {
     if (!isResizing || !resizeDir) return;
@@ -194,14 +204,16 @@ const DesktopWindow = ({
   return (
     <div
       ref={windowRef}
-      className={`absolute flex flex-col bg-[#c0c0c0] dark:bg-[#3a3a3a] ${isDragging ? 'cursor-grabbing' : ''} ${isResizing ? 'select-none' : ''}`}
+      className={`absolute flex flex-col bg-[#c0c0c0] dark:bg-[#2b2b2b] ${isDragging ? 'cursor-grabbing' : ''} ${isResizing ? 'select-none' : ''}`}
       style={{
         ...windowStyle,
-        borderTop: '2px solid #ffffff',
-        borderLeft: '2px solid #ffffff',
-        borderRight: '2px solid #404040',
-        borderBottom: '2px solid #404040',
-        boxShadow: 'inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 3px 3px 0 rgba(0,0,0,0.3)',
+        borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderLeft: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderRight: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+        borderBottom: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+        boxShadow: isDark 
+          ? 'inset 1px 1px 0 #3f3f46, inset -1px -1px 0 #18181b, 3px 3px 0 rgba(0,0,0,0.6)'
+          : 'inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080, 3px 3px 0 rgba(0,0,0,0.3)',
         visibility: isReady ? 'visible' : 'hidden',
       }}
       onMouseDown={() => onFocus?.()}
@@ -219,7 +231,7 @@ const DesktopWindow = ({
       <div
         onMouseDown={handleTitleMouseDown}
         className="flex items-center justify-between px-2 py-1 cursor-grab active:cursor-grabbing select-none shrink-0"
-        style={{ background: 'linear-gradient(180deg, #0997ff 0%, #0053ee 50%, #0044cc 100%)' }}
+        style={{ background: isDark ? 'linear-gradient(180deg, #3f3f46 0%, #27272a 50%, #18181b 100%)' : 'linear-gradient(180deg, #0997ff 0%, #0053ee 50%, #0044cc 100%)' }}
       >
         <span className="text-[13px] font-bold text-white truncate drop-shadow-[1px_1px_0px_rgba(0,0,0,0.4)]" style={{ fontFamily: 'Tahoma, Geneva, sans-serif' }}>{title}</span>
         <div className="flex items-center gap-[2px] shrink-0 ml-4">
@@ -228,11 +240,11 @@ const DesktopWindow = ({
             onClick={(e) => { e.stopPropagation(); onMinimize?.(); }}
             className="w-[21px] h-[21px] flex items-center justify-center"
             style={{
-              background: 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
-              borderTop: '1px solid #ffffff80',
-              borderLeft: '1px solid #ffffff80',
-              borderRight: '1px solid #00000040',
-              borderBottom: '1px solid #00000040',
+              background: isDark ? 'linear-gradient(180deg, #5a5a5a 0%, #2b2b2b 100%)' : 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
+              borderTop: isDark ? '1px solid #7a7a7a' : '1px solid #ffffff80',
+              borderLeft: isDark ? '1px solid #7a7a7a' : '1px solid #ffffff80',
+              borderRight: isDark ? '1px solid #00000080' : '1px solid #00000040',
+              borderBottom: isDark ? '1px solid #00000080' : '1px solid #00000040',
               borderRadius: '3px',
             }}
             aria-label="Minimize"
@@ -244,11 +256,11 @@ const DesktopWindow = ({
             onClick={(e) => { e.stopPropagation(); handleMaximize(); }}
             className="w-[21px] h-[21px] flex items-center justify-center"
             style={{
-              background: 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
-              borderTop: '1px solid #ffffff80',
-              borderLeft: '1px solid #ffffff80',
-              borderRight: '1px solid #00000040',
-              borderBottom: '1px solid #00000040',
+              background: isDark ? 'linear-gradient(180deg, #5a5a5a 0%, #2b2b2b 100%)' : 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
+              borderTop: isDark ? '1px solid #7a7a7a' : '1px solid #ffffff80',
+              borderLeft: isDark ? '1px solid #7a7a7a' : '1px solid #ffffff80',
+              borderRight: isDark ? '1px solid #00000080' : '1px solid #00000040',
+              borderBottom: isDark ? '1px solid #00000080' : '1px solid #00000040',
               borderRadius: '3px',
             }}
             aria-label="Maximize"
@@ -260,11 +272,11 @@ const DesktopWindow = ({
             onClick={(e) => { e.stopPropagation(); onClose?.(); }}
             className="w-[21px] h-[21px] flex items-center justify-center ml-[2px]"
             style={{
-              background: 'linear-gradient(180deg, #e87961 0%, #c7321a 100%)',
-              borderTop: '1px solid #ffffff80',
-              borderLeft: '1px solid #ffffff80',
-              borderRight: '1px solid #00000040',
-              borderBottom: '1px solid #00000040',
+              background: isDark ? 'linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%)' : 'linear-gradient(180deg, #e87961 0%, #c7321a 100%)',
+              borderTop: isDark ? '1px solid #991b1b' : '1px solid #ffffff80',
+              borderLeft: isDark ? '1px solid #991b1b' : '1px solid #ffffff80',
+              borderRight: isDark ? '1px solid #00000080' : '1px solid #00000040',
+              borderBottom: isDark ? '1px solid #00000080' : '1px solid #00000040',
               borderRadius: '3px',
             }}
             aria-label="Close"
@@ -275,7 +287,12 @@ const DesktopWindow = ({
       </div>
 
       {/* Window Content — inset panel */}
-      <div className="mx-1 mb-1 flex-1 overflow-hidden" style={{ borderTop: '2px solid #808080', borderLeft: '2px solid #808080', borderRight: '2px solid #ffffff', borderBottom: '2px solid #ffffff' }}>
+      <div className="mx-1 mb-1 flex-1 overflow-hidden" style={{ 
+        borderTop: isDark ? '2px solid #0a0a0a' : '2px solid #808080', 
+        borderLeft: isDark ? '2px solid #0a0a0a' : '2px solid #808080', 
+        borderRight: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff', 
+        borderBottom: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff' 
+      }}>
         <div className={`${color} overflow-y-auto h-full p-6`}>
           {children}
         </div>

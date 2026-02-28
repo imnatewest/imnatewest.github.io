@@ -44,7 +44,9 @@ export class Renderer {
         // ====================================================================
         // WebGL Renderer Setup
         // ====================================================================
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        // Retro PS1/PS2 style: no antialiasing, low pixel ratio
+        this.renderer = new THREE.WebGLRenderer({ antialias: false });
+        this.renderer.setPixelRatio(0.45);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         
         // Enable shadow rendering for depth and realism

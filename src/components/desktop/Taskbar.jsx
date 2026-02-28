@@ -7,7 +7,7 @@ const MONTHS = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const CalendarPopup = ({ onClose, clockRef }) => {
+const CalendarPopup = ({ onClose, clockRef, isDark }) => {
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
@@ -80,19 +80,19 @@ const CalendarPopup = ({ onClose, clockRef }) => {
       ref={calRef}
       className="absolute bottom-12 right-0 w-64 z-[100] select-none"
       style={{
-        background: '#d4d0c8',
-        borderTop: '2px solid #ffffff',
-        borderLeft: '2px solid #ffffff',
-        borderRight: '2px solid #404040',
-        borderBottom: '2px solid #404040',
-        boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+        background: isDark ? '#2b2b2b' : '#d4d0c8',
+        borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderLeft: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderRight: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+        borderBottom: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+        boxShadow: isDark ? '2px 2px 6px rgba(0,0,0,0.6)' : '2px 2px 6px rgba(0,0,0,0.3)',
         fontFamily: 'Tahoma, Geneva, sans-serif',
       }}
     >
       {/* Title bar */}
       <div
         className="flex items-center justify-between px-2 py-1"
-        style={{ background: 'linear-gradient(90deg, #0058e6, #3a8df5)' }}
+        style={{ background: isDark ? 'linear-gradient(90deg, #3f3f46, #27272a)' : 'linear-gradient(90deg, #0058e6, #3a8df5)' }}
       >
         <button
           onClick={prevMonth}
@@ -131,17 +131,17 @@ const CalendarPopup = ({ onClose, clockRef }) => {
       <div
         className="mx-2 mt-2 mb-1"
         style={{
-          background: '#ffffff',
-          borderTop: '2px solid #808080',
-          borderLeft: '2px solid #808080',
-          borderRight: '2px solid #dfdfdf',
-          borderBottom: '2px solid #dfdfdf',
+          background: isDark ? '#1a1a1a' : '#ffffff',
+          borderTop: isDark ? '2px solid #0a0a0a' : '2px solid #808080',
+          borderLeft: isDark ? '2px solid #0a0a0a' : '2px solid #808080',
+          borderRight: isDark ? '2px solid #5a5a5a' : '2px solid #dfdfdf',
+          borderBottom: isDark ? '2px solid #5a5a5a' : '2px solid #dfdfdf',
         }}
       >
         {/* Day Headers */}
-        <div className="grid grid-cols-7" style={{ borderBottom: '1px solid #c0c0c0' }}>
+        <div className="grid grid-cols-7" style={{ borderBottom: isDark ? '1px solid #404040' : '1px solid #c0c0c0' }}>
           {DAYS.map(d => (
-            <div key={d} className="text-center text-[10px] font-bold py-0.5" style={{ color: d === 'Su' || d === 'Sa' ? '#cc0000' : '#000' }}>
+            <div key={d} className="text-center text-[10px] font-bold py-0.5" style={{ color: d === 'Su' || d === 'Sa' ? (isDark ? '#ef4444' : '#cc0000') : (isDark ? '#e5e7eb' : '#000') }}>
               {d}
             </div>
           ))}
@@ -154,8 +154,8 @@ const CalendarPopup = ({ onClose, clockRef }) => {
               key={i}
               className="text-center text-[11px] py-[3px]"
               style={{
-                color: !cell.current ? '#aaa' : isToday(cell.day) ? '#fff' : '#000',
-                background: cell.current && isToday(cell.day) ? '#0058e6' : 'transparent',
+                color: !cell.current ? (isDark ? '#555' : '#aaa') : isToday(cell.day) ? '#fff' : (isDark ? '#e5e7eb' : '#000'),
+                background: cell.current && isToday(cell.day) ? (isDark ? '#52525b' : '#0058e6') : 'transparent',
                 fontWeight: cell.current && isToday(cell.day) ? 'bold' : 'normal',
               }}
             >
@@ -171,12 +171,12 @@ const CalendarPopup = ({ onClose, clockRef }) => {
           onClick={goToToday}
           className="text-[10px] px-3 py-0.5"
           style={{
-            background: '#d4d0c8',
-            borderTop: '1px solid #ffffff',
-            borderLeft: '1px solid #ffffff',
-            borderRight: '1px solid #404040',
-            borderBottom: '1px solid #404040',
-            color: '#000',
+            background: isDark ? '#2b2b2b' : '#d4d0c8',
+            borderTop: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff',
+            borderLeft: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff',
+            borderRight: isDark ? '1px solid #0a0a0a' : '1px solid #404040',
+            borderBottom: isDark ? '1px solid #0a0a0a' : '1px solid #404040',
+            color: isDark ? '#e5e7eb' : '#000',
           }}
         >
           Today: {MONTHS[today.getMonth()]} {today.getDate()}, {today.getFullYear()}
@@ -200,7 +200,7 @@ const weatherCodes = {
   95: ['⛈️', 'Thunderstorm'], 96: ['⛈️', 'Thunderstorm + hail'], 99: ['⛈️', 'Severe thunderstorm'],
 };
 
-const WeatherWidget = () => {
+const WeatherWidget = ({ isDark }) => {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -260,7 +260,7 @@ const WeatherWidget = () => {
         ref={btnRef}
         onClick={() => setShowPopup(prev => !prev)}
         className="h-6 flex items-center gap-1 hover:opacity-80 transition-all"
-        style={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px', fontWeight: 'bold', color: '#000000' }}
+        style={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px', fontWeight: 'bold', color: isDark ? '#e5e7eb' : '#000000' }}
       >
         {loading ? (
           <span className="animate-pulse">🌡️</span>
@@ -279,21 +279,21 @@ const WeatherWidget = () => {
           ref={widgetRef}
           className="absolute bottom-12 right-0 w-56 z-[100] select-none"
           style={{
-            background: '#d4d0c8',
-            borderTop: '2px solid #ffffff',
-            borderLeft: '2px solid #ffffff',
-            borderRight: '2px solid #404040',
-            borderBottom: '2px solid #404040',
-            boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+            background: isDark ? '#2b2b2b' : '#d4d0c8',
+            borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+            borderLeft: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+            borderRight: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+            borderBottom: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+            boxShadow: isDark ? '2px 2px 6px rgba(0,0,0,0.6)' : '2px 2px 6px rgba(0,0,0,0.3)',
           }}
         >
-          <div className="px-3 py-1.5" style={{ background: 'linear-gradient(90deg, #0058e6, #3a8df5)', fontFamily: 'Tahoma, sans-serif' }}>
+          <div className="px-3 py-1.5" style={{ background: isDark ? 'linear-gradient(90deg, #3f3f46, #27272a)' : 'linear-gradient(90deg, #0058e6, #3a8df5)', fontFamily: 'Tahoma, sans-serif' }}>
             <span className="text-[11px] font-bold text-white">Local Weather</span>
           </div>
           {loading ? (
-            <div className="p-4 text-center text-sm font-bold" style={{ color: '#000' }}>Loading...</div>
+            <div className="p-4 text-center text-sm font-bold" style={{ color: isDark ? '#e5e7eb' : '#000' }}>Loading...</div>
           ) : error ? (
-            <div className="p-4 text-center text-sm font-bold" style={{ color: '#000' }}>
+            <div className="p-4 text-center text-sm font-bold" style={{ color: isDark ? '#e5e7eb' : '#000' }}>
               {error === 'Location denied' ? '📍 Location access denied' : '⚠️ Could not load weather'}
             </div>
           ) : (
@@ -301,11 +301,11 @@ const WeatherWidget = () => {
               <div className="flex items-center gap-2">
                 <span className="text-3xl">{emoji}</span>
                 <div>
-                  <div className="text-2xl font-black" style={{ color: '#000' }}>{temp}°F</div>
-                  <div className="text-[10px] font-bold uppercase" style={{ color: '#666', fontFamily: 'Tahoma, sans-serif' }}>{label}</div>
+                  <div className="text-2xl font-black" style={{ color: isDark ? '#e5e7eb' : '#000' }}>{temp}°F</div>
+                  <div className="text-[10px] font-bold uppercase" style={{ color: isDark ? '#a1a1aa' : '#666', fontFamily: 'Tahoma, sans-serif' }}>{label}</div>
                 </div>
               </div>
-              <div className="pt-2 grid grid-cols-2 gap-1 text-[10px] font-bold uppercase" style={{ borderTop: '1px solid #808080', color: '#000', fontFamily: 'Tahoma, sans-serif' }}>
+              <div className="pt-2 grid grid-cols-2 gap-1 text-[10px] font-bold uppercase" style={{ borderTop: isDark ? '1px solid #404040' : '1px solid #808080', color: isDark ? '#e5e7eb' : '#000', fontFamily: 'Tahoma, sans-serif' }}>
                 <div>Feels like</div>
                 <div className="text-right">{Math.round(weather.apparent_temperature)}°F</div>
                 <div>Humidity</div>
@@ -330,7 +330,7 @@ const WindowsLogo = () => (
   </div>
 );
 
-const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
+const StartMenu = ({ apps, onAppClick, onClose, startBtnRef, isDark }) => {
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -351,11 +351,11 @@ const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
       ref={menuRef}
       className="absolute bottom-full left-0 mb-0 flex z-[100] select-none shadow-[2px_2px_10px_rgba(0,0,0,0.5)]"
       style={{
-        background: '#c0c0c0',
-        borderTop: '2px solid #ffffff',
-        borderLeft: '2px solid #ffffff',
-        borderRight: '2px solid #404040',
-        borderBottom: '2px solid #404040',
+        background: isDark ? '#2b2b2b' : '#c0c0c0',
+        borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderLeft: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+        borderRight: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+        borderBottom: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
         padding: '2px',
         minWidth: '220px',
         fontFamily: 'Tahoma, sans-serif'
@@ -363,7 +363,7 @@ const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
     >
       <div 
         className="w-8 flex flex-col justify-end items-center py-2 shrink-0"
-        style={{ background: 'linear-gradient(180deg, #000080 0%, #1084d0 100%)' }}
+        style={{ background: isDark ? 'linear-gradient(180deg, #18181b 0%, #3f3f46 100%)' : 'linear-gradient(180deg, #000080 0%, #1084d0 100%)' }}
       >
         <div 
           className="text-white font-bold tracking-widest"
@@ -377,13 +377,13 @@ const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
         </div>
       </div>
 
-      <div className="flex-1 py-1 flex flex-col items-stretch bg-[#c0c0c0]">
+      <div className="flex-1 py-1 flex flex-col items-stretch" style={{ background: isDark ? '#2b2b2b' : '#c0c0c0' }}>
         {apps?.map((app) => (
           <React.Fragment key={app.id}>
             <button
               onClick={() => { onAppClick(app.id); onClose(); }}
-              className="px-3 py-1.5 flex items-center gap-3 hover:bg-[#000080] hover:text-white group text-left transition-none"
-              style={{ fontSize: '13px', color: '#000' }}
+              className={`px-3 py-1.5 flex items-center gap-3 ${isDark ? 'hover:bg-[#3f3f46]' : 'hover:bg-[#000080]'} hover:text-white group text-left transition-none`}
+              style={{ fontSize: '13px', color: isDark ? '#e5e7eb' : '#000' }}
             >
               <div className="w-10 h-10 flex items-center justify-center pointer-events-none drop-shadow-md" style={{ imageRendering: 'pixelated' }}>
                 <div style={{ transform: 'scale(0.70)', transformOrigin: 'center' }}>
@@ -393,15 +393,15 @@ const StartMenu = ({ apps, onAppClick, onClose, startBtnRef }) => {
               <span className="font-bold cursor-pointer group-hover:text-white">{app.label}</span>
             </button>
             {(app.id === 'contact' || app.id === 'extraction') && (
-              <div className="mx-2 my-1" style={{ borderTop: '1px solid #808080', borderBottom: '1px solid #ffffff' }} />
+              <div className="mx-2 my-1" style={{ borderTop: isDark ? '1px solid #0a0a0a' : '1px solid #808080', borderBottom: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff' }} />
             )}
           </React.Fragment>
         ))}
         
         <button
           onClick={() => { alert('It is now safe to turn off your computer.'); onClose(); }}
-          className="px-3 py-1 flex items-center gap-3 hover:bg-[#000080] hover:text-white group text-left transition-none"
-          style={{ fontSize: '13px', color: '#000' }}
+          className={`px-3 py-1 flex items-center gap-3 ${isDark ? 'hover:bg-[#3f3f46]' : 'hover:bg-[#000080]'} hover:text-white group text-left transition-none`}
+          style={{ fontSize: '13px', color: isDark ? '#e5e7eb' : '#000' }}
         >
           <div className="w-8 h-8 flex items-center justify-center text-[18px] grayscale opacity-80 pointer-events-none group-hover:grayscale-0 group-hover:text-white">
             ⏻
@@ -441,8 +441,8 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
     <div
       className="h-12 flex items-center justify-between px-1 z-50 select-none shrink-0"
       style={{
-        background: '#c0c0c0',
-        borderTop: '2px solid #ffffff',
+        background: isDark ? '#2b2b2b' : '#c0c0c0',
+        borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
       }}
     >
       {/* Start Button */}
@@ -452,11 +452,11 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
           onClick={() => setShowStartMenu(prev => !prev)}
           className="h-8 flex items-center gap-1.5"
           style={{
-            background: '#c0c0c0',
-            borderTop: showStartMenu ? '2px solid #808080' : '2px solid #ffffff',
-            borderLeft: showStartMenu ? '2px solid #808080' : '2px solid #ffffff',
-            borderRight: showStartMenu ? '2px solid #ffffff' : '2px solid #808080',
-            borderBottom: showStartMenu ? '2px solid #ffffff' : '2px solid #808080',
+            background: isDark ? '#2b2b2b' : '#c0c0c0',
+            borderTop: showStartMenu ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
+            borderLeft: showStartMenu ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
+            borderRight: showStartMenu ? (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff') : (isDark ? '2px solid #0a0a0a' : '2px solid #808080'),
+            borderBottom: showStartMenu ? (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff') : (isDark ? '2px solid #0a0a0a' : '2px solid #808080'),
             fontFamily: 'Tahoma, sans-serif',
             paddingTop: showStartMenu ? '2px' : '0',
             paddingLeft: showStartMenu ? '10px' : '8px',
@@ -465,11 +465,11 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
           }}
         >
           <WindowsLogo />
-          <span className="text-black font-bold text-[13px] tracking-wide">Start</span>
+          <span className="font-bold text-[13px] tracking-wide" style={{ color: isDark ? '#e5e7eb' : '#000' }}>Start</span>
         </button>
 
         {showStartMenu && (
-          <StartMenu apps={apps} onAppClick={onAppClick} onClose={() => setShowStartMenu(false)} startBtnRef={startBtnRef} />
+          <StartMenu apps={apps} onAppClick={onAppClick} onClose={() => setShowStartMenu(false)} startBtnRef={startBtnRef} isDark={isDark} />
         )}
       </div>
 
@@ -482,12 +482,12 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
             className="h-7 px-3 text-[11px] font-bold truncate max-w-[150px] transition-all"
             style={{
               fontFamily: 'Tahoma, Geneva, sans-serif',
-              background: '#c0c0c0',
-              borderTop: win.isMinimized ? '2px solid #ffffff' : '2px solid #808080',
-              borderLeft: win.isMinimized ? '2px solid #ffffff' : '2px solid #808080',
-              borderRight: win.isMinimized ? '2px solid #808080' : '2px solid #ffffff',
-              borderBottom: win.isMinimized ? '2px solid #808080' : '2px solid #ffffff',
-              color: '#000000',
+              background: isDark ? '#2b2b2b' : '#c0c0c0',
+              borderTop: win.isMinimized ? (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff') : (isDark ? '2px solid #0a0a0a' : '2px solid #808080'),
+              borderLeft: win.isMinimized ? (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff') : (isDark ? '2px solid #0a0a0a' : '2px solid #808080'),
+              borderRight: win.isMinimized ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
+              borderBottom: win.isMinimized ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
+              color: isDark ? '#e5e7eb' : '#000000',
               paddingTop: win.isMinimized ? '0' : '2px', // shift text down when sunken
               paddingLeft: win.isMinimized ? '12px' : '14px', // shift text right when sunken
             }}
@@ -501,30 +501,30 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
       <div
         className="flex items-center gap-0 shrink-0 relative h-8 px-1"
         style={{
-          borderTop: '1px solid #808080',
-          borderLeft: '1px solid #808080',
-          borderRight: '1px solid #ffffff',
-          borderBottom: '1px solid #ffffff',
+          borderTop: isDark ? '1px solid #0a0a0a' : '1px solid #808080',
+          borderLeft: isDark ? '1px solid #0a0a0a' : '1px solid #808080',
+          borderRight: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff',
+          borderBottom: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff',
         }}
       >
         {/* Weather */}
-        <WeatherWidget />
+        <WeatherWidget isDark={isDark} />
 
         {/* Divider */}
-        <div className="w-px h-5 mx-1" style={{ borderLeft: '1px solid #808080', borderRight: '1px solid #ffffff' }} />
+        <div className="w-px h-5 mx-1" style={{ borderLeft: isDark ? '1px solid #0a0a0a' : '1px solid #808080', borderRight: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff' }} />
 
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleDarkMode}
           className="h-6 w-6 flex items-center justify-center hover:opacity-80 transition-all"
           aria-label="Toggle dark mode"
-          style={{ color: '#000000' }}
+          style={{ color: isDark ? '#e5e7eb' : '#000000' }}
         >
           {isDark ? <Sun className="w-4 h-4 stroke-[2]" /> : <Moon className="w-4 h-4 stroke-[2]" />}
         </button>
 
         {/* Divider */}
-        <div className="w-px h-5 mx-1" style={{ borderLeft: '1px solid #808080', borderRight: '1px solid #ffffff' }} />
+        <div className="w-px h-5 mx-1" style={{ borderLeft: isDark ? '1px solid #0a0a0a' : '1px solid #808080', borderRight: isDark ? '1px solid #5a5a5a' : '1px solid #ffffff' }} />
 
         {/* Clock — click to toggle calendar */}
         <button
@@ -532,12 +532,12 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
           onClick={() => setShowCalendar(prev => !prev)}
           className="h-7 px-2 flex flex-col items-end justify-center leading-none hover:bg-white/20 transition-colors"
         >
-          <span className="text-[11px] font-bold" style={{ fontFamily: 'Tahoma, sans-serif', color: '#000000' }}>{formattedTime}</span>
+          <span className="text-[11px] font-bold" style={{ fontFamily: 'Tahoma, sans-serif', color: isDark ? '#e5e7eb' : '#000000' }}>{formattedTime}</span>
         </button>
 
         {/* Calendar Popup */}
         {showCalendar && (
-          <CalendarPopup onClose={() => setShowCalendar(false)} clockRef={clockRef} />
+          <CalendarPopup onClose={() => setShowCalendar(false)} clockRef={clockRef} isDark={isDark} />
         )}
       </div>
     </div>

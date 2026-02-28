@@ -11,6 +11,8 @@ import SkillsSection from '../SkillsSection';
 import ContactSection from '../ContactSection';
 import { portfolio } from '../../data/content';
 
+const OS_NAME = 'NateOS™';
+
 // Classic Mac OS 9 style SVG icons (32x32 viewBox, rendered at 48px)
 
 // Classic Windows XP Style Glossy Icons
@@ -127,15 +129,13 @@ const APPS = [
     id: 'resume', 
     icon: <ResumeIcon />,
     label: 'Resume', 
-    isLink: true,
-    href: portfolio.hero.resumeUrl,
+    windowColor: 'bg-zinc-800',
   },
   { 
     id: 'extraction', 
     icon: <ExtractionIcon />,
     label: 'Dark Harvest', 
-    isLink: true,
-    href: '/extraction-game/index.html',
+    windowColor: 'bg-black',
   },
 ];
 
@@ -215,15 +215,19 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
   const renderWindowContent = (appId) => {
     switch (appId) {
       case 'about':
-        return <Hero hero={portfolio.hero} contained />;
+        return <Hero hero={portfolio.hero} contained isDark={isDark} />;
       case 'experience':
-        return <ExperienceSection experience={portfolio.experience} contained />;
+        return <ExperienceSection experience={portfolio.experience} contained isDark={isDark} />;
       case 'projects':
-        return <ProjectsSection projects={portfolio.projects} contained />;
+        return <ProjectsSection projects={portfolio.projects} contained isDark={isDark} />;
       case 'skills':
-        return <SkillsSection skills={portfolio.skills} contained />;
+        return <SkillsSection skills={portfolio.skills} contained isDark={isDark} />;
       case 'contact':
-        return <ContactSection contained />;
+        return <ContactSection contained isDark={isDark} />;
+      case 'resume':
+        return <iframe src={portfolio.hero.resumeUrl} sandbox="allow-scripts allow-same-origin" className="w-full h-full border-none bg-white" title="Resume" />;
+      case 'extraction':
+        return <iframe src="/extraction-game/index.html" sandbox="allow-scripts allow-same-origin" allow="fullscreen" className="w-full h-full border-none bg-black" title="Dark Harvest" />;
       default:
         return null;
     }
@@ -250,7 +254,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
           aspectRatio: '4/3',
           maxWidth: '1200px',
           maxHeight: '85vh',
-          background: 'linear-gradient(180deg, #d8d0c0 0%, #c4baa8 50%, #b8ae9c 100%)',
+          background: isDark ? 'linear-gradient(180deg, #3f3f46 0%, #27272a 50%, #18181b 100%)' : 'linear-gradient(180deg, #d8d0c0 0%, #c4baa8 50%, #b8ae9c 100%)',
           borderRadius: '18px',
           padding: '12px 14px 10px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.3)',
@@ -298,6 +302,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
                 zIndex={state.zIndex}
                 defaultPosition={getDefaultPosition(appId)}
                 color={app?.windowColor || 'bg-white dark:bg-black'}
+                isDark={isDark}
               >
                 {renderWindowContent(appId)}
               </DesktopWindow>
@@ -320,7 +325,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
         <div className="flex items-center justify-between px-6 mt-1 shrink-0">
           <div className="flex-1" />
           <div className="flex items-center justify-center">
-            <span className="text-[9px] font-bold tracking-[0.3em] text-[#666] uppercase" style={{ fontFamily: 'Tahoma, sans-serif' }}>NateOS™</span>
+            <span className="text-[9px] font-bold tracking-[0.3em] text-[#666] uppercase" style={{ fontFamily: 'Tahoma, sans-serif' }}>{OS_NAME}</span>
           </div>
           <div className="flex-1 flex justify-end">
             {/* Power LED */}
