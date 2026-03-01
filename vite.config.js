@@ -8,9 +8,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          utils: ['clsx', 'tailwind-merge', 'lucide-react']
+        manualChunks(id) {
+          if (id.includes('node_modules/three/')) return 'three';
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) return 'vendor';
+          if (id.includes('node_modules/lucide-react/') || id.includes('node_modules/clsx/') || id.includes('node_modules/tailwind-merge/')) return 'utils';
         }
       }
     }

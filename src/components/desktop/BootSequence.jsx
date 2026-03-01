@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const BootSequence = ({ onComplete }) => {
+const BootSequence = ({ onComplete, onFadeStart }) => {
   const [phase, setPhase] = useState('black'); // 'black' → 'logo' → 'fade'
 
   useEffect(() => {
@@ -11,7 +11,10 @@ const BootSequence = ({ onComplete }) => {
 
     // Brief black screen → show logo → fade out
     const logoTimer = setTimeout(() => setPhase('logo'), 200);
-    const fadeTimer = setTimeout(() => setPhase('fade'), 1400);
+    const fadeTimer = setTimeout(() => {
+      setPhase('fade');
+      if (onFadeStart) onFadeStart(); // Trigger chime exactly as fade begins
+    }, 1400);
     const doneTimer = setTimeout(() => {
       sessionStorage.setItem('nateos-booted', 'true');
       onComplete();
@@ -22,7 +25,7 @@ const BootSequence = ({ onComplete }) => {
       clearTimeout(fadeTimer);
       clearTimeout(doneTimer);
     };
-  }, [onComplete]);
+  }, [onComplete, onFadeStart]);
 
   return (
     <div

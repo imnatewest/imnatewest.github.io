@@ -378,7 +378,7 @@ const StartMenu = ({ apps, onAppClick, onClose, startBtnRef, isDark }) => {
       </div>
 
       <div className="flex-1 py-1 flex flex-col items-stretch" style={{ background: isDark ? '#2b2b2b' : '#c0c0c0' }}>
-        {apps?.map((app) => (
+        {apps?.filter(app => app.isAppOnly).map((app) => (
           <React.Fragment key={app.id}>
             <button
               onClick={() => { onAppClick(app.id); onClose(); }}
@@ -479,7 +479,7 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
           <button
             key={win.id}
             onClick={() => onWindowClick(win.id)}
-            className="h-7 px-3 text-[11px] font-bold truncate max-w-[150px] transition-all"
+            className="h-7 px-2 flex items-center justify-center gap-1 min-w-[100px] max-w-[150px] transition-all"
             style={{
               fontFamily: 'Tahoma, Geneva, sans-serif',
               background: isDark ? '#2b2b2b' : '#c0c0c0',
@@ -488,11 +488,16 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
               borderRight: win.isMinimized ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
               borderBottom: win.isMinimized ? (isDark ? '2px solid #0a0a0a' : '2px solid #808080') : (isDark ? '2px solid #5a5a5a' : '2px solid #ffffff'),
               color: isDark ? '#e5e7eb' : '#000000',
-              paddingTop: win.isMinimized ? '0' : '2px', // shift text down when sunken
-              paddingLeft: win.isMinimized ? '12px' : '14px', // shift text right when sunken
+              paddingTop: win.isMinimized ? '0' : '2px', // shift content down when sunken
+              paddingLeft: win.isMinimized ? '8px' : '10px', // shift content right when sunken
             }}
           >
-            {win.title}
+            <div className="w-6 h-6 shrink-0 flex items-center justify-center pointer-events-none drop-shadow-sm" style={{ imageRendering: 'pixelated' }}>
+              <div style={{ transform: 'scale(1.1)', transformOrigin: 'center' }}>
+                {win.icon}
+              </div>
+            </div>
+            <span className="text-[12px] font-bold truncate leading-none">{win.label}</span>
           </button>
         ))}
       </div>
