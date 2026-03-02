@@ -237,7 +237,8 @@ const DesktopWindow = ({
         <div className="flex items-center gap-[2px] shrink-0 ml-4">
           {/* Minimize */}
           <button
-            onClick={(e) => { e.stopPropagation(); onMinimize?.(); }}
+            tabIndex={-1}
+            onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onMinimize?.(); }}
             className="w-[21px] h-[21px] flex items-center justify-center"
             style={{
               background: isDark ? 'linear-gradient(180deg, #5a5a5a 0%, #2b2b2b 100%)' : 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
@@ -253,7 +254,8 @@ const DesktopWindow = ({
           </button>
           {/* Maximize */}
           <button
-            onClick={(e) => { e.stopPropagation(); handleMaximize(); }}
+            tabIndex={-1}
+            onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); handleMaximize(); }}
             className="w-[21px] h-[21px] flex items-center justify-center"
             style={{
               background: isDark ? 'linear-gradient(180deg, #5a5a5a 0%, #2b2b2b 100%)' : 'linear-gradient(180deg, #3c8fe8 0%, #2663c1 100%)',
@@ -269,7 +271,8 @@ const DesktopWindow = ({
           </button>
           {/* Close */}
           <button
-            onClick={(e) => { e.stopPropagation(); onClose?.(); }}
+            tabIndex={-1}
+            onClick={(e) => { e.stopPropagation(); e.currentTarget.blur(); onClose?.(); }}
             className="w-[21px] h-[21px] flex items-center justify-center ml-[2px]"
             style={{
               background: isDark ? 'linear-gradient(180deg, #7f1d1d 0%, #450a0a 100%)' : 'linear-gradient(180deg, #e87961 0%, #c7321a 100%)',

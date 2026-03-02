@@ -14,6 +14,7 @@ import MusicPlayer from './MusicPlayer';
 import TerminalWindow from './TerminalWindow';
 import NotepadWindow from './NotepadWindow';
 import PaintWindow from './PaintWindow';
+import StarChaserWindow from './StarChaserWindow';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { portfolio } from '../../data/content';
 
@@ -100,7 +101,7 @@ const ExtractionIcon = () => (
 );
 
 const MusicIcon = () => (
-  <svg width="48" height="48" viewBox="-16 -16 80 80" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
     <rect x="4" y="8" width="40" height="32" fill="#d4d0c8" outline="2px solid #000" />
     <rect x="8" y="12" width="32" height="12" fill="#2b2b2b" />
     <path d="M12 16 L20 16 M24 16 L36 16 M12 20 L36 20" stroke="#00ff00" strokeWidth="2" strokeDasharray="4 2" />
@@ -111,7 +112,7 @@ const MusicIcon = () => (
 );
 
 const TerminalIcon = () => (
-  <svg width="48" height="48" viewBox="-16 -16 80 80" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
     <rect x="2" y="6" width="44" height="36" fill="#1a1a1a" outline="2px solid #000" />
     <rect x="2" y="6" width="44" height="8" fill="#d4d0c8" />
     <path d="M6 22 L12 28 L6 34" stroke="#00ff00" strokeWidth="3" fill="none" />
@@ -120,7 +121,7 @@ const TerminalIcon = () => (
 );
 
 const NotepadIcon = () => (
-  <svg width="48" height="48" viewBox="-16 -16 80 80" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
     <rect x="8" y="4" width="32" height="40" fill="#fff" outline="2px solid #000" />
     <rect x="8" y="4" width="32" height="8" fill="#0000aa" />
     <line x1="12" y1="18" x2="36" y2="18" stroke="#ccc" strokeWidth="2" />
@@ -131,7 +132,7 @@ const NotepadIcon = () => (
 );
 
 const PaintIcon = () => (
-  <svg width="48" height="48" viewBox="-16 -16 80 80" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
     <rect x="8" y="8" width="32" height="32" fill="#fff" outline="2px solid #000" />
     <rect x="8" y="8" width="32" height="6" fill="#0000aa" />
     <path d="M 16 28 C 14 20, 24 16, 28 20 C 32 24, 30 32, 22 32 C 18 32, 16 28, 16 28 Z" fill="#e0c0a0" stroke="#000" strokeWidth="1" />
@@ -140,6 +141,24 @@ const PaintIcon = () => (
     <circle cx="22" cy="28" r="2.5" fill="#0000ff" />
     <path d="M 12 36 L 16 26 L 18 28 L 14 38 Z" fill="#d4d0c8" stroke="#000" strokeWidth="1" />
     <path d="M 12 36 L 10 40 L 14 38 Z" fill="#000" />
+  </svg>
+);
+
+const StarChaserIcon = () => (
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+    <rect x="8" y="8" width="32" height="32" fill="#050510" outline="2px solid #000" />
+    {/* Grid / Stars */}
+    <rect x="12" y="12" width="2" height="2" fill="#fff" />
+    <rect x="34" y="24" width="2" height="2" fill="#fff" />
+    <rect x="14" y="32" width="2" height="2" fill="#fff" />
+    <rect x="28" y="14" width="2" height="2" fill="#fff" />
+    {/* Ship */}
+    <polygon points="24,14 16,36 24,28 32,36" fill="#e2e8f0" stroke="#000" strokeWidth="1" />
+    {/* Blue Wings */}
+    <polygon points="18,22 12,30 18,34" fill="#3b82f6" stroke="#000" strokeWidth="1" />
+    <polygon points="30,22 36,30 30,34" fill="#3b82f6" stroke="#000" strokeWidth="1" />
+    {/* Engine exhaust */}
+    <circle cx="24" cy="30" r="2" fill="#ef4444" />
   </svg>
 );
 
@@ -217,6 +236,13 @@ const APPS = [
     windowColor: 'bg-[#c0c0c0]',
     defaultSize: { width: 680, height: 500 },
     isAppOnly: true,
+  },
+  {
+    id: 'starfox',
+    icon: <StarChaserIcon />,
+    label: 'Star Chaser 3D',
+    windowColor: 'bg-black',
+    defaultSize: { width: 800, height: 600 }
   }
 ];
 
@@ -407,6 +433,8 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
         return <NotepadWindow isDark={isDark} />;
       case 'paint':
         return <PaintWindow isDark={isDark} />;
+      case 'starfox':
+        return <StarChaserWindow />;
       default:
         return null;
     }
