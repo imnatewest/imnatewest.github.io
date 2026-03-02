@@ -3,7 +3,7 @@ import Starfield from './screensavers/Starfield';
 
 const IDLE_TIMEOUT_MS = 30 * 1000; // 30 seconds
 
-const ScreensaverManager = () => {
+const ScreensaverManager = ({ disabled }) => {
   const [isIdle, setIsIdle] = useState(false);
   const [screensaverType, setScreensaverType] = useState('starfield');
 
@@ -12,6 +12,11 @@ const ScreensaverManager = () => {
   }, []);
 
   useEffect(() => {
+    if (disabled) {
+      resetIdleTimer();
+      return;
+    }
+
     let timeoutId;
 
     const handleActivity = () => {
@@ -38,9 +43,9 @@ const ScreensaverManager = () => {
         window.removeEventListener(event, handleActivity);
       });
     };
-  }, [resetIdleTimer]);
+  }, [resetIdleTimer, disabled]);
 
-  if (!isIdle) return null;
+  if (!isIdle || disabled) return null;
 
   return (
     <div 

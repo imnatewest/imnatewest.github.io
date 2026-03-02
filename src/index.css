@@ -150,3 +150,93 @@
     }
   }
 }
+
+/* Global Retro Windows 9x Scrollbars - Explicitly Outside Layers to Prevent Purging */
+*::-webkit-scrollbar {
+  width: 17px;
+  height: 17px;
+  background: #dfdfdf;
+  display: block;
+}
+
+*::-webkit-scrollbar-track {
+  background: #dfdfdf;
+  /* Dithered checkered pattern for the track */
+  background-image: 
+    linear-gradient(45deg, #c0c0c0 25%, transparent 25%, transparent 75%, #c0c0c0 75%, #c0c0c0), 
+    linear-gradient(45deg, #c0c0c0 25%, transparent 25%, transparent 75%, #c0c0c0 75%, #c0c0c0);
+  background-size: 2px 2px;
+  background-position: 0 0, 1px 1px;
+  border-left: 1px solid #dfdfdf;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  /* Classic 3D Outset Border */
+  box-shadow: 
+    inset 1px 1px 0px 0px #ffffff,
+    inset -1px -1px 0px 0px #000000,
+    inset 2px 2px 0px 0px #dfdfdf,
+    inset -2px -2px 0px 0px #808080;
+  border: 1px solid #dfdfdf;
+  border-right: none;
+  border-bottom: none;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: #a0a0a0;
+}
+
+/* Scrollbar Top/Bottom Buttons (Up/Down Arrows) */
+*::-webkit-scrollbar-button:single-button {
+  background-color: #c0c0c0;
+  display: block;
+  height: 17px;
+  width: 17px;
+  box-shadow: 
+    inset 1px 1px 0px 0px #ffffff,
+    inset -1px -1px 0px 0px #000000,
+    inset 2px 2px 0px 0px #dfdfdf,
+    inset -2px -2px 0px 0px #808080;
+}
+
+*::-webkit-scrollbar-button:single-button:active {
+  box-shadow: 
+    inset 1px 1px 0px 0px #000000,
+    inset -1px -1px 0px 0px #ffffff,
+    inset 2px 2px 0px 0px #808080,
+    inset -2px -2px 0px 0px #dfdfdf;
+}
+
+/* Up Arrow SVG */
+*::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url('data:image/svg+xml;utf8,<svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M4 10 L8 5 L13 10 Z" fill="black"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Down Arrow SVG */
+*::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url('data:image/svg+xml;utf8,<svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M4 7 L8 12 L13 7 Z" fill="black"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Left Arrow SVG */
+*::-webkit-scrollbar-button:single-button:horizontal:decrement {
+  background-image: url('data:image/svg+xml;utf8,<svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M10 4 L5 8 L10 13 Z" fill="black"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Right Arrow SVG */
+*::-webkit-scrollbar-button:single-button:horizontal:increment {
+  background-image: url('data:image/svg+xml;utf8,<svg width="17" height="17" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg"><path d="M7 4 L12 8 L7 13 Z" fill="black"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Fix corner piece where 2 scrollbars meet */
+*::-webkit-scrollbar-corner {
+  background-color: #dfdfdf;
+}

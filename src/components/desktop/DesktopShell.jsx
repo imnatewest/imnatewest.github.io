@@ -13,6 +13,7 @@ import ContactSection from '../ContactSection';
 import MusicPlayer from './MusicPlayer';
 import TerminalWindow from './TerminalWindow';
 import NotepadWindow from './NotepadWindow';
+import PaintWindow from './PaintWindow';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 import { portfolio } from '../../data/content';
 
@@ -129,6 +130,19 @@ const NotepadIcon = () => (
   </svg>
 );
 
+const PaintIcon = () => (
+  <svg width="48" height="48" viewBox="-16 -16 80 80" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+    <rect x="8" y="8" width="32" height="32" fill="#fff" outline="2px solid #000" />
+    <rect x="8" y="8" width="32" height="6" fill="#0000aa" />
+    <path d="M 16 28 C 14 20, 24 16, 28 20 C 32 24, 30 32, 22 32 C 18 32, 16 28, 16 28 Z" fill="#e0c0a0" stroke="#000" strokeWidth="1" />
+    <circle cx="20" cy="22" r="2.5" fill="#ff0000" />
+    <circle cx="26" cy="24" r="2.5" fill="#00ff00" />
+    <circle cx="22" cy="28" r="2.5" fill="#0000ff" />
+    <path d="M 12 36 L 16 26 L 18 28 L 14 38 Z" fill="#d4d0c8" stroke="#000" strokeWidth="1" />
+    <path d="M 12 36 L 10 40 L 14 38 Z" fill="#000" />
+  </svg>
+);
+
 
 // Desktop app definitions
 const APPS = [
@@ -194,6 +208,14 @@ const APPS = [
     icon: <NotepadIcon />,
     label: 'Notepad',
     windowColor: 'bg-white',
+    isAppOnly: true,
+  },
+  {
+    id: 'paint',
+    icon: <PaintIcon />,
+    label: 'MS Paint',
+    windowColor: 'bg-[#c0c0c0]',
+    defaultSize: { width: 680, height: 500 },
     isAppOnly: true,
   }
 ];
@@ -383,6 +405,8 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
         return <TerminalWindow onOpenApp={openWindow} />;
       case 'notepad':
         return <NotepadWindow isDark={isDark} />;
+      case 'paint':
+        return <PaintWindow isDark={isDark} />;
       default:
         return null;
     }
@@ -422,7 +446,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
             boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3), inset 0 0 60px rgba(0,0,0,0.1)',
           }}
         >
-          <ScreensaverManager />
+          <ScreensaverManager disabled={windows['extraction']?.isOpen} />
           {/* Desktop Area */}
           <div 
             ref={desktopRef}
