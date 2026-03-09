@@ -494,7 +494,7 @@ const Taskbar = ({ apps, onAppClick, openWindows, onWindowClick, isDark, toggleD
           >
             <div className="w-6 h-6 shrink-0 flex items-center justify-center pointer-events-none drop-shadow-sm" style={{ imageRendering: 'pixelated' }}>
               <div style={{ transform: 'scale(1.1)', transformOrigin: 'center' }}>
-                {win.icon}
+                {win.taskbarIcon || win.icon}
               </div>
             </div>
             <span className="text-[12px] font-bold truncate leading-none">{win.label}</span>

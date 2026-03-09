@@ -100,65 +100,43 @@ const ExtractionIcon = () => (
   />
 );
 
-const MusicIcon = () => (
-  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
-    <rect x="4" y="8" width="40" height="32" fill="#d4d0c8" outline="2px solid #000" />
-    <rect x="8" y="12" width="32" height="12" fill="#2b2b2b" />
-    <path d="M12 16 L20 16 M24 16 L36 16 M12 20 L36 20" stroke="#00ff00" strokeWidth="2" strokeDasharray="4 2" />
-    <circle cx="16" cy="30" r="4" fill="#666" outline="1px solid #000" />
-    <circle cx="32" cy="30" r="4" fill="#666" outline="1px solid #000" />
-    <rect x="22" y="30" width="4" height="2" fill="#2b2b2b" />
-  </svg>
-);
-
-const TerminalIcon = () => (
-  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
-    <rect x="2" y="6" width="44" height="36" fill="#1a1a1a" outline="2px solid #000" />
-    <rect x="2" y="6" width="44" height="8" fill="#d4d0c8" />
-    <path d="M6 22 L12 28 L6 34" stroke="#00ff00" strokeWidth="3" fill="none" />
-    <rect x="16" y="32" width="8" height="3" fill="#00ff00" />
-  </svg>
-);
-
-const NotepadIcon = () => (
-  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
-    <rect x="8" y="4" width="32" height="40" fill="#fff" outline="2px solid #000" />
-    <rect x="8" y="4" width="32" height="8" fill="#0000aa" />
-    <line x1="12" y1="18" x2="36" y2="18" stroke="#ccc" strokeWidth="2" />
-    <line x1="12" y1="24" x2="36" y2="24" stroke="#ccc" strokeWidth="2" />
-    <line x1="12" y1="30" x2="36" y2="30" stroke="#ccc" strokeWidth="2" />
-    <line x1="12" y1="36" x2="28" y2="36" stroke="#ccc" strokeWidth="2" />
-  </svg>
-);
-
-const PaintIcon = () => (
-  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
-    <rect x="8" y="8" width="32" height="32" fill="#fff" outline="2px solid #000" />
-    <rect x="8" y="8" width="32" height="6" fill="#0000aa" />
-    <path d="M 16 28 C 14 20, 24 16, 28 20 C 32 24, 30 32, 22 32 C 18 32, 16 28, 16 28 Z" fill="#e0c0a0" stroke="#000" strokeWidth="1" />
-    <circle cx="20" cy="22" r="2.5" fill="#ff0000" />
-    <circle cx="26" cy="24" r="2.5" fill="#00ff00" />
-    <circle cx="22" cy="28" r="2.5" fill="#0000ff" />
-    <path d="M 12 36 L 16 26 L 18 28 L 14 38 Z" fill="#d4d0c8" stroke="#000" strokeWidth="1" />
-    <path d="M 12 36 L 10 40 L 14 38 Z" fill="#000" />
-  </svg>
-);
-
 const StarChaserIcon = () => (
   <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
     <rect x="8" y="8" width="32" height="32" fill="#050510" outline="2px solid #000" />
-    {/* Grid / Stars */}
     <rect x="12" y="12" width="2" height="2" fill="#fff" />
     <rect x="34" y="24" width="2" height="2" fill="#fff" />
     <rect x="14" y="32" width="2" height="2" fill="#fff" />
     <rect x="28" y="14" width="2" height="2" fill="#fff" />
-    {/* Ship */}
     <polygon points="24,14 16,36 24,28 32,36" fill="#e2e8f0" stroke="#000" strokeWidth="1" />
-    {/* Blue Wings */}
     <polygon points="18,22 12,30 18,34" fill="#3b82f6" stroke="#000" strokeWidth="1" />
     <polygon points="30,22 36,30 30,34" fill="#3b82f6" stroke="#000" strokeWidth="1" />
-    {/* Engine exhaust */}
     <circle cx="24" cy="30" r="2" fill="#ef4444" />
+  </svg>
+);
+
+// Small icon for taskbar to avoid overflow (24x24)
+const StarChaserSmallIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 48 48" style={{ imageRendering: 'pixelated' }}>
+    <rect x="8" y="8" width="32" height="32" fill="#050510" />
+    <polygon points="24,14 18,34 24,26 30,34" fill="#e2e8f0" />
+    <polygon points="20,22 14,28 20,32" fill="#3b82f6" />
+    <polygon points="28,22 34,28 28,32" fill="#3b82f6" />
+    <circle cx="24" cy="28" r="2" fill="#ef4444" />
+  </svg>
+);
+
+const GamesFolderIcon = () => (
+  <svg width="96" height="96" viewBox="-8 -8 64 64" className="drop-shadow-[1px_2px_3px_rgba(0,0,0,0.4)]" style={{ imageRendering: 'pixelated' }}>
+    {/* Folder body */}
+    <rect x="4" y="14" width="40" height="28" rx="2" fill="#f0c040" stroke="#b08820" strokeWidth="1" />
+    {/* Folder tab */}
+    <rect x="4" y="10" width="16" height="6" rx="1" fill="#f0c040" stroke="#b08820" strokeWidth="1" />
+    {/* Gamepad icon on folder */}
+    <rect x="16" y="22" width="16" height="10" rx="3" fill="#333" />
+    <rect x="20" y="24" width="2" height="6" fill="#888" />
+    <rect x="18" y="26" width="6" height="2" fill="#888" />
+    <circle cx="30" cy="25" r="1.5" fill="#ef4444" />
+    <circle cx="28" cy="28" r="1.5" fill="#3b82f6" />
   </svg>
 );
 
@@ -201,48 +179,27 @@ const APPS = [
     label: 'Resume', 
     windowColor: 'bg-zinc-800',
   },
+  {
+    id: 'games',
+    icon: <GamesFolderIcon />,
+    label: 'Games',
+    isFolder: true,
+  },
   { 
     id: 'extraction', 
     icon: <ExtractionIcon />,
     label: 'Dark Harvest', 
     windowColor: 'bg-black',
-  },
-  {
-    id: 'music',
-    icon: <MusicIcon />,
-    label: 'LoFi Player',
-    windowColor: 'bg-[#111]',
-    defaultSize: { width: 350, height: 250 },
-    isAppOnly: true,
-  },
-  {
-    id: 'terminal',
-    icon: <TerminalIcon />,
-    label: 'Command Prompt',
-    windowColor: 'bg-black',
-    isAppOnly: true,
-  },
-  {
-    id: 'notepad',
-    icon: <NotepadIcon />,
-    label: 'Notepad',
-    windowColor: 'bg-white',
-    isAppOnly: true,
-  },
-  {
-    id: 'paint',
-    icon: <PaintIcon />,
-    label: 'MS Paint',
-    windowColor: 'bg-[#c0c0c0]',
-    defaultSize: { width: 680, height: 500 },
-    isAppOnly: true,
+    isHidden: true,
   },
   {
     id: 'starfox',
     icon: <StarChaserIcon />,
+    taskbarIcon: <StarChaserSmallIcon />,
     label: 'Star Chaser 3D',
     windowColor: 'bg-black',
-    defaultSize: { width: 800, height: 600 }
+    defaultSize: { width: 800, height: 600 },
+    isHidden: true,
   }
 ];
 
@@ -262,7 +219,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
     }
     // Default 2-column layout, 96px spacing
     const pos = {};
-    const desktopApps = APPS.filter(a => !a.isAppOnly);
+    const desktopApps = APPS.filter(a => !a.isAppOnly && !a.isHidden);
     desktopApps.forEach((app, i) => {
       const col = Math.floor(i / 5); // 5 icons per column
       const row = i % 5;
@@ -282,6 +239,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
 
   // === Selection Box ===
   const [selectionBox, setSelectionBox] = useState(null);
+  const [showGamesFolder, setShowGamesFolder] = useState(false);
   const desktopRef = React.useRef(null);
 
   const handleDesktopMouseDown = (e) => {
@@ -338,6 +296,11 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
 
     if (app.isLink) {
       window.open(app.href, '_blank');
+      return true;
+    }
+
+    if (app.isFolder) {
+      setShowGamesFolder(prev => !prev);
       return true;
     }
 
@@ -498,7 +461,7 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
             )}
 
             {/* Desktop Icons */}
-            {APPS.filter(app => !app.isAppOnly).map((app) => (
+            {APPS.filter(app => !app.isAppOnly && !app.isHidden).map((app) => (
               <DesktopIcon
                 key={app.id}
                 icon={app.icon}
@@ -509,6 +472,39 @@ const DesktopShell = ({ isDark, toggleDarkMode }) => {
                 containerRef={desktopRef}
               />
             ))}
+
+            {/* Games Folder Popup */}
+            {showGamesFolder && (
+              <div
+                className="absolute z-[60]"
+                style={{
+                  left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
+                  background: isDark ? '#2b2b2b' : '#c0c0c0',
+                  borderTop: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+                  borderLeft: isDark ? '2px solid #5a5a5a' : '2px solid #ffffff',
+                  borderRight: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+                  borderBottom: isDark ? '2px solid #0a0a0a' : '2px solid #404040',
+                  minWidth: 280, fontFamily: 'Tahoma, sans-serif',
+                }}
+              >
+                {/* Title bar */}
+                <div className="flex items-center justify-between px-2 py-1" style={{ background: isDark ? 'linear-gradient(90deg, #18181b, #3f3f46)' : 'linear-gradient(90deg, #000080, #1084d0)' }}>
+                  <span className="text-white text-[12px] font-bold">📁 Games</span>
+                  <button onClick={() => setShowGamesFolder(false)} className="w-4 h-4 flex items-center justify-center text-[10px] font-bold" style={{ background: isDark ? '#3f3f46' : '#c0c0c0', border: '1px outset #ccc' }}>✕</button>
+                </div>
+                {/* Folder contents */}
+                <div className="flex gap-4 p-4 items-start">
+                  {APPS.filter(a => a.isHidden).map(app => (
+                    <button key={app.id} onClick={() => { openWindow(app.id); setShowGamesFolder(false); }} className="flex flex-col items-center gap-1 w-[80px] hover:bg-white/10 p-1 rounded">
+                      <div className="w-[48px] h-[48px] flex items-center justify-center overflow-hidden" style={{ imageRendering: 'pixelated' }}>
+                        <div className="w-[48px] h-[48px] [&>*]:w-full [&>*]:h-full [&>*]:object-contain">{app.icon}</div>
+                      </div>
+                      <span className={`text-[11px] font-bold text-center leading-tight ${isDark ? 'text-white' : 'text-black'}`}>{app.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
           {/* Render Open Windows */}
           {Object.entries(windows).map(([appId, state]) => {
