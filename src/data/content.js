@@ -6,11 +6,11 @@ export const portfolio = {
     summary:
       "Software Developer who enjoys building complex projects from the ground up. My work primarily consists of designing full-stack apps, data-rich APIs, and other fun projects that pique my interest.",
     extendedSummary:
-      "I gravitate toward products where performance, usability, and measurable outcomes matter. Recently I optimized 50+ Express APIs for storm monitoring, redesigned StormAlert’s dashboard, and onboarded new geolocation data to unlock 10K+ more users.",
+      "I enjoy building products that solve real-world problems, whether it's through software, hardware, or a combination of both. I'm passionate about learning new technologies and applying them to create innovative solutions.",
     location: "Tampa, FL · Open to Relocation · Remote-friendly",
     email: "imnathanwest@gmail.com",
     phone: "727-459-5304",
-    resumeUrl: "nathan-west-resume.pdf",
+    resumeUrl: "/nathan-west-resume.pdf",
   },
   skills: [
     {
@@ -112,12 +112,15 @@ export const portfolio = {
       webLink: "https://www.linkedin.com/company/bell-automation-systems/",
       period: "Sep 2024 – Sep 2025",
       summary:
-        "Optimizing StormAlert, a severe-weather monitoring platform spanning 50+ API endpoints and live telemetry.",
+        "Project-based internship. Recently worked on a severe-weather monitoring platform spanning 50+ API endpoints and live telemetry.",
       achievements: [
-        "Reduced API response times by 35% by rewriting Express query logic and introducing caching layers.",
-        "Redesigned React/CSS components that improved dashboard satisfaction scores by 70%.",
-        "Integrated three new Mapbox geolocation feeds to unlock coverage from Arizona to Texas (10K+ new users).",
-        "Partnered with QA/DevOps to automate testing + CI/CD, accelerating releases.",
+        "Worked on a web scraping solution using ParseHub that automated power outage data collection, eliminating manual data gathering across 3 teams (frontend, backend, QA)",
+        "Built full-stack application using Node.js, MongoDB, React, and CSS, displaying live storm and power outage data on a map-based interface",
+        "Redesigned React/CSS dashboard components, improving user satisfaction scores by 70% based on pre/post survey results",
+        "Integrated three Mapbox geolocation feeds expanding power outage coverage from Arizona to Texas, onboarding 10K+ new users",
+        "Worked on a team of 5 developers to expand data source integrations, extending geographic coverage from Arizona to Texas",
+        "Partnered with QA/DevOps to implement automated testing and CI/CD pipeline, streamlining the release process",
+        "Developed Node.js API for authentication and live weather data, ensuring seamless integration with existing codebase",
       ],
     },
     {
@@ -132,6 +135,6 @@ export const portfolio = {
         "Guided 200+ learners through industry-style exercises while maintaining a 90% retention rate.",
         "Designed capstone-style projects with Agile workflows to mirror real engineering teams.",
       ],
-    }
+    },
   ],
 };
